@@ -29,7 +29,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User findById(int userId) {
         String sql = """
-                     SELECT * 
+                     SELECT UserID, Username, Password, FullName, Role, CreatedAt
                      FROM Users 
                      WHERE UserID=?
                      """;
@@ -53,7 +53,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public User findByUsername(String username) {
         String sql = """
-                     SELECT *
+                     SELECT UserID, Username, Password, FullName, Role, CreatedAt
                      FROM Users
                      WHERE Username=?
                      """;
@@ -78,7 +78,7 @@ public class UserDAOImpl implements UserDAO {
     public List<User> findAll() {
         List<User> users = new ArrayList<>();
         String sql = """
-                     SELECT *
+                     SELECT UserID, Username, Password, FullName, Role, CreatedAt
                      FROM Users
                      ORDER BY UserID
                      """;

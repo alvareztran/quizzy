@@ -148,13 +148,6 @@ public class TakeQuizController {
         }
 
         saveSelectedAnswer();
-
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Time's Up");
-        alert.setHeaderText("⏱ Time limit reached!");
-        alert.setContentText("Your quiz answers have been automatically submitted.");
-        alert.showAndWait();
-
         finishQuiz();
     }
 

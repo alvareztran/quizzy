@@ -21,6 +21,7 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableCell;
 import javafx.scene.layout.HBox;
 
@@ -34,6 +35,10 @@ public class AnswerController {
     private final List<Answer> allAnswers = new ArrayList<>();
     private final List<Question> allQuestions = new ArrayList<>();
     private final Map<Integer, String> questionMap = new HashMap<>();
+    private final List<Answer> currentFilteredList = new ArrayList<>();
+
+    private int currentPage = 1;
+    private int pageSize = 10;
 
     public AnswerController() {
         this.view = new AnswerView();
@@ -69,6 +74,20 @@ public class AnswerController {
             view.getQuestionFilterComboBox().setValue("All Questions");
             view.getStatusFilterComboBox().setValue("All Correct Status");
             filterAnswers();
+        });
+
+        view.getPerPageComboBox().valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                if (newVal.contains("25")) {
+                    pageSize = 25;
+                } else if (newVal.contains("50")) {
+                    pageSize = 50;
+                } else {
+                    pageSize = 10;
+                }
+                currentPage = 1;
+                renderPage();
+            }
         });
 
         view.getQuestionContentColumn().setCellValueFactory(cellData -> {
@@ -148,10 +167,6 @@ public class AnswerController {
         view.getCorrectAnswersCard().getValueLabel().setText(String.valueOf(correctCount));
         view.getIncorrectAnswersCard().getValueLabel().setText(String.valueOf(incorrectCount));
         view.getQuestionsCoveredCard().getValueLabel().setText(String.valueOf(questionMap.size()));
-
-        view.getPaginationInfoLabel().setText(
-                String.format("Showing 1 to %d of %d answers", displayedAnswerList.size(), allAnswers.size())
-        );
     }
 
     private void filterAnswers() {
@@ -181,10 +196,120 @@ public class AnswerController {
             return matchSearch && matchQuestion && matchStatus;
         }).toList();
 
-        displayedAnswerList.setAll(filtered);
-        view.getPaginationInfoLabel().setText(
-                String.format("Showing 1 to %d of %d answers", displayedAnswerList.size(), allAnswers.size())
-        );
+        currentFilteredList.clear();
+        currentFilteredList.addAll(filtered);
+        currentPage = 1;
+        renderPage();
+    }
+
+    private void renderPage() {
+        int total = currentFilteredList.size();
+        int totalPages = Math.max(1, (int) Math.ceil((double) total / pageSize));
+
+        if (currentPage > totalPages) {
+            currentPage = totalPages;
+        }
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
+
+        int fromIndex = (currentPage - 1) * pageSize;
+        int toIndex = Math.min(fromIndex + pageSize, total);
+
+        if (fromIndex < total) {
+            displayedAnswerList.setAll(currentFilteredList.subList(fromIndex, toIndex));
+            view.getPaginationInfoLabel().setText(
+                    String.format("Showing %d to %d of %d answers", (fromIndex + 1), toIndex, total)
+            );
+        } else {
+            displayedAnswerList.clear();
+            view.getPaginationInfoLabel().setText("Showing 0 to 0 of 0 answers");
+        }
+
+        renderPaginationButtons(totalPages);
+    }
+
+    private void renderPaginationButtons(int totalPages) {
+        HBox box = view.getPaginationButtonsBox();
+        box.getChildren().clear();
+
+        Button prevBtn = new Button("<");
+        stylePaginationBtn(prevBtn, false);
+        prevBtn.setDisable(currentPage <= 1);
+        prevBtn.setOnAction(e -> {
+            if (currentPage > 1) {
+                currentPage--;
+                renderPage();
+            }
+        });
+        box.getChildren().add(prevBtn);
+
+        int startPage = Math.max(1, currentPage - 2);
+        int endPage = Math.min(totalPages, currentPage + 2);
+
+        if (startPage > 1) {
+            Button p1 = new Button("1");
+            stylePaginationBtn(p1, currentPage == 1);
+            p1.setOnAction(e -> {
+                currentPage = 1;
+                renderPage();
+            });
+            box.getChildren().add(p1);
+
+            if (startPage > 2) {
+                Label dots = new Label("...");
+                dots.setStyle("-fx-text-fill: #94a3b8; -fx-padding: 2 4; -fx-font-weight: bold;");
+                box.getChildren().add(dots);
+            }
+        }
+
+        for (int p = startPage; p <= endPage; p++) {
+            final int pageNum = p;
+            Button pageBtn = new Button(String.valueOf(pageNum));
+            boolean isActive = (pageNum == currentPage);
+            stylePaginationBtn(pageBtn, isActive);
+            pageBtn.setOnAction(e -> {
+                currentPage = pageNum;
+                renderPage();
+            });
+            box.getChildren().add(pageBtn);
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                Label dots = new Label("...");
+                dots.setStyle("-fx-text-fill: #94a3b8; -fx-padding: 2 4; -fx-font-weight: bold;");
+                box.getChildren().add(dots);
+            }
+
+            Button pLast = new Button(String.valueOf(totalPages));
+            stylePaginationBtn(pLast, currentPage == totalPages);
+            pLast.setOnAction(e -> {
+                currentPage = totalPages;
+                renderPage();
+            });
+            box.getChildren().add(pLast);
+        }
+
+        Button nextBtn = new Button(">");
+        stylePaginationBtn(nextBtn, false);
+        nextBtn.setDisable(currentPage >= totalPages);
+        nextBtn.setOnAction(e -> {
+            if (currentPage < totalPages) {
+                currentPage++;
+                renderPage();
+            }
+        });
+        box.getChildren().add(nextBtn);
+    }
+
+    private void stylePaginationBtn(Button btn, boolean isActive) {
+        if (isActive) {
+            btn.getStyleClass().add("button-primary");
+            btn.setStyle("-fx-background-color: #4f46e5; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-padding: 4 10; -fx-background-radius: 6px; -fx-cursor: hand; -fx-min-width: 32px;");
+        } else {
+            btn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-text-fill: #334155; -fx-font-weight: bold; -fx-padding: 4 10; -fx-border-radius: 6px; -fx-background-radius: 6px; -fx-cursor: hand; -fx-min-width: 32px;");
+        }
     }
 
     private void deleteAnswer(Answer answer) {

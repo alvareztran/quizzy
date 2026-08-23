@@ -61,6 +61,7 @@ public class QuizView {
     private final Button prevPageBtn = new Button("<");
     private final Button page1Btn = new Button("1");
     private final Button nextPageBtn = new Button(">");
+    private final HBox paginationButtonsBox = new HBox(4);
 
     public QuizView() {
         createUI();
@@ -227,15 +228,10 @@ public class QuizView {
         perPageComboBox.setValue("10 per page");
         perPageComboBox.setPrefHeight(30);
 
-        prevPageBtn.setStyle("-fx-padding: 3 9;");
-        page1Btn.getStyleClass().add("button-primary");
-        page1Btn.setStyle("-fx-padding: 3 9; -fx-font-weight: bold;");
-        nextPageBtn.setStyle("-fx-padding: 3 9;");
+        paginationButtonsBox.setAlignment(Pos.CENTER);
+        paginationButtonsBox.getChildren().setAll(prevPageBtn, page1Btn, nextPageBtn);
 
-        HBox pagBtns = new HBox(4, prevPageBtn, page1Btn, nextPageBtn);
-        pagBtns.setAlignment(Pos.CENTER);
-
-        paginationBar.getChildren().addAll(paginationInfoLabel, pagSpacer, perPageComboBox, pagBtns);
+        paginationBar.getChildren().addAll(paginationInfoLabel, pagSpacer, perPageComboBox, paginationButtonsBox);
 
         mainContent.getChildren().addAll(pageHeader, statCardsRow, toolbar, quizTable, paginationBar);
         root.setCenter(mainContent);
@@ -359,6 +355,10 @@ public class QuizView {
 
     public Button getNextPageBtn() {
         return nextPageBtn;
+    }
+
+    public HBox getPaginationButtonsBox() {
+        return paginationButtonsBox;
     }
 
 }

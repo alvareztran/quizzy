@@ -23,7 +23,7 @@ public class AnswerDAOImpl implements AnswerDAO {
     @Override
     public Answer findById(int answerId) {
         String sql = """
-                     SELECT *
+                     SELECT AnswerID, QuestionID, AnswerContent, IsCorrect
                      FROM Answer
                      WHERE AnswerID=?
                      """;
@@ -48,7 +48,7 @@ public class AnswerDAOImpl implements AnswerDAO {
     public List<Answer> findByQuestionId(int questionId) {
         List<Answer> answers = new ArrayList<>();
         String sql = """
-                     SELECT * 
+                     SELECT AnswerID, QuestionID, AnswerContent, IsCorrect 
                      FROM Answer
                      WHERE QuestionID=?
                      ORDER BY AnswerID
@@ -73,7 +73,7 @@ public class AnswerDAOImpl implements AnswerDAO {
     @Override
     public Answer findCorrectAnswer(int questionId) {
         String sql = """
-                     SELECT *
+                     SELECT AnswerID, QuestionID, AnswerContent, IsCorrect
                      FROM Answer
                      WHERE QuestionID=? AND IsCorrect=1
                      """;
@@ -98,7 +98,7 @@ public class AnswerDAOImpl implements AnswerDAO {
     public List<Answer> findAll() {
         List<Answer> answers = new ArrayList<>();
         String sql = """
-                     SELECT *
+                     SELECT AnswerID, QuestionID, AnswerContent, IsCorrect
                      FROM Answer
                      ORDER BY AnswerID
                      """;

@@ -49,7 +49,7 @@ public class AdminResultController {
     private final ObservableList<ResultItemDTO> displayedItems = FXCollections.observableArrayList();
 
     private int currentPage = 1;
-    private final int pageSize = 10;
+    private int pageSize = 10;
 
     public AdminResultController() {
         this.view = new AdminResultView();
@@ -86,17 +86,16 @@ public class AdminResultController {
             applyFilters();
         });
 
-        view.getPrevPageBtn().setOnAction(e -> {
-            if (currentPage > 1) {
-                currentPage--;
-                updatePagination();
-            }
-        });
-
-        view.getNextPageBtn().setOnAction(e -> {
-            int totalPages = Math.max(1, (int) Math.ceil((double) getFilteredItems().size() / pageSize));
-            if (currentPage < totalPages) {
-                currentPage++;
+        view.getPerPageComboBox().valueProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                if (newVal.contains("25")) {
+                    pageSize = 25;
+                } else if (newVal.contains("50")) {
+                    pageSize = 50;
+                } else {
+                    pageSize = 10;
+                }
+                currentPage = 1;
                 updatePagination();
             }
         });
@@ -459,6 +458,9 @@ public class AdminResultController {
         if (currentPage > totalPages) {
             currentPage = totalPages;
         }
+        if (currentPage < 1) {
+            currentPage = 1;
+        }
 
         int fromIndex = (currentPage - 1) * pageSize;
         int toIndex = Math.min(fromIndex + pageSize, total);
@@ -471,9 +473,90 @@ public class AdminResultController {
             view.getPaginationInfoLabel().setText("Showing 0 to 0 of 0 results");
         }
 
-        view.getPage1Btn().setText(String.valueOf(currentPage));
-        view.getPrevPageBtn().setDisable(currentPage <= 1);
-        view.getNextPageBtn().setDisable(currentPage >= totalPages);
+        renderPaginationButtons(totalPages);
+    }
+
+    private void renderPaginationButtons(int totalPages) {
+        HBox box = view.getPaginationButtonsBox();
+        box.getChildren().clear();
+
+        Button prevBtn = new Button("<");
+        stylePaginationBtn(prevBtn, false);
+        prevBtn.setDisable(currentPage <= 1);
+        prevBtn.setOnAction(e -> {
+            if (currentPage > 1) {
+                currentPage--;
+                updatePagination();
+            }
+        });
+        box.getChildren().add(prevBtn);
+
+        int startPage = Math.max(1, currentPage - 2);
+        int endPage = Math.min(totalPages, currentPage + 2);
+
+        if (startPage > 1) {
+            Button p1 = new Button("1");
+            stylePaginationBtn(p1, currentPage == 1);
+            p1.setOnAction(e -> {
+                currentPage = 1;
+                updatePagination();
+            });
+            box.getChildren().add(p1);
+
+            if (startPage > 2) {
+                Label dots = new Label("...");
+                dots.setStyle("-fx-text-fill: #94a3b8; -fx-padding: 2 4; -fx-font-weight: bold;");
+                box.getChildren().add(dots);
+            }
+        }
+
+        for (int p = startPage; p <= endPage; p++) {
+            final int pageNum = p;
+            Button pageBtn = new Button(String.valueOf(pageNum));
+            boolean isActive = (pageNum == currentPage);
+            stylePaginationBtn(pageBtn, isActive);
+            pageBtn.setOnAction(e -> {
+                currentPage = pageNum;
+                updatePagination();
+            });
+            box.getChildren().add(pageBtn);
+        }
+
+        if (endPage < totalPages) {
+            if (endPage < totalPages - 1) {
+                Label dots = new Label("...");
+                dots.setStyle("-fx-text-fill: #94a3b8; -fx-padding: 2 4; -fx-font-weight: bold;");
+                box.getChildren().add(dots);
+            }
+
+            Button pLast = new Button(String.valueOf(totalPages));
+            stylePaginationBtn(pLast, currentPage == totalPages);
+            pLast.setOnAction(e -> {
+                currentPage = totalPages;
+                updatePagination();
+            });
+            box.getChildren().add(pLast);
+        }
+
+        Button nextBtn = new Button(">");
+        stylePaginationBtn(nextBtn, false);
+        nextBtn.setDisable(currentPage >= totalPages);
+        nextBtn.setOnAction(e -> {
+            if (currentPage < totalPages) {
+                currentPage++;
+                updatePagination();
+            }
+        });
+        box.getChildren().add(nextBtn);
+    }
+
+    private void stylePaginationBtn(Button btn, boolean isActive) {
+        if (isActive) {
+            btn.getStyleClass().add("button-primary");
+            btn.setStyle("-fx-background-color: #4f46e5; -fx-text-fill: #ffffff; -fx-font-weight: bold; -fx-padding: 4 10; -fx-background-radius: 6px; -fx-cursor: hand; -fx-min-width: 32px;");
+        } else {
+            btn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-text-fill: #334155; -fx-font-weight: bold; -fx-padding: 4 10; -fx-border-radius: 6px; -fx-background-radius: 6px; -fx-cursor: hand; -fx-min-width: 32px;");
+        }
     }
 
     private void logout() {

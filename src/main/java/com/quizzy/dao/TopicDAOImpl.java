@@ -22,7 +22,7 @@ public class TopicDAOImpl implements TopicDAO {
     @Override
     public Topic findById(int topicId) {
         String sql = """
-                     SELECT * 
+                     SELECT TopicID, TopicName, Description
                      FROM Topic 
                      WHERE TopicID=?
                      """;
@@ -46,7 +46,7 @@ public class TopicDAOImpl implements TopicDAO {
     @Override
     public Topic findByName(String topicName) {
         String sql = """
-                     SELECT *
+                     SELECT TopicID, TopicName, Description
                      FROM Topic
                      WHERE TopicName=?
                      """;
@@ -71,7 +71,7 @@ public class TopicDAOImpl implements TopicDAO {
     public List<Topic> findAll() {
         List<Topic> topics = new ArrayList<>();
         String sql = """
-                     SELECT *
+                     SELECT TopicID, TopicName, Description
                      FROM Topic
                      ORDER BY TopicID
                      """;

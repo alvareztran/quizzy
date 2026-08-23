@@ -24,7 +24,7 @@ public class ResultDAOImpl implements ResultDAO {
     @Override
     public Result findById(int resultId) {
         String sql = """
-                     SELECT * 
+                     SELECT ResultID, UserID, QuizID, Score, TotalQuestions, CorrectAnswers, StartedAt, FinishedAt
                      FROM Result 
                      WHERE ResultID=?
                      """;
@@ -40,7 +40,7 @@ public class ResultDAOImpl implements ResultDAO {
             }
             
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("ResultDAO.findById error: " + e.getMessage());
         }
         return null;
     }
@@ -49,7 +49,7 @@ public class ResultDAOImpl implements ResultDAO {
     public List<Result> findByUserId(int userId) {
         List<Result> results = new ArrayList<>();
         String sql = """
-                     SELECT * 
+                     SELECT ResultID, UserID, QuizID, Score, TotalQuestions, CorrectAnswers, StartedAt, FinishedAt
                      FROM Result
                      WHERE UserID=?
                      ORDER BY FinishedAt DESC, ResultID DESC
@@ -66,7 +66,7 @@ public class ResultDAOImpl implements ResultDAO {
             }
             
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("ResultDAO.findByUserId error: " + e.getMessage());
         }
         return results;
     }
@@ -75,7 +75,7 @@ public class ResultDAOImpl implements ResultDAO {
     public List<Result> findByQuizId(int quizId) {
         List<Result> results = new ArrayList<>();
         String sql = """
-                     SELECT * 
+                     SELECT ResultID, UserID, QuizID, Score, TotalQuestions, CorrectAnswers, StartedAt, FinishedAt
                      FROM Result
                      WHERE QuizID=?
                      ORDER BY FinishedAt DESC, ResultID DESC
@@ -92,7 +92,7 @@ public class ResultDAOImpl implements ResultDAO {
             }
             
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("ResultDAO.findByQuizId error: " + e.getMessage());
         }
         return results;
     }
@@ -101,7 +101,7 @@ public class ResultDAOImpl implements ResultDAO {
     public List<Result> findAll() {
         List<Result> results = new ArrayList<>();
         String sql = """
-                     SELECT *
+                     SELECT ResultID, UserID, QuizID, Score, TotalQuestions, CorrectAnswers, StartedAt, FinishedAt
                      FROM Result
                      ORDER BY FinishedAt DESC, ResultID DESC
                      """;
@@ -115,7 +115,7 @@ public class ResultDAOImpl implements ResultDAO {
             }
            
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("ResultDAO.findAll error: " + e.getMessage());
         }
         return results;
     }
@@ -124,7 +124,7 @@ public class ResultDAOImpl implements ResultDAO {
     public List<Result> findTopResults(int limit) {
         List<Result> topResults = new ArrayList<>();
         String sql = """
-                     SELECT TOP(?) *
+                     SELECT TOP(?) ResultID, UserID, QuizID, Score, TotalQuestions, CorrectAnswers, StartedAt, FinishedAt
                      FROM Result
                      ORDER BY Score DESC,
                               FinishedAt ASC

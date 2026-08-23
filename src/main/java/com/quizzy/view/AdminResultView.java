@@ -48,9 +48,11 @@ public class AdminResultView {
     private final TableColumn<ResultItemDTO, ResultItemDTO> actionColumn = new TableColumn<>("Action");
 
     private final Label paginationInfoLabel = new Label("Showing 0 to 0 of 0 results");
-    private final Button prevPageBtn = new Button("‹");
+    private final ComboBox<String> perPageComboBox = new ComboBox<>();
+    private final Button prevPageBtn = new Button("<");
     private final Button page1Btn = new Button("1");
-    private final Button nextPageBtn = new Button("›");
+    private final Button nextPageBtn = new Button(">");
+    private final HBox paginationButtonsBox = new HBox(4);
 
     public AdminResultView() {
         createUI();
@@ -187,15 +189,14 @@ public class AdminResultView {
         HBox pagSpacer = new HBox();
         HBox.setHgrow(pagSpacer, Priority.ALWAYS);
 
-        prevPageBtn.setStyle("-fx-padding: 3 9;");
-        page1Btn.getStyleClass().add("button-primary");
-        page1Btn.setStyle("-fx-padding: 3 9; -fx-font-weight: bold;");
-        nextPageBtn.setStyle("-fx-padding: 3 9;");
+        perPageComboBox.getItems().setAll("10 per page", "25 per page", "50 per page");
+        perPageComboBox.setValue("10 per page");
+        perPageComboBox.setPrefHeight(30);
 
-        HBox pagBtns = new HBox(4, prevPageBtn, page1Btn, nextPageBtn);
-        pagBtns.setAlignment(Pos.CENTER);
+        paginationButtonsBox.setAlignment(Pos.CENTER);
+        paginationButtonsBox.getChildren().setAll(prevPageBtn, page1Btn, nextPageBtn);
 
-        paginationBar.getChildren().addAll(paginationInfoLabel, pagSpacer, pagBtns);
+        paginationBar.getChildren().addAll(paginationInfoLabel, pagSpacer, perPageComboBox, paginationButtonsBox);
 
         mainContent.getChildren().addAll(titleCol, toolbar, resultTable, paginationBar);
         root.setCenter(mainContent);
@@ -315,5 +316,13 @@ public class AdminResultView {
 
     public Button getNextPageBtn() {
         return nextPageBtn;
+    }
+
+    public ComboBox<String> getPerPageComboBox() {
+        return perPageComboBox;
+    }
+
+    public HBox getPaginationButtonsBox() {
+        return paginationButtonsBox;
     }
 }
