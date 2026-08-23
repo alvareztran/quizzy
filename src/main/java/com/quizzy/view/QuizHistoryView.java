@@ -1,18 +1,24 @@
 package com.quizzy.view;
 
+import com.quizzy.model.Topic;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.component.UserProfileWidget;
+import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class QuizHistoryView {
@@ -23,56 +29,74 @@ public class QuizHistoryView {
     // Top Navbar Controls
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
-    private final Button navDashboardBtn = new Button("Dashboard");
     private final Button navTopicsBtn = new Button("Topics");
     private final Button navHistoryBtn = new Button("History");
 
-    private final TextField searchField = new TextField();
+    // Left Sidebar ("Learning Topics")
+    private final ListView<Topic> topicListView = new ListView<>();
 
-    // Left Sidebar Statistics Card Controls
-    private final Label totalQuizzesValLabel = new Label("12");
-    private final Label avgScoreValLabel = new Label("85%");
-    private final Label bestScoreValLabel = new Label("98%");
+    // 4 Stat Cards Labels
+    private final Label totalQuizzesValLabel = new Label("0");
+    private final Label avgScoreValLabel = new Label("0%");
+    private final Label bestScoreValLabel = new Label("0%");
+    private final Label daysActiveValLabel = new Label("0");
 
-    // Right Main History List Container
-    private final VBox historyListContainer = new VBox(14);
+    // Filter Controls
+    private final ComboBox<String> topicFilterComboBox = new ComboBox<>();
+    private final ComboBox<String> dateFilterComboBox = new ComboBox<>();
+
+    // Table Section: Unified GridPane for Perfect Column Alignment
+    private final GridPane attemptsGrid = new GridPane();
+    private final Label paginationInfoLabel = new Label("Showing 1 to 5 of 5 attempts");
+    private final HBox paginationButtonsBox = new HBox(8);
 
     public QuizHistoryView() {
         createUI();
     }
 
     private void createUI() {
-        root.setPrefSize(1240, 780);
+        root.setPrefSize(1280, 800);
+        root.setStyle("-fx-background-color: #f8fafc;");
 
         // ==========================================
-        // 1. TOP NAVBAR (Matching media_1787421029588.png)
+        // 1. TOP NAVBAR
         // ==========================================
         HBox navbar = new HBox(24);
         navbar.setAlignment(Pos.CENTER_LEFT);
-        navbar.setPadding(new Insets(14, 52, 14, 52));
-        navbar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1px 0;");
+        navbar.setPadding(new Insets(12, 48, 12, 48));
+        navbar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1px 0;");
 
         try {
             Image iconImg = new Image(getClass().getResourceAsStream("/com/quizzy/images/quizzy-icon.png"));
             logoImageView.setImage(iconImg);
-            logoImageView.setFitHeight(30);
+            logoImageView.setFitHeight(28);
+            logoImageView.setFitWidth(28);
             logoImageView.setPreserveRatio(true);
             logoImageView.setSmooth(true);
             logoImageView.setStyle("-fx-cursor: hand;");
-        } catch (Exception e) {
-            // Fallback
+        } catch (Exception ignored) {
         }
 
-        brandNameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #6366f1; -fx-letter-spacing: 1px; -fx-cursor: hand;");
-        HBox logoBrandBox = new HBox(10, logoImageView, brandNameLabel);
+        brandNameLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #4f46e5; -fx-letter-spacing: 0.5px; -fx-cursor: hand;");
+        HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Nav Tabs (Centered)
-        navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
-        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
-        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4338ca; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 6 16; -fx-cursor: hand;");
+        // Center Nav Tabs with Active Underline Indicator for History
+        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
+        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 8 16 4 16; -fx-cursor: hand;");
 
-        HBox navTabs = new HBox(12, navDashboardBtn, navTopicsBtn, navHistoryBtn);
+        Region activeUnderline = new Region();
+        activeUnderline.setPrefHeight(3);
+        activeUnderline.setMinHeight(3);
+        activeUnderline.setMaxHeight(3);
+        activeUnderline.setPrefWidth(54);
+        activeUnderline.setMaxWidth(54);
+        activeUnderline.setStyle("-fx-background-color: #4f46e5; -fx-background-radius: 3 3 0 0;");
+
+        VBox activeHistoryTab = new VBox(2, navHistoryBtn, activeUnderline);
+        activeHistoryTab.setAlignment(Pos.CENTER);
+
+        HBox navTabs = new HBox(12, navTopicsBtn, activeHistoryTab);
         navTabs.setAlignment(Pos.CENTER);
 
         HBox leftSpacer = new HBox();
@@ -81,93 +105,180 @@ public class QuizHistoryView {
         HBox rightSpacer = new HBox();
         HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
-        // Search Input Field
-        searchField.setPromptText("🔍  Search...");
-        searchField.setPrefWidth(200);
-        searchField.setPrefHeight(32);
-        searchField.setStyle("-fx-background-color: #f1f5f9; -fx-border-color: transparent; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 5 10; -fx-font-size: 12px;");
-
         Label bellIcon = new Label("🔔");
-        bellIcon.setStyle("-fx-font-size: 17px; -fx-text-fill: #64748b; -fx-cursor: hand;");
+        bellIcon.setStyle("-fx-font-size: 18px; -fx-text-fill: #64748b; -fx-cursor: hand;");
 
-        HBox userBox = new HBox(16, searchField, bellIcon, userProfileWidget.getRoot());
+        HBox userBox = new HBox(16, bellIcon, userProfileWidget.getRoot());
         userBox.setAlignment(Pos.CENTER_RIGHT);
 
         navbar.getChildren().addAll(logoBrandBox, leftSpacer, navTabs, rightSpacer, userBox);
         root.setTop(navbar);
 
         // ==========================================
-        // 2. MAIN 2-COLUMN WORKSPACE CANVAS
+        // 2. LEFT SIDEBAR ("Learning Topics")
         // ==========================================
-        VBox contentContainer = new VBox(28);
-        contentContainer.setAlignment(Pos.TOP_CENTER);
-        contentContainer.setPadding(new Insets(36, 52, 40, 52));
-        contentContainer.setStyle("-fx-background-color: #f8f9fb;");
-
-        HBox workspaceRow = new HBox(32);
-        workspaceRow.setAlignment(Pos.TOP_LEFT);
-        workspaceRow.setMaxWidth(1140);
-        VBox.setVgrow(workspaceRow, Priority.ALWAYS);
-
-        // LEFT SIDEBAR: Statistics Card (280px Width)
         VBox leftSidebar = new VBox(16);
-        leftSidebar.setPrefWidth(280);
-        leftSidebar.setMinWidth(260);
+        leftSidebar.setPrefWidth(260);
+        leftSidebar.setMinWidth(240);
+        leftSidebar.setMaxWidth(280);
+        leftSidebar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 1px 0 0;");
+        leftSidebar.setPadding(new Insets(24, 16, 24, 20));
 
-        VBox statsCard = new VBox(14);
-        statsCard.getStyleClass().add("card");
-        statsCard.setPadding(new Insets(24));
-        statsCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 10, 0, 0, 3);");
+        VBox topicsHeaderBox = new VBox(4);
+        Label topicsHeader = new Label("Learning Topics");
+        topicsHeader.setStyle("-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
 
-        Label statsTitle = new Label("Statistics");
-        statsTitle.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
+        Label topicsSubHeader = new Label("Select a subject to begin");
+        topicsSubHeader.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b;");
+        topicsHeaderBox.getChildren().addAll(topicsHeader, topicsSubHeader);
 
-        // Stat Row 1: Total Quizzes
-        HBox r1 = createStatRow("Total Quizzes", totalQuizzesValLabel, "#191c1e");
-        // Stat Row 2: Avg Score
-        HBox r2 = createStatRow("Avg. Score", avgScoreValLabel, "#6366f1");
-        // Stat Row 3: Best Score
-        HBox r3 = createStatRow("Best Score", bestScoreValLabel, "#6366f1");
+        topicListView.getStyleClass().add("topic-list-view");
+        topicListView.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
+        VBox.setVgrow(topicListView, Priority.ALWAYS);
 
-        statsCard.getChildren().addAll(statsTitle, r1, createDivider(), r2, createDivider(), r3);
-        leftSidebar.getChildren().add(statsCard);
+        // Motivational Card at bottom of sidebar
+        HBox motivCard = new HBox(12);
+        motivCard.setAlignment(Pos.CENTER_LEFT);
+        motivCard.setPadding(new Insets(14, 14, 14, 14));
+        motivCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.03), 6, 0, 0, 2);");
 
-        // RIGHT MAIN CONTENT: Quiz History Cards List
-        VBox rightMainCol = new VBox(20);
-        HBox.setHgrow(rightMainCol, Priority.ALWAYS);
+        Label bulbIcon = new Label("💡");
+        bulbIcon.setStyle("-fx-font-size: 20px; -fx-background-color: #fef9c3; -fx-padding: 8 10; -fx-background-radius: 10px;");
 
-        VBox pageHeaderBox = new VBox(6);
+        VBox motivTextBox = new VBox(2);
+        Label motivTitle = new Label("Keep practicing!");
+        motivTitle.setStyle("-fx-font-size: 13px; -fx-font-weight: 800; -fx-text-fill: #4338ca;");
+        Label motivSub = new Label("Consistent practice leads to great results.");
+        motivSub.setStyle("-fx-font-size: 11px; -fx-text-fill: #64748b; -fx-line-spacing: 1px;");
+        motivSub.setWrapText(true);
+        motivSub.setMaxWidth(130);
+        motivTextBox.getChildren().addAll(motivTitle, motivSub);
+
+        motivCard.getChildren().addAll(bulbIcon, motivTextBox);
+
+        leftSidebar.getChildren().addAll(topicsHeaderBox, topicListView, motivCard);
+        root.setLeft(leftSidebar);
+
+        // ==========================================
+        // 3. MAIN WORKSPACE CONTENT CANVAS
+        // ==========================================
+        VBox mainContent = new VBox(16);
+        mainContent.setPadding(new Insets(18, 36, 20, 36));
+        mainContent.setStyle("-fx-background-color: #f8fafc;");
+
+        // Page Header
+        VBox headerTitleBox = new VBox(3);
         Label pageTitleL = new Label("Quiz History");
-        pageTitleL.setStyle("-fx-font-size: 30px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
+        pageTitleL.setStyle("-fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
 
-        Label pageSubTitleL = new Label("Review your past performance and track your progress over time.");
-        pageSubTitleL.setStyle("-fx-font-size: 14px; -fx-text-fill: #64748b;");
+        Label pageSubTitleL = new Label("Review your past attempts and track your progress over time.");
+        pageSubTitleL.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b;");
+        headerTitleBox.getChildren().addAll(pageTitleL, pageSubTitleL);
 
-        pageHeaderBox.getChildren().addAll(pageTitleL, pageSubTitleL);
+        // 4 Stat Cards Row
+        HBox statsGrid = new HBox(14);
+        statsGrid.setAlignment(Pos.CENTER);
 
-        historyListContainer.setAlignment(Pos.TOP_LEFT);
-        VBox.setVgrow(historyListContainer, Priority.ALWAYS);
+        VBox card1 = createTopStatCard("📑", totalQuizzesValLabel, "Total Quizzes", "#4f46e5", "#eff2fe");
+        VBox card2 = createTopStatCard("📈", avgScoreValLabel, "Average Score", "#0284c7", "#e0f2fe");
+        VBox card3 = createTopStatCard("🏆", bestScoreValLabel, "Best Score", "#16a34a", "#dcfce7");
+        VBox card4 = createTopStatCard("📅", daysActiveValLabel, "Days Active", "#ea580c", "#ffedd5");
 
-        rightMainCol.getChildren().addAll(pageHeaderBox, historyListContainer);
+        HBox.setHgrow(card1, Priority.ALWAYS);
+        HBox.setHgrow(card2, Priority.ALWAYS);
+        HBox.setHgrow(card3, Priority.ALWAYS);
+        HBox.setHgrow(card4, Priority.ALWAYS);
 
-        workspaceRow.getChildren().addAll(leftSidebar, rightMainCol);
-        contentContainer.getChildren().add(workspaceRow);
+        statsGrid.getChildren().addAll(card1, card2, card3, card4);
 
-        ScrollPane scrollPane = new ScrollPane(contentContainer);
+        // "Your Quiz Attempts" Table Card Container
+        VBox tableCard = new VBox(14);
+        tableCard.setPadding(new Insets(18, 20, 16, 20));
+        tableCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2);");
+
+        // Table Header Section: Title on Left, Date & Topic Filters on Right
+        HBox tableHeaderRow = new HBox(12);
+        tableHeaderRow.setAlignment(Pos.CENTER_LEFT);
+
+        Label tableTitle = new Label("Your Quiz Attempts");
+        tableTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
+
+        HBox tableSpacer = new HBox();
+        HBox.setHgrow(tableSpacer, Priority.ALWAYS);
+
+        dateFilterComboBox.getItems().setAll("All Time", "Today", "This Week", "This Month", "This Year");
+        dateFilterComboBox.setValue("All Time");
+        dateFilterComboBox.setPrefWidth(140);
+        dateFilterComboBox.setPrefHeight(34);
+        dateFilterComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #334155;");
+
+        topicFilterComboBox.setPrefWidth(160);
+        topicFilterComboBox.setPrefHeight(34);
+        topicFilterComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #334155;");
+
+        tableHeaderRow.getChildren().addAll(tableTitle, tableSpacer, dateFilterComboBox, topicFilterComboBox);
+
+        // Setup GridPane Column Constraints for Guaranteed Mathematical Alignment
+        attemptsGrid.getColumnConstraints().clear();
+
+        ColumnConstraints col0 = new ColumnConstraints();
+        col0.setPercentWidth(30);
+        col0.setHalignment(HPos.LEFT);
+
+        ColumnConstraints col1 = new ColumnConstraints();
+        col1.setPercentWidth(22);
+        col1.setHalignment(HPos.LEFT);
+
+        ColumnConstraints col2 = new ColumnConstraints();
+        col2.setPercentWidth(16);
+        col2.setHalignment(HPos.CENTER);
+
+        ColumnConstraints col3 = new ColumnConstraints();
+        col3.setPercentWidth(24);
+        col3.setHalignment(HPos.LEFT);
+
+        ColumnConstraints col4 = new ColumnConstraints();
+        col4.setPercentWidth(8);
+        col4.setHalignment(HPos.CENTER);
+
+        attemptsGrid.getColumnConstraints().addAll(col0, col1, col2, col3, col4);
+        attemptsGrid.setHgap(12);
+        attemptsGrid.setVgap(0);
+        attemptsGrid.setMaxWidth(Double.MAX_VALUE);
+
+        // Pagination Bar: Info on Left + Buttons on Right/Center
+        HBox paginationRow = new HBox(16);
+        paginationRow.setAlignment(Pos.CENTER_LEFT);
+        paginationRow.setPadding(new Insets(16, 8, 4, 8));
+
+        paginationInfoLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #64748b;");
+
+        HBox pSpacer = new HBox();
+        HBox.setHgrow(pSpacer, Priority.ALWAYS);
+
+        paginationButtonsBox.setAlignment(Pos.CENTER_RIGHT);
+
+        paginationRow.getChildren().addAll(paginationInfoLabel, pSpacer, paginationButtonsBox);
+
+        tableCard.getChildren().addAll(tableHeaderRow, attemptsGrid, paginationRow);
+
+        mainContent.getChildren().addAll(headerTitleBox, statsGrid, tableCard);
+
+        ScrollPane scrollPane = new ScrollPane(mainContent);
         scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8f9fb;");
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8fafc;");
         root.setCenter(scrollPane);
 
         // ==========================================
-        // 3. BOTTOM FOOTER BAR
+        // 4. BOTTOM FOOTER BAR
         // ==========================================
         HBox footerBar = new HBox(20);
         footerBar.setAlignment(Pos.CENTER_LEFT);
-        footerBar.setPadding(new Insets(18, 52, 18, 52));
-        footerBar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 1px 0 0 0;");
+        footerBar.setPadding(new Insets(16, 48, 16, 48));
+        footerBar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 1px 0 0 0;");
 
-        Label copyrightLabel = new Label("© 2024 QUIZZY Learning Platform");
-        copyrightLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #64748b;");
+        Label copyrightLabel = new Label("© 2026 QUIZZY Learning Platform");
+        copyrightLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #64748b;");
 
         HBox footerSpacer = new HBox();
         HBox.setHgrow(footerSpacer, Priority.ALWAYS);
@@ -183,35 +294,29 @@ public class QuizHistoryView {
         helpLink.setStyle(linkStyle);
         contactLink.setStyle(linkStyle);
 
-        HBox linksBox = new HBox(20, privacyLink, termsLink, helpLink, contactLink);
+        HBox linksBox = new HBox(24, privacyLink, termsLink, helpLink, contactLink);
         linksBox.setAlignment(Pos.CENTER_RIGHT);
 
         footerBar.getChildren().addAll(copyrightLabel, footerSpacer, linksBox);
         root.setBottom(footerBar);
     }
 
-    private HBox createStatRow(String labelStr, Label valLabel, String hexColor) {
-        HBox row = new HBox(12);
-        row.setAlignment(Pos.CENTER_LEFT);
-        row.setPadding(new Insets(4, 0, 4, 0));
+    private VBox createTopStatCard(String iconStr, Label valLabel, String labelStr, String iconColorHex, String iconBgHex) {
+        VBox card = new VBox(10);
+        card.setAlignment(Pos.CENTER);
+        card.setPadding(new Insets(20, 16, 18, 16));
+        card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.03), 8, 0, 0, 2);");
 
-        Label nameL = new Label(labelStr);
-        nameL.setStyle("-fx-font-size: 14px; -fx-text-fill: #64748b;");
+        Label iconBox = new Label(iconStr);
+        iconBox.setStyle("-fx-font-size: 18px; -fx-text-fill: " + iconColorHex + "; -fx-background-color: " + iconBgHex + "; -fx-padding: 8 10; -fx-background-radius: 8px;");
 
-        HBox spacer = new HBox();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
+        valLabel.setStyle("-fx-font-size: 26px; -fx-font-weight: 900; -fx-text-fill: #0f172a;");
 
-        valLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: bold; -fx-text-fill: " + hexColor + ";");
+        Label titleL = new Label(labelStr);
+        titleL.setStyle("-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #64748b;");
 
-        row.getChildren().addAll(nameL, spacer, valLabel);
-        return row;
-    }
-
-    private HBox createDivider() {
-        HBox div = new HBox();
-        div.setPrefHeight(1);
-        div.setStyle("-fx-background-color: #f1f5f9;");
-        return div;
+        card.getChildren().addAll(iconBox, valLabel, titleL);
+        return card;
     }
 
     public BorderPane getRoot() {
@@ -230,10 +335,6 @@ public class QuizHistoryView {
         return brandNameLabel;
     }
 
-    public Button getNavDashboardBtn() {
-        return navDashboardBtn;
-    }
-
     public Button getNavTopicsBtn() {
         return navTopicsBtn;
     }
@@ -242,8 +343,8 @@ public class QuizHistoryView {
         return navHistoryBtn;
     }
 
-    public TextField getSearchField() {
-        return searchField;
+    public ListView<Topic> getTopicListView() {
+        return topicListView;
     }
 
     public Label getTotalQuizzesValLabel() {
@@ -258,8 +359,27 @@ public class QuizHistoryView {
         return bestScoreValLabel;
     }
 
-    public VBox getHistoryListContainer() {
-        return historyListContainer;
+    public Label getDaysActiveValLabel() {
+        return daysActiveValLabel;
     }
 
+    public ComboBox<String> getTopicFilterComboBox() {
+        return topicFilterComboBox;
+    }
+
+    public ComboBox<String> getDateFilterComboBox() {
+        return dateFilterComboBox;
+    }
+
+    public GridPane getAttemptsGrid() {
+        return attemptsGrid;
+    }
+
+    public Label getPaginationInfoLabel() {
+        return paginationInfoLabel;
+    }
+
+    public HBox getPaginationButtonsBox() {
+        return paginationButtonsBox;
+    }
 }

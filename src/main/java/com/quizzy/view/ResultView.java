@@ -23,7 +23,6 @@ public class ResultView {
     // Top Navbar Controls
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
-    private final Button navDashboardBtn = new Button("Dashboard");
     private final Button navTopicsBtn = new Button("Topics");
     private final Button navHistoryBtn = new Button("History");
 
@@ -46,14 +45,18 @@ public class ResultView {
     // Bottom Action Buttons Controls
     private final Button reviewAnswersBtn = new Button("👁  Review Answers");
     private final Button tryAgainBtn = new Button("🔄  Try Again");
-    private final Button backDashboardBtn = new Button("⊞  Back to Dashboard");
+    private final Button backTopicsBtn = new Button("⊞  Back to Topics");
+    private final Button backAdminBtn = new Button("←  Back to Quiz History");
+
+    private final HBox navTabs = new HBox(12);
+    private final HBox actionBtnRow = new HBox(16);
 
     public ResultView() {
         createUI();
     }
 
     private void createUI() {
-        root.setPrefSize(1240, 780);
+        root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");
 
         // ==========================================
@@ -61,29 +64,29 @@ public class ResultView {
         // ==========================================
         HBox navbar = new HBox(20);
         navbar.setAlignment(Pos.CENTER_LEFT);
-        navbar.setPadding(new Insets(14, 52, 14, 52));
-        navbar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1px 0;");
+        navbar.setPadding(new Insets(12, 48, 12, 48));
+        navbar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1px 0;");
 
         try {
             Image iconImg = new Image(getClass().getResourceAsStream("/com/quizzy/images/quizzy-icon.png"));
             logoImageView.setImage(iconImg);
             logoImageView.setFitHeight(28);
+            logoImageView.setFitWidth(28);
             logoImageView.setPreserveRatio(true);
             logoImageView.setSmooth(true);
             logoImageView.setStyle("-fx-cursor: hand;");
         } catch (Exception ignored) {
         }
 
-        brandNameLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #4338ca; -fx-letter-spacing: 1px; -fx-cursor: hand;");
+        brandNameLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #4f46e5; -fx-letter-spacing: 0.5px; -fx-cursor: hand;");
         HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Center Nav Tabs (Dashboard, Topics, History centered)
-        navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
-        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
-        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
+        // Center Nav Tabs (Topics, History centered)
+        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
+        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
 
-        HBox navTabs = new HBox(12, navDashboardBtn, navTopicsBtn, navHistoryBtn);
+        navTabs.getChildren().setAll(navTopicsBtn, navHistoryBtn);
         navTabs.setAlignment(Pos.CENTER);
 
         HBox leftSpacer = new HBox();
@@ -187,20 +190,32 @@ public class ResultView {
 
         reviewSectionCard.getChildren().addAll(reviewHeader, questionReviewBox);
 
-        // Bottom Action Buttons Row (3 Buttons)
-        HBox actionBtnRow = new HBox(16);
+        // Bottom Action Buttons Row
         actionBtnRow.setAlignment(Pos.CENTER);
 
         reviewAnswersBtn.setStyle("-fx-background-color: #4338ca; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 10 24; -fx-font-weight: 700; -fx-background-radius: 8px; -fx-cursor: hand;");
         tryAgainBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-text-fill: #0f172a; -fx-font-size: 14px; -fx-padding: 10 24; -fx-font-weight: 700; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-cursor: hand;");
-        backDashboardBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-text-fill: #0f172a; -fx-font-size: 14px; -fx-padding: 10 24; -fx-font-weight: 700; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-cursor: hand;");
+        backTopicsBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-text-fill: #0f172a; -fx-font-size: 14px; -fx-padding: 10 24; -fx-font-weight: 700; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-cursor: hand;");
+        backAdminBtn.setStyle("-fx-background-color: #4338ca; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 10 28; -fx-font-weight: 700; -fx-background-radius: 8px; -fx-cursor: hand;");
 
-        actionBtnRow.getChildren().addAll(reviewAnswersBtn, tryAgainBtn, backDashboardBtn);
+        actionBtnRow.getChildren().addAll(reviewAnswersBtn, tryAgainBtn, backTopicsBtn);
 
         mainBox.getChildren().addAll(headerBox, metricsRow, reviewSectionCard, actionBtnRow);
         contentContainer.getChildren().add(mainBox);
 
         root.setCenter(contentContainer);
+    }
+
+    public void setAdminMode(boolean isAdmin) {
+        if (isAdmin) {
+            navTabs.setVisible(false);
+            navTabs.setManaged(false);
+            actionBtnRow.getChildren().setAll(backAdminBtn);
+        } else {
+            navTabs.setVisible(true);
+            navTabs.setManaged(true);
+            actionBtnRow.getChildren().setAll(reviewAnswersBtn, tryAgainBtn, backTopicsBtn);
+        }
     }
 
     private VBox createGridStatCard(String iconSymbol, String titleText, Label valLabel, String iconColorHex) {
@@ -239,10 +254,6 @@ public class ResultView {
 
     public Label getBrandNameLabel() {
         return brandNameLabel;
-    }
-
-    public Button getNavDashboardBtn() {
-        return navDashboardBtn;
     }
 
     public Button getNavTopicsBtn() {
@@ -293,8 +304,12 @@ public class ResultView {
         return tryAgainBtn;
     }
 
-    public Button getBackDashboardBtn() {
-        return backDashboardBtn;
+    public Button getBackTopicsBtn() {
+        return backTopicsBtn;
+    }
+
+    public Button getBackAdminBtn() {
+        return backAdminBtn;
     }
 
 }

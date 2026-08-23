@@ -61,37 +61,39 @@ public class AdminResultView {
     }
 
     private void createUI() {
-        root.setPrefSize(1240, 780);
+        root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");
 
         // ==========================================
         // 1. SIDEBAR (Full-height from top)
         // ==========================================
-        VBox sidebar = new VBox(8);
-        sidebar.setPrefWidth(280);
-        sidebar.setMinWidth(280);
+        VBox sidebar = new VBox(6);
+        sidebar.setPrefWidth(260);
+        sidebar.setMinWidth(260);
+        sidebar.setMaxWidth(260);
         sidebar.getStyleClass().add("sidebar");
-        sidebar.setPadding(new Insets(24, 16, 16, 16));
+        sidebar.setPadding(new Insets(20, 16, 16, 16));
 
         ImageView iconView = new ImageView();
         try {
             Image iconImg = new Image(getClass().getResourceAsStream("/com/quizzy/images/quizzy-icon.png"));
             iconView.setImage(iconImg);
-            iconView.setFitHeight(32);
+            iconView.setFitHeight(30);
+            iconView.setFitWidth(30);
             iconView.setPreserveRatio(true);
             iconView.setSmooth(true);
         } catch (Exception ignored) {
         }
 
         Label brandTitle = new Label("QUIZZY");
-        brandTitle.setStyle("-fx-font-size: 32px; -fx-font-weight: 800; -fx-text-fill: #191c1e;");
+        brandTitle.setStyle("-fx-font-size: 22px; -fx-font-weight: 800; -fx-text-fill: #191c1e; -fx-letter-spacing: 0.5px;");
 
-        HBox logoContainer = new HBox(8, iconView, brandTitle);
+        HBox logoContainer = new HBox(10, iconView, brandTitle);
         logoContainer.setAlignment(Pos.CENTER_LEFT);
-        logoContainer.setPadding(new Insets(0, 8, 28, 8));
+        logoContainer.setPadding(new Insets(4, 8, 22, 8));
 
         Label managementHeader = new Label("MANAGEMENT");
-        managementHeader.setStyle("-fx-text-fill: #767586; -fx-font-size: 12px; -fx-font-weight: 600; -fx-padding: 2 0 4 16;");
+        managementHeader.setStyle("-fx-text-fill: #767586; -fx-font-size: 11px; -fx-font-weight: 700; -fx-padding: 4 0 4 12; -fx-letter-spacing: 0.8px;");
 
         // Setup navigation buttons with PNG icons
         NavIconHelper.setupNavButton(dashBtn, "Dashboard", "dashboard.png", false);
@@ -106,7 +108,7 @@ public class AdminResultView {
         VBox.setVgrow(sidebarSpacer, Priority.ALWAYS);
 
         VBox profileBox = new VBox(10);
-        profileBox.setPadding(new Insets(16, 0, 0, 0));
+        profileBox.setPadding(new Insets(14, 0, 0, 0));
         profileBox.setStyle("-fx-border-color: #c7c4d7; -fx-border-width: 1 0 0 0;");
         profileBox.getChildren().add(userProfileWidget.getRoot());
 
@@ -227,6 +229,7 @@ public class AdminResultView {
         public String dateDisplay;
         public String timeDisplay;
         public String durationDisplay;
+        public java.time.LocalDateTime attemptDateTime;
     }
 
     public BorderPane getRoot() {

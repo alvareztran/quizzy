@@ -14,6 +14,8 @@ import com.quizzy.util.SessionManager;
 import com.quizzy.view.AdminResultView;
 import com.quizzy.view.AdminResultView.ResultItemDTO;
 import java.time.Duration;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -340,11 +342,13 @@ public class AdminResultController {
                 dto.scorePercent = (totalQ > 0) ? ((double) correctQ / totalQ) * 100 : 0;
 
                 if (r.getStartedAt() != null) {
+                    dto.attemptDateTime = r.getStartedAt();
                     dto.dateDisplay = r.getStartedAt().format(dateFormatter);
                     dto.timeDisplay = r.getStartedAt().format(timeFormatter);
                 } else {
-                    dto.dateDisplay = "Oct 24, 2023";
-                    dto.timeDisplay = "14:30 PM";
+                    dto.attemptDateTime = LocalDateTime.now();
+                    dto.dateDisplay = dto.attemptDateTime.format(dateFormatter);
+                    dto.timeDisplay = dto.attemptDateTime.format(timeFormatter);
                 }
 
                 if (r.getStartedAt() != null && r.getFinishedAt() != null) {
@@ -360,12 +364,12 @@ public class AdminResultController {
             }
         }
 
-        // Add sample fallback items if database has fewer results
-        if (allItems.isEmpty()) {
-            allItems.add(createSampleItem("Sarah Jenkins", "sarah.j@example.com", "Advanced Calculus Midterm", "Mathematics", 9, 10, "Oct 24, 2023", "14:30 PM", "45m 12s"));
-            allItems.add(createSampleItem("Michael Chang", "m.chang@example.com", "Cellular Biology Quiz 3", "Science", 4, 10, "Oct 24, 2023", "11:15 AM", "18m 05s"));
-            allItems.add(createSampleItem("Elena Rodriguez", "elena.r@example.com", "European History: WWII", "History", 7, 10, "Oct 23, 2023", "09:45 AM", "32m 50s"));
-        }
+        // Sort by attempt date descending (newest first)
+        allItems.sort((a, b) -> {
+            LocalDateTime tA = a.attemptDateTime != null ? a.attemptDateTime : LocalDateTime.MIN;
+            LocalDateTime tB = b.attemptDateTime != null ? b.attemptDateTime : LocalDateTime.MIN;
+            return tB.compareTo(tA);
+        });
 
         applyFilters();
     }
@@ -383,6 +387,7 @@ public class AdminResultController {
         dto.dateDisplay = date;
         dto.timeDisplay = time;
         dto.durationDisplay = duration;
+        dto.attemptDateTime = LocalDateTime.now();
 
         Result r = new Result();
         r.setCorrectAnswer(correct);
@@ -411,6 +416,7 @@ public class AdminResultController {
         String searchLower = (search != null) ? search.trim().toLowerCase() : "";
 
         String topicFilter = view.getTopicFilterComboBox().getValue();
+        String dateFilter = view.getDateFilterComboBox().getValue();
         String scoreFilter = view.getScoreFilterComboBox().getValue();
 
         return allItems.stream().filter(item -> {
@@ -426,6 +432,16 @@ public class AdminResultController {
             if (topicFilter != null && !topicFilter.equals("All Topics") && !topicFilter.isBlank()) {
                 if (item.topicName == null || !item.topicName.equalsIgnoreCase(topicFilter)) {
                     return false;
+                }
+            }
+
+            if (dateFilter != null && !dateFilter.equals("Any Date") && !dateFilter.isBlank()) {
+                if (item.attemptDateTime != null) {
+                    LocalDate itemDate = item.attemptDateTime.toLocalDate();
+                    LocalDate today = LocalDate.now();
+                    if ("Today".equalsIgnoreCase(dateFilter) && !itemDate.isEqual(today)) return false;
+                    if ("This Week".equalsIgnoreCase(dateFilter) && itemDate.isBefore(today.minusDays(7))) return false;
+                    if ("This Month".equalsIgnoreCase(dateFilter) && itemDate.isBefore(today.minusDays(30))) return false;
                 }
             }
 

@@ -77,6 +77,9 @@ public class Quiz {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    
-    
+
+    @Override
+    public String toString() {
+        return quizName != null ? quizName : "";
+    }
 }

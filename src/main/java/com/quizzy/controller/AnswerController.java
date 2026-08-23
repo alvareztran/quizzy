@@ -82,13 +82,12 @@ public class AnswerController {
 
         // Setup Actions Column Center Aligned
         view.getActionsColumn().setCellFactory(col -> new TableCell<>() {
-            private final Button deleteBtn = new Button("🗑");
+            private final Button deleteBtn = com.quizzy.util.NavIconHelper.createDeleteActionButton();
             private final HBox btnBox = new HBox(8, deleteBtn);
 
             {
                 btnBox.setAlignment(Pos.CENTER);
                 btnBox.setMaxWidth(Double.MAX_VALUE);
-                deleteBtn.setStyle("-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-padding: 6 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;");
 
                 deleteBtn.setOnAction(e -> {
                     Answer answer = getTableView().getItems().get(getIndex());

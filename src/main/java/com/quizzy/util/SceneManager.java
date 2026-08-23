@@ -90,15 +90,13 @@ public class SceneManager {
 
     public static void showMain() {
         if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        if (!SessionManager.isAdmin()) { showPlayerDashboard(); return; }
+        if (!SessionManager.isAdmin()) { showSelectQuiz(); return; }
         MainController controller = new MainController();
         switchScene(controller.getView(), "Quizzy - Dashboard");
     }
 
     public static void showPlayerDashboard() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        com.quizzy.controller.PlayerDashboardController controller = new com.quizzy.controller.PlayerDashboardController();
-        switchScene(controller.getView(), "Quizzy - Student Dashboard");
+        showSelectQuiz();
     }
 
     public static void showTopic() {
@@ -165,6 +163,12 @@ public class SceneManager {
         if (!SessionManager.isLoggedIn()) { showLogin(); return; }
         com.quizzy.controller.QuizHistoryController controller = new com.quizzy.controller.QuizHistoryController();
         switchScene(controller.getView(), "Quizzy - Quiz History");
+    }
+
+    public static void showHistoryDetail() {
+        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
+        com.quizzy.controller.HistoryDetailController controller = new com.quizzy.controller.HistoryDetailController();
+        switchScene(controller.getView(), "Quizzy - Quiz Attempt Review");
     }
 
 }

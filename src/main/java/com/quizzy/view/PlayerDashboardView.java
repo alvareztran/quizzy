@@ -52,20 +52,22 @@ public class PlayerDashboardView {
     }
 
     private void createUI() {
-        root.setPrefSize(1240, 780);
+        root.setPrefSize(1280, 800);
+        root.setStyle("-fx-background-color: #f8fafc;");
 
         // ==========================================
         // 1. TOP NAVBAR
         // ==========================================
         HBox navbar = new HBox(24);
         navbar.setAlignment(Pos.CENTER_LEFT);
-        navbar.setPadding(new Insets(14, 52, 14, 52));
-        navbar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1px 0;");
+        navbar.setPadding(new Insets(12, 48, 12, 48));
+        navbar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 0 1px 0;");
 
         try {
             Image iconImg = new Image(getClass().getResourceAsStream("/com/quizzy/images/quizzy-icon.png"));
             logoImageView.setImage(iconImg);
-            logoImageView.setFitHeight(30);
+            logoImageView.setFitHeight(28);
+            logoImageView.setFitWidth(28);
             logoImageView.setPreserveRatio(true);
             logoImageView.setSmooth(true);
             logoImageView.setStyle("-fx-cursor: hand;");
@@ -73,16 +75,27 @@ public class PlayerDashboardView {
             // Fallback
         }
 
-        brandNameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #6366f1; -fx-letter-spacing: 1px; -fx-cursor: hand;");
-        HBox logoBrandBox = new HBox(10, logoImageView, brandNameLabel);
+        brandNameLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #4f46e5; -fx-letter-spacing: 0.5px; -fx-cursor: hand;");
+        HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Nav Tabs (Centered)
-        navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4338ca; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 6 16; -fx-cursor: hand;");
-        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
-        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
+        // Center Nav Tabs with Active Underline Indicator for Dashboard
+        navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 8 16 4 16; -fx-cursor: hand;");
+        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
+        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
 
-        HBox navTabs = new HBox(12, navDashboardBtn, navTopicsBtn, navHistoryBtn);
+        Region activeUnderline = new Region();
+        activeUnderline.setPrefHeight(3);
+        activeUnderline.setMinHeight(3);
+        activeUnderline.setMaxHeight(3);
+        activeUnderline.setPrefWidth(72);
+        activeUnderline.setMaxWidth(72);
+        activeUnderline.setStyle("-fx-background-color: #4f46e5; -fx-background-radius: 3 3 0 0;");
+
+        VBox activeDashTab = new VBox(2, navDashboardBtn, activeUnderline);
+        activeDashTab.setAlignment(Pos.CENTER);
+
+        HBox navTabs = new HBox(8, activeDashTab, navTopicsBtn, navHistoryBtn);
         navTabs.setAlignment(Pos.CENTER);
 
         HBox leftSpacer = new HBox();
@@ -92,7 +105,7 @@ public class PlayerDashboardView {
         HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
         Label bellIcon = new Label("🔔");
-        bellIcon.setStyle("-fx-font-size: 17px; -fx-text-fill: #64748b; -fx-cursor: hand;");
+        bellIcon.setStyle("-fx-font-size: 18px; -fx-text-fill: #64748b; -fx-cursor: hand;");
 
         HBox userBox = new HBox(16, bellIcon, userProfileWidget.getRoot());
         userBox.setAlignment(Pos.CENTER_RIGHT);
@@ -105,8 +118,8 @@ public class PlayerDashboardView {
         // ==========================================
         VBox contentContainer = new VBox(32);
         contentContainer.setAlignment(Pos.TOP_CENTER);
-        contentContainer.setPadding(new Insets(36, 52, 40, 52));
-        contentContainer.setStyle("-fx-background-color: #f8f9fb;");
+        contentContainer.setPadding(new Insets(32, 48, 36, 48));
+        contentContainer.setStyle("-fx-background-color: #f8fafc;");
 
         VBox mainBox = new VBox(32);
         mainBox.setMaxWidth(1140);
@@ -233,7 +246,7 @@ public class PlayerDashboardView {
         footerBar.setPadding(new Insets(18, 52, 18, 52));
         footerBar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 1px 0 0 0;");
 
-        Label copyrightLabel = new Label("© 2024 QUIZZY Learning Platform");
+        Label copyrightLabel = new Label("© 2026 QUIZZY Learning Platform");
         copyrightLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #64748b;");
 
         HBox footerSpacer = new HBox();

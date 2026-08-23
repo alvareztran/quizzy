@@ -250,23 +250,19 @@ public class TakeQuizController {
     }
 
     private void confirmAndExitQuiz() {
-        saveSelectedAnswer();
-        int answeredCount = 0;
-        int totalQuestions = questionList.size();
-        Map<Integer, Boolean> questionAnsweredMap = new HashMap<>();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Exit Quiz");
+        alert.setHeaderText("Cancel Quiz Attempt?");
+        alert.setContentText("Are you sure you want to exit? Your current quiz progress will be cancelled and will NOT be saved.");
 
-        for (int i = 0; i < totalQuestions; i++) {
-            Question q = questionList.get(i);
-            boolean isAns = selectedAnswerMap.containsKey(q.getQuestionId());
-            if (isAns) {
-                answeredCount++;
-            }
-            questionAnsweredMap.put(i + 1, isAns);
-        }
+        javafx.scene.control.ButtonType exitBtn = new javafx.scene.control.ButtonType("Exit & Discard", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
+        javafx.scene.control.ButtonType cancelBtn = new javafx.scene.control.ButtonType("Continue Quiz", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+        alert.getButtonTypes().setAll(exitBtn, cancelBtn);
 
-        boolean confirmed = SubmitQuizModal.showConfirmation(answeredCount, totalQuestions, questionAnsweredMap);
-        if (confirmed) {
+        java.util.Optional<javafx.scene.control.ButtonType> opt = alert.showAndWait();
+        if (opt.isPresent() && opt.get() == exitBtn) {
             stopTimer();
+            SessionManager.setQuizStartTime(null);
             SceneManager.showSelectQuiz();
         }
     }

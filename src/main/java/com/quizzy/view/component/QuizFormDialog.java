@@ -59,6 +59,32 @@ public class QuizFormDialog {
         topicComboBox.setMaxWidth(Double.MAX_VALUE);
         topicComboBox.setPromptText("Select topic category");
         topicComboBox.setPrefHeight(38);
+        javafx.util.StringConverter<Topic> topicConverter = new javafx.util.StringConverter<>() {
+            @Override
+            public String toString(Topic topic) {
+                return topic != null ? topic.getTopicName() : "";
+            }
+
+            @Override
+            public Topic fromString(String string) {
+                return null;
+            }
+        };
+        topicComboBox.setConverter(topicConverter);
+        topicComboBox.setCellFactory(lv -> new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(Topic item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getTopicName());
+            }
+        });
+        topicComboBox.setButtonCell(new javafx.scene.control.ListCell<>() {
+            @Override
+            protected void updateItem(Topic item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty || item == null ? null : item.getTopicName());
+            }
+        });
         if (availableTopics != null) {
             topicComboBox.getItems().addAll(availableTopics);
         }

@@ -26,7 +26,7 @@ import javafx.scene.shape.Rectangle;
 public class AdminDashboardView {
 
     private final ScrollPane root = new ScrollPane();
-    private final VBox contentBox = new VBox(14);
+    private final VBox contentBox = new VBox(16);
 
     private final Label greetingPrefixLabel = new Label("Welcome back, ");
     private final Label greetingUserLabel = new Label("Administrator!");
@@ -42,10 +42,10 @@ public class AdminDashboardView {
     private final StatCard totalUsersCard = new StatCard("👥", "Total Users", "0", "Registered accounts", "#e0f2fe", "#075985");
 
     private final Button viewAllActivitiesBtn = new Button("View all");
-    private final VBox activitiesContainer = new VBox(10);
+    private final VBox activitiesContainer = new VBox(12);
 
     private final Button viewAllTopicsBtn = new Button("View all");
-    private final VBox topTopicsContainer = new VBox(10);
+    private final VBox topTopicsContainer = new VBox(12);
 
     public AdminDashboardView() {
         createUI();
@@ -56,8 +56,8 @@ public class AdminDashboardView {
         root.setFitToHeight(true);
         root.setStyle("-fx-background-color: transparent; -fx-background: #f8f9fb;");
 
-        contentBox.setPadding(new Insets(14, 24, 14, 24));
-        contentBox.setSpacing(14);
+        contentBox.setPadding(new Insets(18, 28, 18, 28));
+        contentBox.setSpacing(16);
         contentBox.setAlignment(Pos.TOP_LEFT);
 
         // ==========================================
@@ -83,21 +83,21 @@ public class AdminDashboardView {
         // Calendar Date Badge
         String currentDateStr = "📅  " + LocalDate.now().format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
         dateBadgeLabel.setText(currentDateStr);
-        dateBadgeLabel.setStyle("-fx-background-color: #ffffff; -fx-border-color: #c7c4d7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 6 14; -fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #464554;");
+        dateBadgeLabel.setStyle("-fx-background-color: #ffffff; -fx-border-color: #c7c4d7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 7 16; -fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #464554;");
         header.getChildren().addAll(greetingText, headerSpacer, dateBadgeLabel);
 
         // ==========================================
         // 2. HERO BANNER
         // ==========================================
         StackPane heroFrame = new StackPane();
-        heroFrame.setMinHeight(145);
-        heroFrame.setPrefHeight(145);
+        heroFrame.setMinHeight(155);
+        heroFrame.setPrefHeight(155);
         heroFrame.setMaxWidth(Double.MAX_VALUE);
         heroFrame.setStyle("-fx-background-color: #ffffff; -fx-border-color: #4648d4 #c7c4d7 #c7c4d7 #4648d4; -fx-border-width: 0 1 1 5px; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.05), 8, 0, 0, 2);");
 
         HBox heroContent = new HBox(20);
         heroContent.setAlignment(Pos.CENTER_LEFT);
-        heroContent.setPadding(new Insets(16, 24, 16, 24));
+        heroContent.setPadding(new Insets(18, 28, 18, 28));
 
         VBox heroText = new VBox(6);
         heroText.setAlignment(Pos.CENTER_LEFT);
@@ -114,8 +114,8 @@ public class AdminDashboardView {
         Label heroSub = new Label("Create, manage and take quizzes in a smarter way.");
         heroSub.setStyle("-fx-font-size: 13px; -fx-text-fill: #464554;");
 
-        createNewQuizBtn.setStyle("-fx-font-size: 13px; -fx-padding: 8 20; -fx-font-weight: 700; -fx-background-color: #4648d4; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;");
-        VBox.setMargin(createNewQuizBtn, new Insets(6, 0, 0, 0));
+        createNewQuizBtn.setStyle("-fx-font-size: 13px; -fx-padding: 9 22; -fx-font-weight: 700; -fx-background-color: #4648d4; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;");
+        VBox.setMargin(createNewQuizBtn, new Insets(8, 0, 0, 0));
         heroText.getChildren().addAll(heroTitle, heroSub, createNewQuizBtn);
 
         heroContent.getChildren().addAll(heroText, createHeroGraphic());
@@ -124,7 +124,7 @@ public class AdminDashboardView {
         // ==========================================
         // 3. STATS ROW (4 Stat Cards)
         // ==========================================
-        HBox statsRow = new HBox(12);
+        HBox statsRow = new HBox(14);
         statsRow.getChildren().addAll(
                 totalTopicsCard.getRoot(),
                 totalQuizzesCard.getRoot(),
@@ -138,14 +138,18 @@ public class AdminDashboardView {
         // ==========================================
         // 4. BOTTOM SPLIT GRID (Recent Activities & Top Topics)
         // ==========================================
-        HBox bottomGrid = new HBox(14);
+        HBox bottomGrid = new HBox(16);
         bottomGrid.setAlignment(Pos.TOP_LEFT);
 
         VBox recentActivitiesCard = createPanel("Recent Activities", viewAllActivitiesBtn);
+        activitiesContainer.setPadding(new Insets(6, 0, 4, 0));
         recentActivitiesCard.getChildren().add(activitiesContainer);
+        VBox.setVgrow(activitiesContainer, Priority.ALWAYS);
 
         VBox topTopicsCard = createPanel("Top Topics", viewAllTopicsBtn);
+        topTopicsContainer.setPadding(new Insets(6, 0, 4, 0));
         topTopicsCard.getChildren().add(topTopicsContainer);
+        VBox.setVgrow(topTopicsContainer, Priority.ALWAYS);
 
         bottomGrid.getChildren().addAll(recentActivitiesCard, topTopicsCard);
         HBox.setHgrow(recentActivitiesCard, Priority.ALWAYS);
@@ -198,9 +202,11 @@ public class AdminDashboardView {
     }
 
     private VBox createPanel(String title, Button actionButton) {
-        VBox panel = new VBox(10);
+        VBox panel = new VBox(12);
         panel.getStyleClass().add("card");
-        panel.setPadding(new Insets(14, 18, 14, 18));
+        panel.setPadding(new Insets(16, 20, 16, 20));
+        panel.setMinHeight(220);
+        panel.setMaxHeight(Double.MAX_VALUE);
         panel.setStyle("-fx-background-color: #ffffff; -fx-border-color: #c7c4d7; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.03), 6, 0, 0, 2);");
 
         HBox header = new HBox(12);
@@ -212,7 +218,7 @@ public class AdminDashboardView {
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        actionButton.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #4648d4; -fx-font-weight: 700; -fx-font-size: 11px; -fx-padding: 3 12; -fx-border-color: #c7c4d7; -fx-border-radius: 999; -fx-background-radius: 999; -fx-cursor: hand;");
+        actionButton.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #4648d4; -fx-font-weight: 700; -fx-font-size: 11px; -fx-padding: 4 14; -fx-border-color: #c7c4d7; -fx-border-radius: 999; -fx-background-radius: 999; -fx-cursor: hand;");
         header.getChildren().addAll(titleLabel, spacer, actionButton);
         panel.getChildren().add(header);
         return panel;
@@ -254,13 +260,14 @@ public class AdminDashboardView {
     }
 
     private VBox createTopicProgressRow(String topicName, int questionsCount, double ratio) {
-        VBox row = new VBox(4);
+        VBox row = new VBox(5);
+        row.setPadding(new Insets(2, 0, 2, 0));
 
         HBox labelLine = new HBox(12);
         labelLine.setAlignment(Pos.CENTER_LEFT);
 
         Label nameLabel = new Label(topicName);
-        nameLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 700; -fx-text-fill: #191c1e;");
+        nameLabel.setStyle("-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #191c1e;");
 
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -270,16 +277,16 @@ public class AdminDashboardView {
         labelLine.getChildren().addAll(nameLabel, spacer, countLabel);
 
         StackPane trackPane = new StackPane();
-        trackPane.setPrefHeight(6);
-        trackPane.setMinHeight(6);
-        trackPane.setMaxHeight(6);
+        trackPane.setPrefHeight(7);
+        trackPane.setMinHeight(7);
+        trackPane.setMaxHeight(7);
         trackPane.setMaxWidth(Double.MAX_VALUE);
         trackPane.setStyle("-fx-background-color: #e7e8ea; -fx-background-radius: 999;");
 
         HBox fillBar = new HBox();
-        fillBar.setPrefHeight(6);
-        fillBar.setMinHeight(6);
-        fillBar.setMaxHeight(6);
+        fillBar.setPrefHeight(7);
+        fillBar.setMinHeight(7);
+        fillBar.setMaxHeight(7);
         fillBar.setStyle("-fx-background-color: #4648d4; -fx-background-radius: 999;");
         fillBar.setMaxWidth(Region.USE_PREF_SIZE);
         fillBar.prefWidthProperty().bind(trackPane.widthProperty().multiply(ratio));
@@ -306,19 +313,19 @@ public class AdminDashboardView {
     }
 
     public HBox createActivityItem(String iconText, String titleText, String subText, String timeText, String bgHex, String iconHex) {
-        HBox item = new HBox(12);
+        HBox item = new HBox(14);
         item.setAlignment(Pos.CENTER_LEFT);
-        item.setPadding(new Insets(3, 0, 3, 0));
+        item.setPadding(new Insets(5, 0, 5, 0));
 
         StackPane iconPane = new StackPane();
-        Circle circle = new Circle(16);
+        Circle circle = new Circle(17);
         circle.setFill(Color.web(bgHex));
 
         Label iconLabel = new Label(iconText);
-        iconLabel.setStyle(String.format("-fx-font-size: 12px; -fx-text-fill: %s; -fx-font-weight: 800;", iconHex));
+        iconLabel.setStyle(String.format("-fx-font-size: 13px; -fx-text-fill: %s; -fx-font-weight: 800;", iconHex));
         iconPane.getChildren().addAll(circle, iconLabel);
 
-        VBox textCol = new VBox(1);
+        VBox textCol = new VBox(2);
         HBox.setHgrow(textCol, Priority.ALWAYS);
 
         Label titleLabel = new Label(titleText);
@@ -329,7 +336,7 @@ public class AdminDashboardView {
         textCol.getChildren().addAll(titleLabel, subLabel);
 
         Label timeLabel = new Label(timeText);
-        timeLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #767586;");
+        timeLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #767586;");
 
         item.getChildren().addAll(iconPane, textCol, timeLabel);
         return item;

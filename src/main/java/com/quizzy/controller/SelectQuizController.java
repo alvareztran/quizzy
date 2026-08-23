@@ -8,6 +8,7 @@ import com.quizzy.service.TopicService;
 import com.quizzy.util.SceneManager;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.SelectQuizView;
+import java.util.ArrayList;
 import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -20,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
 public class SelectQuizController {
@@ -30,6 +32,7 @@ public class SelectQuizController {
     private final ObservableList<Topic> topicList = FXCollections.observableArrayList();
 
     private Quiz selectedQuiz = null;
+    private final List<QuizCardHolder> quizCardHolders = new ArrayList<>();
 
     public SelectQuizController() {
         this.view = new SelectQuizView();
@@ -46,11 +49,9 @@ public class SelectQuizController {
     }
 
     private void initEventHandlers() {
-        view.getNavDashboardBtn().setOnAction(e -> SceneManager.showPlayerDashboard());
         view.getNavTopicsBtn().setOnAction(e -> SceneManager.showSelectQuiz());
-        view.getNavHistoryBtn().setOnAction(e -> SceneManager.showResult());
+        view.getNavHistoryBtn().setOnAction(e -> SceneManager.showHistory());
 
-        view.getBackToDashboardBtn().setOnAction(e -> backToDashboard());
         view.getRefreshBtn().setOnAction(e -> refreshData());
 
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
@@ -71,43 +72,31 @@ public class SelectQuizController {
                 if (empty || topic == null) {
                     setText(null);
                     setGraphic(null);
+                    setStyle("-fx-background-color: transparent;");
                 } else {
                     boolean isSel = isSelected();
-                    HBox box = new HBox(12);
+                    HBox box = new HBox();
                     box.setAlignment(Pos.CENTER_LEFT);
-                    box.setPadding(new Insets(12, 16, 12, 16));
-
-                    String iconStr = getTopicIcon(topic.getTopicName());
-                    Label iconL = new Label(iconStr);
-                    iconL.setStyle(isSel ? "-fx-font-size: 16px; -fx-text-fill: #ffffff;" : "-fx-font-size: 16px; -fx-text-fill: #6366f1;");
+                    box.setPadding(new Insets(10, 14, 10, 14));
 
                     Label nameL = new Label(topic.getTopicName());
-                    nameL.setStyle(isSel
-                            ? "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #ffffff;"
-                            : "-fx-font-weight: bold; -fx-font-size: 14px; -fx-text-fill: #334155;");
+                    if (isSel) {
+                        box.setStyle("-fx-background-color: #eef2ff; -fx-border-color: #4f46e5; -fx-border-width: 0 0 0 3.5px; -fx-border-radius: 0 8 8 0; -fx-background-radius: 0 8 8 0;");
+                        nameL.setStyle("-fx-font-weight: 700; -fx-font-size: 14px; -fx-text-fill: #4f46e5;");
+                    } else {
+                        box.setStyle("-fx-background-color: transparent; -fx-border-width: 0; -fx-background-radius: 8;");
+                        nameL.setStyle("-fx-font-weight: 600; -fx-font-size: 14px; -fx-text-fill: #334155;");
+                    }
 
-                    box.getChildren().addAll(iconL, nameL);
-                    box.setStyle(isSel
-                            ? "-fx-background-color: #6366f1; -fx-background-radius: 8px;"
-                            : "-fx-background-color: transparent; -fx-background-radius: 8px;");
-
+                    box.getChildren().add(nameL);
                     setGraphic(box);
                     setText(null);
+                    setStyle("-fx-background-color: transparent; -fx-padding: 2 0; -fx-cursor: hand;");
                 }
             }
         });
 
         loadTopics();
-    }
-
-    private String getTopicIcon(String name) {
-        if (name == null) return "📁";
-        String lower = name.toLowerCase();
-        if (lower.contains("math")) return "➗";
-        if (lower.contains("science") || lower.contains("computer")) return "💻";
-        if (lower.contains("data")) return "≡";
-        if (lower.contains("oop")) return "⚙";
-        return "📁";
     }
 
     private void loadTopics() {
@@ -122,6 +111,7 @@ public class SelectQuizController {
     }
 
     private void loadQuizzesByTopic(Topic topic) {
+        quizCardHolders.clear();
         view.getQuizCardsContainer().getChildren().clear();
         selectedQuiz = null;
 
@@ -133,104 +123,129 @@ public class SelectQuizController {
             List<Quiz> quizzes = quizService.getQuizzesByTopicId(topic.getTopicId());
             if (quizzes == null || quizzes.isEmpty()) {
                 VBox emptyBox = new VBox(12);
-                emptyBox.setPadding(new Insets(30));
-                Label emptyLabel = new Label("No quizzes available under " + topic.getTopicName() + " yet.");
-                emptyLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #64748b;");
+                emptyBox.setPadding(new Insets(40, 20, 40, 20));
+                Label emptyLabel = new Label("No quizzes available under \"" + topic.getTopicName() + "\" yet.");
+                emptyLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #64748b; -fx-font-weight: 600;");
                 emptyBox.getChildren().add(emptyLabel);
                 view.getQuizCardsContainer().getChildren().add(emptyBox);
                 return;
             }
 
-            for (int i = 0; i < quizzes.size(); i++) {
-                Quiz quiz = quizzes.get(i);
-                boolean isPrimary = (i == 0);
-                VBox quizCard = createQuizCard(quiz, topic.getTopicName(), isPrimary);
-                HBox.setHgrow(quizCard, Priority.ALWAYS);
-                view.getQuizCardsContainer().getChildren().add(quizCard);
+            selectedQuiz = quizzes.get(0);
+
+            for (Quiz quiz : quizzes) {
+                QuizCardHolder holder = createQuizCard(quiz, topic.getTopicName());
+                quizCardHolders.add(holder);
+                view.getQuizCardsContainer().getChildren().add(holder.card);
             }
 
-            selectedQuiz = quizzes.get(0);
+            updateCardStyles();
 
         } catch (Exception e) {
             showError("Failed to load quizzes for selected topic.");
         }
     }
 
-    private VBox createQuizCard(Quiz quiz, String topicName, boolean isPrimary) {
-        VBox card = new VBox(16);
-        card.setPrefWidth(280);
-        card.setMinWidth(260);
-        card.setPadding(new Insets(24));
+    private void updateCardStyles() {
+        for (QuizCardHolder holder : quizCardHolders) {
+            boolean isSel = (selectedQuiz != null && holder.quiz.getQuizId() == selectedQuiz.getQuizId());
+            if (isSel) {
+                holder.card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #4f46e5; -fx-border-width: 1.5px; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(79, 70, 229, 0.14), 16, 0, 0, 4); -fx-cursor: hand;");
+                holder.startBtn.setStyle("-fx-background-color: #4f46e5; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 700; -fx-background-radius: 8; -fx-cursor: hand;");
+            } else {
+                holder.card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 1px; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2); -fx-cursor: hand;");
+                holder.startBtn.setStyle("-fx-background-color: transparent; -fx-border-color: #4f46e5; -fx-border-width: 1.5px; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-border-radius: 8; -fx-background-radius: 8; -fx-cursor: hand;");
+            }
+        }
+    }
+
+    private QuizCardHolder createQuizCard(Quiz quiz, String topicName) {
+        QuizCardHolder holder = new QuizCardHolder();
+        holder.quiz = quiz;
+
+        VBox card = new VBox(14);
+        card.setPrefWidth(350);
+        card.setMinWidth(310);
+        card.setMaxWidth(400);
+        card.setPadding(new Insets(24, 24, 22, 24));
         card.getStyleClass().add("card");
-        card.setStyle(isPrimary
-                ? "-fx-background-color: #ffffff; -fx-border-color: #6366f1; -fx-border-width: 1.5px; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-effect: dropshadow(three-pass-box, rgba(99, 102, 241, 0.12), 16, 0, 0, 4);"
-                : "-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 1px; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 10, 0, 0, 3);");
-
-        // Top Row: Icon & Level Badge
-        HBox topRow = new HBox(12);
-        topRow.setAlignment(Pos.CENTER_LEFT);
-
-        Label iconL = new Label("💻");
-        iconL.setStyle("-fx-background-color: #e0e7ff; -fx-text-fill: #4338ca; -fx-font-size: 14px; -fx-padding: 8 10; -fx-background-radius: 8px;");
-
-        HBox spacer = new HBox();
-        HBox.setHgrow(spacer, Priority.ALWAYS);
-
-        String levelText = (quiz.getNumberOfQuestions() <= 10) ? "Beginner" : (quiz.getNumberOfQuestions() <= 20) ? "Intermediate" : "Advanced";
-        Label levelBadge = new Label(levelText);
-        levelBadge.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 4 10; -fx-background-radius: 6px;");
-
-        topRow.getChildren().addAll(iconL, spacer, levelBadge);
 
         // Quiz Name
         Label titleL = new Label(quiz.getQuizName());
-        titleL.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
+        titleL.setStyle("-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
 
         // Quiz Description
         Label descL = new Label("Comprehensive practice assessment covering " + topicName + " fundamentals.");
-        descL.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b; -fx-line-spacing: 3px;");
+        descL.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b; -fx-line-spacing: 2px;");
         descL.setWrapText(true);
+        descL.setMinHeight(42);
 
-        // Metadata Row
-        HBox metaRow = new HBox(14);
-        metaRow.setAlignment(Pos.CENTER_LEFT);
+        // Stats Box (2 Columns with vertical separator)
+        HBox statsBox = new HBox();
+        statsBox.setAlignment(Pos.CENTER);
+        statsBox.setPadding(new Insets(10, 0, 10, 0));
 
-        Label qCountL = new Label("≡ " + quiz.getNumberOfQuestions() + " Questions");
-        qCountL.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #64748b;");
+        VBox qBox = new VBox(2);
+        qBox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(qBox, Priority.ALWAYS);
+        Label qNum = new Label(String.valueOf(quiz.getNumberOfQuestions()));
+        qNum.setStyle("-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #4f46e5;");
+        Label qLbl = new Label("Questions");
+        qLbl.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #64748b;");
+        qBox.getChildren().addAll(qNum, qLbl);
 
+        Region vDivider = new Region();
+        vDivider.setPrefWidth(1);
+        vDivider.setMinWidth(1);
+        vDivider.setMaxWidth(1);
+        vDivider.setPrefHeight(32);
+        vDivider.setStyle("-fx-background-color: #e2e8f0;");
+
+        VBox tBox = new VBox(2);
+        tBox.setAlignment(Pos.CENTER);
+        HBox.setHgrow(tBox, Priority.ALWAYS);
         int mins = quiz.getTimeLimit() > 0 ? quiz.getTimeLimit() : 15;
-        Label timeL = new Label("⏱ " + mins + " Minutes");
-        timeL.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #64748b;");
+        Label tNum = new Label(String.valueOf(mins));
+        tNum.setStyle("-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #4f46e5;");
+        Label tLbl = new Label("Minutes");
+        tLbl.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #64748b;");
+        tBox.getChildren().addAll(tNum, tLbl);
 
-        metaRow.getChildren().addAll(qCountL, timeL);
+        statsBox.getChildren().addAll(qBox, vDivider, tBox);
 
-        // Full-Width Start Quiz Button
-        Button startQuizBtn = new Button("Start Quiz →");
+        // Action Button
+        Button startQuizBtn = new Button("Start Quiz  →");
         startQuizBtn.setMaxWidth(Double.MAX_VALUE);
-        startQuizBtn.setPrefHeight(40);
+        startQuizBtn.setPrefHeight(42);
 
-        if (isPrimary) {
-            startQuizBtn.getStyleClass().add("button-primary");
-            startQuizBtn.setStyle("-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 13px; -fx-font-weight: bold; -fx-background-radius: 8px;");
-        } else {
-            startQuizBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #6366f1; -fx-text-fill: #6366f1; -fx-font-size: 13px; -fx-font-weight: bold; -fx-border-radius: 8px; -fx-background-radius: 8px;");
-        }
+        card.getChildren().addAll(titleL, descL, statsBox, startQuizBtn);
+
+        holder.card = card;
+        holder.startBtn = startQuizBtn;
+
+        card.setOnMouseClicked(e -> {
+            selectedQuiz = quiz;
+            updateCardStyles();
+            if (e.getClickCount() == 2) {
+                SessionManager.setSelectedQuiz(quiz);
+                SceneManager.showTakeQuiz();
+            }
+        });
 
         startQuizBtn.setOnAction(e -> {
+            selectedQuiz = quiz;
+            updateCardStyles();
             SessionManager.setSelectedQuiz(quiz);
             SceneManager.showTakeQuiz();
         });
 
-        card.getChildren().addAll(topRow, titleL, descL, metaRow, startQuizBtn);
-        return card;
+        return holder;
     }
 
-    private void backToDashboard() {
-        if (SessionManager.isAdmin()) {
-            SceneManager.showMain();
-        } else {
-            SceneManager.showPlayerDashboard();
-        }
+    private static class QuizCardHolder {
+        Quiz quiz;
+        VBox card;
+        Button startBtn;
     }
 
     private void refreshData() {

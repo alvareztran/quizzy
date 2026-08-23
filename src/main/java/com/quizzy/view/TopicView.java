@@ -71,11 +71,13 @@ public class TopicView {
     }
 
     private void createUI() {
-        root.setPrefSize(1240, 740);
+        root.setPrefSize(1280, 800);
 
         // Sidebar Navigation (Full Height)
-        VBox sidebar = new VBox(8);
-        sidebar.setPrefWidth(240);
+        VBox sidebar = new VBox(6);
+        sidebar.setPrefWidth(260);
+        sidebar.setMinWidth(260);
+        sidebar.setMaxWidth(260);
         sidebar.getStyleClass().add("sidebar");
         sidebar.setPadding(new Insets(20, 16, 16, 16));
 
@@ -83,7 +85,8 @@ public class TopicView {
         try {
             Image iconImg = new Image(getClass().getResourceAsStream("/com/quizzy/images/quizzy-icon.png"));
             iconView.setImage(iconImg);
-            iconView.setFitHeight(32);
+            iconView.setFitHeight(30);
+            iconView.setFitWidth(30);
             iconView.setPreserveRatio(true);
             iconView.setSmooth(true);
         } catch (Exception e) {
@@ -91,14 +94,14 @@ public class TopicView {
         }
 
         Label brandTitle = new Label("QUIZZY");
-        brandTitle.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0f172a; -fx-letter-spacing: 1px;");
+        brandTitle.setStyle("-fx-font-size: 22px; -fx-font-weight: 800; -fx-text-fill: #191c1e; -fx-letter-spacing: 0.5px;");
 
         HBox logoContainer = new HBox(10, iconView, brandTitle);
         logoContainer.setAlignment(Pos.CENTER_LEFT);
-        logoContainer.setPadding(new Insets(4, 0, 20, 8));
+        logoContainer.setPadding(new Insets(4, 8, 22, 8));
 
         Label mgmtHeader = new Label("MANAGEMENT");
-        mgmtHeader.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 10 0 4 8; -fx-letter-spacing: 1px;");
+        mgmtHeader.setStyle("-fx-text-fill: #767586; -fx-font-size: 11px; -fx-font-weight: 700; -fx-padding: 4 0 4 12; -fx-letter-spacing: 0.8px;");
 
         NavIconHelper.setupNavButton(dashBtn, "Dashboard", "dashboard.png", false);
         NavIconHelper.setupNavButton(topicBtn, "Topics", "topic_icon.png", true);
@@ -113,14 +116,14 @@ public class TopicView {
 
         // Bottom User Profile Widget Frame
         VBox profileBox = new VBox(10);
-        profileBox.setPadding(new Insets(12, 0, 0, 0));
-        profileBox.setStyle("-fx-border-color: #e2e8f0; -fx-border-width: 1px 0 0 0;");
+        profileBox.setPadding(new Insets(14, 0, 0, 0));
+        profileBox.setStyle("-fx-border-color: #c7c4d7; -fx-border-width: 1 0 0 0;");
         profileBox.getChildren().add(userProfileWidget.getRoot());
 
         sidebar.getChildren().addAll(
                 logoContainer,
-                dashBtn,
                 mgmtHeader,
+                dashBtn,
                 topicBtn, quizBtn, questionBtn, answerBtn, userBtn, resultBtn,
                 sidebarSpacer,
                 profileBox

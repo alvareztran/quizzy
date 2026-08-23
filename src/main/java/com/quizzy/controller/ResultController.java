@@ -41,17 +41,26 @@ public class ResultController {
     }
 
     private void initEventHandlers() {
-        view.getNavDashboardBtn().setOnAction(e -> backToDashboard());
-        view.getNavTopicsBtn().setOnAction(e -> SceneManager.showSelectQuiz());
-        view.getNavHistoryBtn().setOnAction(e -> SceneManager.showResult());
+        boolean isAdmin = SessionManager.isAdmin();
+        view.setAdminMode(isAdmin);
 
-        view.getTryAgainBtn().setOnAction(e -> SceneManager.showSelectQuiz());
-        view.getBackDashboardBtn().setOnAction(e -> backToDashboard());
-        view.getReviewAnswersBtn().setOnAction(e -> SceneManager.showSelectQuiz());
+        if (isAdmin) {
+            view.getBackAdminBtn().setOnAction(e -> SceneManager.showAdminResult());
+            view.getLogoImageView().setOnMouseClicked(e -> SceneManager.showMain());
+            view.getBrandNameLabel().setOnMouseClicked(e -> SceneManager.showMain());
+        } else {
+            view.getNavTopicsBtn().setOnAction(e -> SceneManager.showSelectQuiz());
+            view.getNavHistoryBtn().setOnAction(e -> SceneManager.showHistory());
+
+            view.getTryAgainBtn().setOnAction(e -> SceneManager.showSelectQuiz());
+            view.getBackTopicsBtn().setOnAction(e -> SceneManager.showSelectQuiz());
+            view.getReviewAnswersBtn().setOnAction(e -> SceneManager.showSelectQuiz());
+
+            view.getLogoImageView().setOnMouseClicked(e -> SceneManager.showHome());
+            view.getBrandNameLabel().setOnMouseClicked(e -> SceneManager.showHome());
+        }
 
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
-        view.getLogoImageView().setOnMouseClicked(e -> SceneManager.showHome());
-        view.getBrandNameLabel().setOnMouseClicked(e -> SceneManager.showHome());
     }
 
     private void loadResultData() {

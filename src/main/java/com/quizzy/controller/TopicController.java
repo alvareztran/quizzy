@@ -65,6 +65,9 @@ public class TopicController {
         view.getSearchTopicsField().textProperty().addListener(
                 (observable, oldValue, newValue) -> filterTopics(newValue)
         );
+        view.getSortComboBox().valueProperty().addListener(
+                (observable, oldValue, newValue) -> filterTopics(view.getSearchTopicsField().getText())
+        );
 
         view.getResetFilterBtn().setOnAction(e -> {
             view.getSearchTopicsField().clear();
@@ -75,16 +78,13 @@ public class TopicController {
 
         // Setup Actions Table Column Center Aligned
         view.getActionsColumn().setCellFactory(col -> new TableCell<>() {
-            private final Button editBtn = new Button("✏");
-            private final Button deleteBtn = new Button("🗑");
+            private final Button editBtn = com.quizzy.util.NavIconHelper.createEditActionButton();
+            private final Button deleteBtn = com.quizzy.util.NavIconHelper.createDeleteActionButton();
             private final HBox btnBox = new HBox(8, editBtn, deleteBtn);
 
             {
                 btnBox.setAlignment(Pos.CENTER);
                 btnBox.setMaxWidth(Double.MAX_VALUE);
-
-                editBtn.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155; -fx-padding: 6 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;");
-                deleteBtn.setStyle("-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-padding: 6 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;");
 
                 editBtn.setOnAction(e -> {
                     Topic topic = getTableView().getItems().get(getIndex());
@@ -157,18 +157,31 @@ public class TopicController {
     }
 
     private void filterTopics(String keyword) {
-        if (keyword == null || keyword.isBlank()) {
-            displayedTopicList.setAll(allTopics);
-        } else {
-            String search = keyword.trim().toLowerCase();
-            List<Topic> filtered = allTopics.stream()
-                    .filter(t -> (t.getTopicName() != null && t.getTopicName().toLowerCase().contains(search))
-                            || (t.getDescription() != null && t.getDescription().toLowerCase().contains(search)))
-                    .toList();
+        String search = (keyword != null && !keyword.isBlank()) ? keyword.trim().toLowerCase() : null;
+        String sortOption = view.getSortComboBox().getValue();
 
-            displayedTopicList.setAll(filtered);
+        List<Topic> filtered = new ArrayList<>(allTopics.stream()
+                .filter(t -> search == null
+                        || (t.getTopicName() != null && t.getTopicName().toLowerCase().contains(search))
+                        || (t.getDescription() != null && t.getDescription().toLowerCase().contains(search)))
+                .toList());
+
+        if (sortOption != null) {
+            switch (sortOption) {
+                case "Sort by: Oldest" -> filtered.sort(java.util.Comparator.comparingInt(Topic::getTopicId));
+                case "Sort by: Name A-Z", "Name: A - Z" -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
+                        a.getTopicName() != null ? a.getTopicName() : "",
+                        b.getTopicName() != null ? b.getTopicName() : ""
+                ));
+                case "Sort by: Name Z-A", "Name: Z - A" -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
+                        b.getTopicName() != null ? b.getTopicName() : "",
+                        a.getTopicName() != null ? a.getTopicName() : ""
+                ));
+                default -> filtered.sort((a, b) -> Integer.compare(b.getTopicId(), a.getTopicId())); // Newest by default
+            }
         }
 
+        displayedTopicList.setAll(filtered);
         view.getPaginationInfoLabel().setText(
                 String.format("Showing 1 to %d of %d topics", displayedTopicList.size(), allTopics.size())
         );

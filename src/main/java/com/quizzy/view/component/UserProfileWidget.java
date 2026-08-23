@@ -26,7 +26,6 @@ public class UserProfileWidget {
     private final VBox textContainer = new VBox(2);
     private final Label nameLabel = new Label("User");
     private final Label roleLabel = new Label("MEMBER");
-    private final Label arrowLabel = new Label("v");
 
     private final ContextMenu profileMenu = new ContextMenu();
     private final MenuItem profileInfoItem = new MenuItem("Profile Details");
@@ -75,8 +74,7 @@ public class UserProfileWidget {
         textContainer.getChildren().addAll(nameLabel, roleLabel);
         HBox.setHgrow(textContainer, Priority.ALWAYS);
 
-        arrowLabel.setStyle("-fx-text-fill: #767586; -fx-font-size: 12px; -fx-padding: 0 2 0 4;");
-        root.getChildren().addAll(avatarPane, textContainer, arrowLabel);
+        root.getChildren().addAll(avatarPane, textContainer);
 
         profileInfoItem.setDisable(true);
         profileMenu.getItems().addAll(profileInfoItem, new SeparatorMenuItem(), logoutItem);

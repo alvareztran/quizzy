@@ -61,6 +61,7 @@ public class UserController {
         // Search & Filters
         view.getSearchUsersField().textProperty().addListener((obs, oldV, newV) -> filterUsers());
         view.getRoleFilterComboBox().valueProperty().addListener((obs, oldV, newV) -> filterUsers());
+        view.getSortComboBox().valueProperty().addListener((obs, oldV, newV) -> filterUsers());
 
         view.getResetFilterBtn().setOnAction(e -> {
             view.getSearchUsersField().clear();
@@ -71,16 +72,13 @@ public class UserController {
 
         // Setup Actions Column Center Aligned
         view.getActionsColumn().setCellFactory(col -> new TableCell<>() {
-            private final Button editBtn = new Button("✏");
-            private final Button deleteBtn = new Button("🗑");
+            private final Button editBtn = com.quizzy.util.NavIconHelper.createEditActionButton();
+            private final Button deleteBtn = com.quizzy.util.NavIconHelper.createDeleteActionButton();
             private final HBox btnBox = new HBox(8, editBtn, deleteBtn);
 
             {
                 btnBox.setAlignment(Pos.CENTER);
                 btnBox.setMaxWidth(Double.MAX_VALUE);
-
-                editBtn.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155; -fx-padding: 6 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;");
-                deleteBtn.setStyle("-fx-background-color: #fee2e2; -fx-text-fill: #dc2626; -fx-padding: 6 10; -fx-background-radius: 6; -fx-cursor: hand; -fx-font-size: 13px; -fx-font-family: 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;");
 
                 editBtn.setOnAction(e -> {
                     User user = getTableView().getItems().get(getIndex());
@@ -119,7 +117,6 @@ public class UserController {
             if (users != null) {
                 allUsers.addAll(users);
             }
-
             filterUsers();
             updateStatCards();
         } catch (Exception e) {
@@ -145,10 +142,11 @@ public class UserController {
     private void filterUsers() {
         String keyword = view.getSearchUsersField().getText();
         String selectedRole = view.getRoleFilterComboBox().getValue();
+        String sortOption = view.getSortComboBox().getValue();
 
         final String search = (keyword != null && !keyword.isBlank()) ? keyword.trim().toLowerCase() : null;
 
-        List<User> filtered = allUsers.stream().filter(u -> {
+        List<User> filtered = new java.util.ArrayList<>(allUsers.stream().filter(u -> {
             boolean matchSearch = (search == null)
                     || (u.getUserName() != null && u.getUserName().toLowerCase().contains(search))
                     || (u.getFullName() != null && u.getFullName().toLowerCase().contains(search));
@@ -159,7 +157,24 @@ public class UserController {
             }
 
             return matchSearch && matchRole;
-        }).toList();
+        }).toList());
+
+        if (sortOption != null) {
+            switch (sortOption) {
+                case "Sort by: Full Name" -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
+                        a.getFullName() != null ? a.getFullName() : "",
+                        b.getFullName() != null ? b.getFullName() : ""
+                ));
+                case "Sort by: Role" -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
+                        a.getRole() != null ? a.getRole() : "",
+                        b.getRole() != null ? b.getRole() : ""
+                ));
+                default -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
+                        a.getUserName() != null ? a.getUserName() : "",
+                        b.getUserName() != null ? b.getUserName() : ""
+                )); // Sort by: Username
+            }
+        }
 
         displayedUserList.setAll(filtered);
         view.getPaginationInfoLabel().setText(
