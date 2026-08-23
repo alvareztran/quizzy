@@ -1,0 +1,5 @@
+# Database Configuration Template
+# Instructions: Copy this file to 'config.properties' and fill in your local SQL Server credentials.
+db.url=jdbc:sqlserver://localhost:1433;databaseName=QUIZZYDB;encrypt=true;trustServerCertificate=true
+db.username=YOUR_DB_USERNAME
+db.password=YOUR_DB_PASSWORD

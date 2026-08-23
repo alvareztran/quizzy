@@ -1,0 +1,27 @@
+# Maven
+target/
+
+# Environment & Local Secrets Configuration
+config.properties
+*.env
+db.properties
+.env
+
+# NetBeans
+nbproject/private/
+nbbuild/
+nbdist/
+.nb-gradle/
+
+# VS Code
+.vscode/
+
+# Java
+*.class
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
