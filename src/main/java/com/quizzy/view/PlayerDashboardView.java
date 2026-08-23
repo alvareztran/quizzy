@@ -21,29 +21,24 @@ public class PlayerDashboardView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Top Navigation Items
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
     private final Button navDashboardBtn = new Button("Dashboard");
     private final Button navTopicsBtn = new Button("Topics");
     private final Button navHistoryBtn = new Button("History");
 
-    // Welcome Greeting Labels
     private final Label welcomeTitleLabel = new Label("Welcome back, User!");
     private final Label welcomeSubtitleLabel = new Label("Ready to continue learning?");
 
-    // 3 Stat Cards Labels
     private final Label totalQuizzesValLabel = new Label("0");
     private final Label avgScoreValLabel = new Label("0%");
     private final Label completedValLabel = new Label("0");
 
-    // Continue Learning Card Elements
     private final Label continueQuizTitleLabel = new Label("Java Programming Basics");
     private final Label continueQuizSubtitleLabel = new Label("Chapter 4: Object-Oriented Principles");
     private final Label progressPercentLabel = new Label("65% Completed");
     private final Button resumeQuizBtn = new Button("Resume Quiz");
 
-    // Right Column Topics Container
     private final VBox topicsListContainer = new VBox(12);
     private final Button viewAllTopicsBtn = new Button("View All");
 
@@ -55,9 +50,6 @@ public class PlayerDashboardView {
         root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");
 
-        // ==========================================
-        // 1. TOP NAVBAR
-        // ==========================================
         HBox navbar = new HBox(24);
         navbar.setAlignment(Pos.CENTER_LEFT);
         navbar.setPadding(new Insets(12, 48, 12, 48));
@@ -71,15 +63,13 @@ public class PlayerDashboardView {
             logoImageView.setPreserveRatio(true);
             logoImageView.setSmooth(true);
             logoImageView.setStyle("-fx-cursor: hand;");
-        } catch (Exception e) {
-            // Fallback
+        } catch (Exception ignored) {
         }
 
         brandNameLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #4f46e5; -fx-letter-spacing: 0.5px; -fx-cursor: hand;");
         HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Center Nav Tabs with Active Underline Indicator for Dashboard
         navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 8 16 4 16; -fx-cursor: hand;");
         navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
         navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
@@ -113,9 +103,6 @@ public class PlayerDashboardView {
         navbar.getChildren().addAll(logoBrandBox, leftSpacer, navTabs, rightSpacer, userBox);
         root.setTop(navbar);
 
-        // ==========================================
-        // 2. MAIN SCROLLABLE CONTENT CANVAS
-        // ==========================================
         VBox contentContainer = new VBox(32);
         contentContainer.setAlignment(Pos.TOP_CENTER);
         contentContainer.setPadding(new Insets(32, 48, 36, 48));
@@ -124,7 +111,6 @@ public class PlayerDashboardView {
         VBox mainBox = new VBox(32);
         mainBox.setMaxWidth(1140);
 
-        // Welcome Header Section
         VBox welcomeHeader = new VBox(6);
         welcomeHeader.setAlignment(Pos.CENTER);
 
@@ -132,7 +118,6 @@ public class PlayerDashboardView {
         welcomeSubtitleLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #64748b;");
         welcomeHeader.getChildren().addAll(welcomeTitleLabel, welcomeSubtitleLabel);
 
-        // 3 Stat Cards Row
         HBox statCardsRow = new HBox(20);
         statCardsRow.setAlignment(Pos.CENTER);
 
@@ -146,11 +131,9 @@ public class PlayerDashboardView {
 
         statCardsRow.getChildren().addAll(card1, card2, card3);
 
-        // 2-Column Workspace Section
         HBox workspaceRow = new HBox(28);
         workspaceRow.setAlignment(Pos.TOP_LEFT);
 
-        // LEFT COLUMN: Continue Learning Card (60% Width)
         VBox leftCol = new VBox(16);
         HBox.setHgrow(leftCol, Priority.ALWAYS);
 
@@ -181,7 +164,6 @@ public class PlayerDashboardView {
         continueQuizSubtitleLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #64748b;");
         quizTitleBox.getChildren().addAll(continueQuizTitleLabel, continueQuizSubtitleLabel);
 
-        // Progress Bar
         StackPane progressTrack = new StackPane();
         progressTrack.setPrefHeight(8);
         progressTrack.setStyle("-fx-background-color: #f1f5f9; -fx-background-radius: 4px;");
@@ -210,7 +192,6 @@ public class PlayerDashboardView {
         continueCard.getChildren().addAll(cardTopRow, quizTitleBox, progressTrack, progressBottomRow);
         leftCol.getChildren().addAll(continueHeading, continueCard);
 
-        // RIGHT COLUMN: Your Topics List (40% Width)
         VBox rightCol = new VBox(16);
         rightCol.setPrefWidth(380);
 
@@ -226,7 +207,6 @@ public class PlayerDashboardView {
         viewAllTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #6366f1; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 0;");
 
         topicsHeaderRow.getChildren().addAll(topicsHeading, topicsSpacer, viewAllTopicsBtn);
-
         rightCol.getChildren().addAll(topicsHeaderRow, topicsListContainer);
 
         workspaceRow.getChildren().addAll(leftCol, rightCol);
@@ -235,12 +215,9 @@ public class PlayerDashboardView {
 
         ScrollPane scrollPane = new ScrollPane(contentContainer);
         scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8f9fb;");
+        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8fafc;");
         root.setCenter(scrollPane);
 
-        // ==========================================
-        // 3. BOTTOM FOOTER BAR
-        // ==========================================
         HBox footerBar = new HBox(20);
         footerBar.setAlignment(Pos.CENTER_LEFT);
         footerBar.setPadding(new Insets(18, 52, 18, 52));

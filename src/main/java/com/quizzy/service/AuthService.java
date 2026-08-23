@@ -3,6 +3,7 @@ package com.quizzy.service;
 import com.quizzy.dao.UserDAO;
 import com.quizzy.factory.DAOFactory;
 import com.quizzy.model.User;
+import com.quizzy.util.PasswordHasher;
 import java.util.Objects;
 
 public class AuthService {
@@ -32,7 +33,7 @@ public class AuthService {
             return null;
         }
         
-        if (!user.getPassword().equals(password)) {
+        if (!PasswordHasher.checkPassword(password, user.getPassword())) {
             return null;
         }
         
@@ -44,10 +45,8 @@ public class AuthService {
         return "SUCCESS".equals(result);
     }
 
-    /**
-     * Complete Register business logic with detailed validation messages.
-     * Always hardcodes Role to "Player". Never accepts role from client.
-     */
+    private static final String PASSWORD_REGEX = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$";
+
     public String registerUser(String fullName, String username, String password, String confirmPassword) {
         if (fullName == null || fullName.isBlank()) {
             return "Full Name is required.";
@@ -59,6 +58,10 @@ public class AuthService {
         
         if (password == null || password.isBlank()) {
             return "Password is required.";
+        }
+
+        if (!password.matches(PASSWORD_REGEX)) {
+            return "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&).";
         }
         
         if (confirmPassword == null || confirmPassword.isBlank()) {
@@ -77,10 +80,10 @@ public class AuthService {
                 return "Username already exists.";
             }
             
-            // Hardcode Role to "Player" for security
+            String hashedPassword = PasswordHasher.hash(password);
             User user = new User(
                     trimmedUsername,
-                    password,
+                    hashedPassword,
                     fullName.trim(),
                     "Player"
             );

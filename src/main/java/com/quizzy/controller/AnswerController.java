@@ -5,6 +5,7 @@ import com.quizzy.model.Answer;
 import com.quizzy.model.Question;
 import com.quizzy.service.AnswerService;
 import com.quizzy.service.QuestionService;
+import com.quizzy.util.NavIconHelper;
 import com.quizzy.util.SceneManager;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.AnswerView;
@@ -49,7 +50,6 @@ public class AnswerController {
     }
 
     private void initEventHandlers() {
-        // Navigation Buttons
         view.getDashBtn().setOnAction(e -> SceneManager.showMain());
         view.getTopicBtn().setOnAction(e -> SceneManager.showTopic());
         view.getQuizBtn().setOnAction(e -> SceneManager.showQuiz());
@@ -58,10 +58,8 @@ public class AnswerController {
         view.getUserBtn().setOnAction(e -> SceneManager.showUser());
         view.getResultBtn().setOnAction(e -> SceneManager.showAdminResult());
 
-        // Logout via User Profile ContextMenu Item
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
 
-        // Search & Filters
         view.getSearchAnswersField().textProperty().addListener((obs, oldV, newV) -> filterAnswers());
         view.getQuestionFilterComboBox().valueProperty().addListener((obs, oldV, newV) -> filterAnswers());
         view.getStatusFilterComboBox().valueProperty().addListener((obs, oldV, newV) -> filterAnswers());
@@ -73,16 +71,14 @@ public class AnswerController {
             filterAnswers();
         });
 
-        // Question Content Column Factory
         view.getQuestionContentColumn().setCellValueFactory(cellData -> {
             int qId = cellData.getValue().getQuestionId();
             String content = questionMap.getOrDefault(qId, "Question #" + qId);
             return new SimpleStringProperty(content);
         });
 
-        // Setup Actions Column Center Aligned
         view.getActionsColumn().setCellFactory(col -> new TableCell<>() {
-            private final Button deleteBtn = com.quizzy.util.NavIconHelper.createDeleteActionButton();
+            private final Button deleteBtn = NavIconHelper.createDeleteActionButton();
             private final HBox btnBox = new HBox(8, deleteBtn);
 
             {

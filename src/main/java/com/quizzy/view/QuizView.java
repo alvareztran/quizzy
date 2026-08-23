@@ -27,7 +27,6 @@ public class QuizView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Sidebar Navigation Buttons
     private final Button dashBtn = new Button();
     private final Button topicBtn = new Button();
     private final Button quizBtn = new Button();
@@ -36,22 +35,18 @@ public class QuizView {
     private final Button userBtn = new Button();
     private final Button resultBtn = new Button();
 
-    // Page Header Action
     private final Button createQuizBtn = new Button("+ Create Quiz");
 
-    // Stat Cards
     private final StatCard totalQuizzesCard = new StatCard("📝", "Total Quizzes", "0", "All quiz assessments", "#DCFCE7", "#16A34A");
     private final StatCard totalTopicsCard = new StatCard("📁", "Topics Covered", "0", "Unique topics linked", "#EEF2FF", "#4F46E5");
     private final StatCard totalQuestionsCard = new StatCard("❓", "Questions Total", "0", "Across all quizzes", "#FEF3C7", "#D97706");
     private final StatCard activeQuizzesCard = new StatCard("🎯", "Active Quizzes", "0", "Available for tests", "#E0F2FE", "#0284C7");
 
-    // Toolbar Components
     private final TextField searchQuizzesField = new TextField();
     private final ComboBox<String> topicFilterComboBox = new ComboBox<>();
     private final ComboBox<String> sortComboBox = new ComboBox<>();
     private final Button resetFilterBtn = new Button("🔄  Reset");
 
-    // TableView Components (Cleaned up & Left-Aligned)
     private final TableView<Quiz> quizTable = new TableView<>();
     private final TableColumn<Quiz, Integer> idColumn = new TableColumn<>("#");
     private final TableColumn<Quiz, String> nameColumn = new TableColumn<>("QUIZ NAME");
@@ -131,12 +126,10 @@ public class QuizView {
         );
         root.setLeft(sidebar);
 
-        // Main Workspace Content (Full height from top)
         VBox mainContent = new VBox(12);
         mainContent.setPadding(new Insets(14, 24, 14, 24));
         mainContent.setStyle("-fx-background-color: #f8fafc;");
 
-        // Page Header
         HBox pageHeader = new HBox(16);
         pageHeader.setAlignment(Pos.CENTER_LEFT);
 
@@ -156,7 +149,6 @@ public class QuizView {
 
         pageHeader.getChildren().addAll(titleCol, headerSpacer, createQuizBtn);
 
-        // 4 Stat Cards Row
         HBox statCardsRow = new HBox(12);
         HBox.setHgrow(totalQuizzesCard.getRoot(), Priority.ALWAYS);
         HBox.setHgrow(totalTopicsCard.getRoot(), Priority.ALWAYS);
@@ -170,7 +162,6 @@ public class QuizView {
                 activeQuizzesCard.getRoot()
         );
 
-        // Search & Filter Toolbar
         HBox toolbar = new HBox(10);
         toolbar.setAlignment(Pos.CENTER_LEFT);
         toolbar.getStyleClass().add("card");
@@ -195,8 +186,7 @@ public class QuizView {
 
         toolbar.getChildren().addAll(searchQuizzesField, topicFilterComboBox, sortComboBox, resetFilterBtn, toolbarSpacer);
 
-        // Full Width Data TableView (Left-Aligned Data Columns, Center-Aligned ACTIONS)
-        quizTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        quizTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         idColumn.setMaxWidth(60);
         idColumn.setMinWidth(45);
@@ -224,7 +214,6 @@ public class QuizView {
         );
         VBox.setVgrow(quizTable, Priority.ALWAYS);
 
-        // Pagination Bar
         HBox paginationBar = new HBox(12);
         paginationBar.setAlignment(Pos.CENTER_LEFT);
         paginationBar.setPadding(new Insets(4, 2, 0, 2));

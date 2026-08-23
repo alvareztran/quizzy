@@ -2,14 +2,13 @@
 
 # 🎯 Quizzy - Enterprise Desktop Quiz & Learning Platform
 
-> A modern, high-performance JavaFX desktop application for interactive quiz management and online testing, built with **Java 21**, **Pure Java UI (No FXML)**, **SQL Server**, **JDBC**, and a decoupled **5-Tier Architecture (View - Controller - Service - DAO - Model)**.
+> A modern, high-performance JavaFX desktop application for interactive quiz management and online testing, built with **Java 21**, **Pure Java UI (No FXML)**, **Microsoft SQL Server**, **JDBC**, **BCrypt Security**, and a decoupled **5-Tier Architecture (View - Controller - Service - DAO - Model)**.
 
 ![Java](https://img.shields.io/badge/Java-21--LTS-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![JavaFX](https://img.shields.io/badge/JavaFX-Pure%20Java%20UI-FF0000?style=for-the-badge&logo=oracle&logoColor=white)
 ![Architecture](https://img.shields.io/badge/Architecture-View%20%7C%20Controller%20%7C%20Service%20%7C%20DAO%20%7C%20Model-blue?style=for-the-badge)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-QUIZZYDB-CC292B?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)
+![Security](https://img.shields.io/badge/Security-BCrypt%20%2B%20RBAC-emerald?style=for-the-badge)
 ![Maven](https://img.shields.io/badge/Maven-3.x-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
-![Security](https://img.shields.io/badge/RBAC-Service%20Enforced-emerald?style=for-the-badge)
 
 </div>
 
@@ -19,127 +18,128 @@
 
 - [Overview](#-overview)
 - [System Architecture & Design Patterns](#-system-architecture--design-patterns)
-- [Key Features & Module Audit](#-key-features--module-audit)
-- [Authentication & Role-Based Access Control (RBAC)](#-authentication--role-based-access-control-rbac)
+- [Key Features](#-key-features)
+- [Authentication & Security Standards](#-authentication--security-standards)
 - [Tech Stack](#-tech-stack)
 - [Project Directory Structure](#-project-directory-structure)
-- [Database Overview](#-database-overview)
+- [Database Schema Architecture](#-database-schema-architecture)
 - [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
-  - [Database Setup](#database-setup)
   - [Configuration](#configuration)
   - [Build & Run Commands](#build--run-commands)
 - [Application Workflow](#-application-workflow)
-- [Security Audit & Data Integrity](#-security-audit--data-integrity)
+- [Security & Data Integrity](#-security--data-integrity)
 - [License](#-license)
 
 ---
 
 ## 📖 Overview
 
-**Quizzy** is an enterprise-grade desktop quiz platform designed for educational institutions, corporate training programs, and individual learners. It delivers two tailored experiences:
-1. **Administrative Suite**: Comprehensive management of topics, quizzes, questions, answer keys, user accounts, and system-wide results.
-2. **Player Experience**: Interactive public landing page, self-registration, topic/quiz selection, timed test environment, real-time score calculation, and personal test history.
+**Quizzy** is an enterprise-grade desktop quiz and assessment platform designed for educational institutions, corporate training programs, and individual learners. The application provides two distinct operational suites:
 
-Quizzy strictly adheres to **Pure JavaFX Code Development (Zero FXML / FXMLLoader)**, eliminating XML parsing overhead while providing 100% type-safe GUI construction, modular component reuse, and an enterprise BigTech UI design system styled with JavaFX CSS.
+1. **Administrative Management Suite**: Comprehensive administration of knowledge topics, quiz configurations, question bank items with difficulty ratings, answer key distributions, user role management, and system-wide performance audit logs.
+2. **Interactive Player Platform**: Modern public portal, self-registration with strong password enforcement, real-time topic & quiz search, timed assessment engine with countdown timers, automatic server-side score calculation, and interactive test attempt review.
+
+Quizzy strictly follows **Pure JavaFX UI Construction (Zero FXML / FXMLLoader)**, eliminating XML parsing overhead, providing 100% compile-time type safety, modular component encapsulation, and modern desktop UI styling with JavaFX CSS.
 
 ---
 
 ## 🏗️ System Architecture & Design Patterns
 
-Quizzy strictly enforces a **5-Tier Decoupled Architecture**:
+Quizzy implements a robust **5-Tier Decoupled Architecture**:
 
 ```mermaid
 flowchart TD
     View[JavaFX View Layer\ncom.quizzy.view]
     Ctrl[Controller Layer\ncom.quizzy.controller]
-    Svc[Service Layer - RBAC & Validation\ncom.quizzy.service]
+    Svc[Service Layer - Security & Business Rules\ncom.quizzy.service]
     DAO[Data Access Object Layer\ncom.quizzy.dao]
-    JDBC[JDBC Driver\ncom.quizzy.util.DatabaseConnection]
-    DB[(SQL Server Database\nQUIZZYDB)]
+    DB[(Database Layer\nMicrosoft SQL Server)]
 
-    View -->|UI Events & Input| Ctrl
-    Ctrl -->|Service Requests| Svc
-    Svc -->|Security & Business Rules| DAO
-    DAO -->|PreparedStatement Queries| JDBC
-    JDBC -->|T-SQL Execution| DB
+    View -->|UI Events & Actions| Ctrl
+    Ctrl -->|Delegates Requests| Svc
+    Svc -->|Business Validation & RBAC| DAO
+    DAO -->|Parameterized Queries| DB
 ```
 
-### Design Patterns Implemented:
-- **MVC (Model-View-Controller)**: Complete separation between JavaFX UI layouts (`View`), user event handlers & navigation (`Controller`), and entity structures (`Model`).
-- **DAO (Data Access Object) Pattern**: Abstracts data persistence behind Java interfaces (`TopicDAO`, `QuizDAO`, `QuestionDAO`, `AnswerDAO`, `UserDAO`, `ResultDAO`).
-- **Service Layer Pattern**: Contains all business logic, score calculations, duplicate assertions, and security assertions (`SessionManager.requireAdmin()`).
-- **Factory Pattern**: Centralized object instantiation via `ServiceFactory` and `DAOFactory`.
-- **Singleton / Static Manager Pattern**: Centralized session state management (`SessionManager`) and stage routing (`SceneManager`).
+### Design Patterns Applied:
+- **MVC (Model-View-Controller)**: Strict separation between UI construction (`View`), user event orchestration (`Controller`), and domain models (`Model`).
+- **DAO (Data Access Object) Pattern**: Full abstraction of persistence logic behind interfaces with reusable mapper utilities (DRY).
+- **Service Layer Pattern**: Centralized business rule validation, automated scoring algorithms, and RBAC authorization guards.
+- **Factory Pattern**: Centralized factory instantiation via `ServiceFactory` and `DAOFactory`.
+- **Singleton / Static Manager Pattern**: Global stage navigation (`SceneManager`) and thread-safe user session management (`SessionManager`).
 
 ---
 
-## ✨ Key Features & Module Audit
+## ✨ Key Features
 
-### 🌐 1. Public Landing Page & Branding (`HomeView`)
-- **Compact Navbar**: Prominent Quizzy logo & brand title with ghost `Login` and gradient primary `Register` buttons.
-- **2-Column Hero Banner**: Gradient typography (*"Test your knowledge. Learn. Practice. **Improve.**"*), eyebrow badge, dual CTAs, and an abstract interactive Quiz UI mockup card composition.
-- **Live Real-time Metrics**: Live SQL Server metrics badge (`⚡ X Topics • Y Quizzes • Z Questions`) dynamically queried from database services.
-- **"WHY QUIZZY" Section**: Horizontal feature cards detailing Smart Practice, Performance Analytics, and Targeted Growth.
+### 🌐 1. Landing & Navigation Portal (`HomeView`, `HomeController`)
+- Modern branding with dynamic system statistics.
+- Direct role-based routing between Public, Player, and Admin zones.
 
-### 🔐 2. Authentication & User Registration (`LoginView`, `RegisterView`)
-- **Two-Way Navigation**: Seamless navigation between Home, Login, and Register screens with explicit *"← Back to Home"* buttons and clickable logo headers.
-- **Self-Registration**: Full Name, Username, Password, and Confirm Password validation.
-- **Role Security**: Role selection is strictly hidden on UI. Role is hardcoded to `"Player"` inside `AuthService`.
-- **Multi-layer Validation**: Frontend empty & mismatch checks + Service-level duplicate username checks (`"Username already exists."`).
+### 🔐 2. Authentication & Registration (`LoginView`, `RegisterView`, `AuthService`)
+- Self-service registration with real-time field validation.
+- Strict password complexity enforcement via Regex policy.
+- Secure credential protection using **BCrypt ($2a$12$)** cryptographic hashing.
+- Role-based automatic redirection on successful authentication.
 
-### 📁 3. Topic Bank Management (`TopicView`, `TopicService`, `TopicDAO`)
-- Admin CRUD for quiz categories.
-- Real-time search by topic name, status filtering, and sorting.
-- Deletion safeguards preventing deletion of topics with associated quizzes.
-- Table layout optimized with left-aligned data columns (`#`, `TOPIC NAME`, `DESCRIPTION`) and centered `ACTIONS`.
+### 📁 3. Knowledge Topic Management (`TopicView`, `TopicController`)
+- Administrative management for subject categories.
+- Real-time search, sorting, and deletion safety checks against active quizzes.
 
-### 📝 4. Quiz Assessment Management (`QuizView`, `QuizService`, `QuizDAO`)
-- Admin CRUD for quiz title, target topic association, question count, and time limit (minutes).
-- Topic filter dropdown and search toolbar.
-- Safeguards preventing deletion of active quizzes linked to recorded test results.
+### 📝 4. Quiz Assessment Configuration (`QuizView`, `QuizController`)
+- Customizable question counts, target topic associations, and time limits (minutes).
+- Multi-criteria filtering by topic, keyword, and creation timeline.
 
-### ❓ 5. Question & Answer Bank Management (`QuestionView`, `AnswerView`, `QuestionFormDialog`)
-- **Question Bank**: Manage question text, target quiz, and difficulty rating badges (`Easy`, `Medium`, `Hard`).
-- **Integrated Question Dialog (`QuestionFormDialog`)**: Unified dialog to create/edit a question along with its 4 multiple-choice options (A, B, C, D) and select the correct answer key.
-- **Standalone Answer Bank (`AnswerView`)**: Dedicated standalone table to search, filter by correct status (`● Correct` / `○ Incorrect`), and inspect option distractors.
+### ❓ 5. Question & Answer Bank (`QuestionView`, `AnswerView`, `QuestionFormDialog`)
+- Question bank management with difficulty badges (`Easy`, `Medium`, `Hard`).
+- Unified modal dialog for managing questions and 4 multiple-choice options (A, B, C, D) simultaneously.
+- Standalone answer inspection view for auditing distractors and key correctness.
 
-### 👤 6. User Account Management (`UserView`, `UserService`, `UserDAO`)
-- Admin user account overview with role badges (`Admin` / `Player`).
-- Admin user creation and password/role management.
+### 👥 6. User Management (`UserView`, `UserController`)
+- Administrative overview of registered users with role tags (`Admin` / `Player`).
+- Secure administrative account creation and profile updates.
 
-### 🎯 7. Player Timed Quiz Engine (`SelectQuizView`, `TakeQuizView`)
-- **Interactive Quiz Selection**: Topic-filtered quiz cards showing question counts and time limits.
-- **Timed Test Environment**: Countdown timer badge, question tracker (`Question X of N`), difficulty tags, and radio answer option cards.
-- **Server-Side Scoring**: Computes score (out of 10.0) using `HALF_UP` rounding, calculates correct/wrong answer counts, and persists results to SQL Server.
+### 🎯 7. Player Dashboard & Exam Engine (`PlayerDashboardView`, `SelectQuizView`, `TakeQuizView`)
+- Real-time search bar for learning topics and quizzes.
+- Timed examination canvas with real-time countdown timer alerts.
+- Question navigation stepper and confirmation modal prior to submission.
+- Server-side score evaluation with `RoundingMode.HALF_UP` precision.
 
-### 📊 8. Performance Analytics & History (`ResultView`, `ResultService`)
-- **Player History**: Isolated view showing only personal quiz test history (`WHERE UserID = session.userId`).
-- **Admin System Overview**: Filter and review test results across all registered users and quizzes.
+### 📊 8. Performance Analytics & History Review (`QuizHistoryView`, `ResultView`, `HistoryDetailView`)
+- Detailed test attempt history with metric badges (Score %, Correct/Incorrect ratio, Time taken).
+- Interactive question-by-question review with answer explanations and status indicators.
+- Administrator overview for reviewing attempts across all registered candidates.
 
 ---
 
-## 🔐 Authentication & Role-Based Access Control (RBAC)
+## 🔐 Authentication & Security Standards
 
-Quizzy implements **Service-Layer Enforced RBAC**:
+Quizzy enforces **Role-Based Access Control (RBAC)** across application layers:
 
 | Role | Permitted Actions | Security Layer Enforcement |
 |---|---|---|
-| **ADMIN** | Access Admin Dashboard, Topic CRUD, Quiz CRUD, Question CRUD, Answer CRUD, User Management, System-wide Results. | `SessionManager.requireAdmin()` called at entry point of all administrative Service mutation methods; `SceneManager` route guards. |
-| **PLAYER** | Public Home, Register, Login, Select Quiz, Take Quiz, Submit Quiz, View Personal Results History, Logout. | Automatically restricted from Admin routes; `ResultService` restricts queries to `WHERE UserID = session.userId`. Client-side role selection blocked. |
+| **ADMIN** | Full administrative suite: Topic CRUD, Quiz CRUD, Question CRUD, Answer CRUD, User Management, Global Result Analytics. | Guarded by `SessionManager.requireAdmin()` on all service mutations and `SceneManager` route checks. |
+| **PLAYER** | Public Portal, Registration, Login, Topic & Quiz Exploration, Timed Exam Execution, Personal Test History Review. | Administrative routes blocked; data queries strictly scoped to `WHERE UserID = session.userId`. |
+
+### Password Security Policy:
+- Minimum 8 characters.
+- Must contain at least one uppercase letter `[A-Z]`, one lowercase letter `[a-z]`, one numeric digit `[0-9]`, and one special symbol `[@$!%*?&]`.
+- Passwords are salted and hashed with **BCrypt ($2a$12$)** before persisting to database storage.
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology | Version / Details |
+| Component | Technology | Description |
 |---|---|---|
 | **Language** | Java | JDK 21 (LTS) |
 | **GUI Framework** | OpenJFX (JavaFX) | 21.0.2 (Pure Java UI Code, 0 FXML) |
-| **Database** | Microsoft SQL Server | Relational Database (`QUIZZYDB`) |
-| **Database Connectivity** | JDBC Driver | `com.microsoft.sqlserver:mssql-jdbc:13.4.0.jre11` |
-| **Build System** | Apache Maven | 3.x (`javafx-maven-plugin:0.0.8`) |
-| **Styling** | JavaFX CSS | Modern Enterprise CSS Theme (`style.css`) |
+| **Database** | Microsoft SQL Server | Relational Data Storage |
+| **Database Driver** | JDBC Driver | `mssql-jdbc:13.4.0.jre11` |
+| **Security & Hashing** | jBCrypt | `org.mindrot:jbcrypt:0.4` |
+| **Build & Tooling** | Apache Maven | 3.x (`javafx-maven-plugin:0.0.8`) |
+| **Styling** | JavaFX CSS | Theme (`style.css`) |
 
 ---
 
@@ -149,34 +149,36 @@ Quizzy implements **Service-Layer Enforced RBAC**:
 Quizzy/
 ├── pom.xml                                      # Maven Dependencies & Build Configuration
 ├── README.md                                    # Project Documentation
-├── docs/                                        # Architecture Diagrams
-│   └── architecture_diagram.png
 └── src/
     └── main/
         ├── java/com/quizzy/
         │   ├── Main.java                        # JavaFX Application Entry Point
-        │   ├── controller/                      # Controller Event & Orchestration Classes
+        │   ├── controller/                      # Controller Orchestration Layer
         │   │   ├── AdminDashboardController.java
+        │   │   ├── AdminResultController.java
         │   │   ├── AnswerController.java
+        │   │   ├── HistoryDetailController.java
         │   │   ├── HomeController.java
         │   │   ├── LoginController.java
         │   │   ├── MainController.java
+        │   │   ├── PlayerDashboardController.java
         │   │   ├── QuestionController.java
         │   │   ├── QuizController.java
+        │   │   ├── QuizHistoryController.java
         │   │   ├── RegisterController.java
         │   │   ├── ResultController.java
         │   │   ├── SelectQuizController.java
         │   │   ├── TakeQuizController.java
         │   │   ├── TopicController.java
         │   │   └── UserController.java
-        │   ├── dao/                             # Data Access Object Layer & Implementations
+        │   ├── dao/                             # Data Access Layer & Implementations
         │   │   ├── AnswerDAO.java / AnswerDAOImpl.java
         │   │   ├── QuestionDAO.java / QuestionDAOImpl.java
         │   │   ├── QuizDAO.java / QuizDAOImpl.java
         │   │   ├── ResultDAO.java / ResultDAOImpl.java
         │   │   ├── TopicDAO.java / TopicDAOImpl.java
         │   │   └── UserDAO.java / UserDAOImpl.java
-        │   ├── factory/                         # Factory Instantiators
+        │   ├── factory/                         # Factory Layer
         │   │   ├── DAOFactory.java
         │   │   └── ServiceFactory.java
         │   ├── model/                           # Domain Entity Models
@@ -186,7 +188,7 @@ Quizzy/
         │   │   ├── Result.java
         │   │   ├── Topic.java
         │   │   └── User.java
-        │   ├── service/                         # Service Layer Business Logic & RBAC
+        │   ├── service/                         # Business Logic & RBAC Security Layer
         │   │   ├── AnswerService.java
         │   │   ├── AuthService.java
         │   │   ├── QuestionService.java
@@ -194,17 +196,23 @@ Quizzy/
         │   │   ├── ResultService.java
         │   │   ├── TopicService.java
         │   │   └── UserService.java
-        │   ├── util/                            # Core Utilities
+        │   ├── util/                            # Security & Core Utilities
         │   │   ├── DatabaseConnection.java
+        │   │   ├── NavIconHelper.java
+        │   │   ├── PasswordHasher.java
         │   │   ├── SceneManager.java
         │   │   └── SessionManager.java
-        │   └── view/                            # Pure JavaFX View Layout Classes
+        │   └── view/                            # Pure JavaFX UI View Classes
         │       ├── AdminDashboardView.java
+        │       ├── AdminResultView.java
         │       ├── AnswerView.java
+        │       ├── HistoryDetailView.java
         │       ├── HomeView.java
         │       ├── LoginView.java
         │       ├── MainView.java
+        │       ├── PlayerDashboardView.java
         │       ├── QuestionView.java
+        │       ├── QuizHistoryView.java
         │       ├── QuizView.java
         │       ├── RegisterView.java
         │       ├── ResultView.java
@@ -212,15 +220,20 @@ Quizzy/
         │       ├── TakeQuizView.java
         │       ├── TopicView.java
         │       ├── UserView.java
-        │       └── component/                   # Reusable UI Widgets
+        │       └── component/                   # Reusable UI Dialogs & Widgets
+        │           ├── ConfirmDialog.java
         │           ├── QuestionFormDialog.java
+        │           ├── QuizFormDialog.java
         │           ├── StatCard.java
         │           ├── StatusBadge.java
+        │           ├── SubmitQuizModal.java
+        │           ├── TopicFormDialog.java
+        │           ├── UserFormDialog.java
         │           └── UserProfileWidget.java
         └── resources/com/quizzy/
             ├── css/
             │   └── style.css                    # Unified Application Stylesheet
-            └── images/                          # High-Resolution UI Image Assets
+            └── images/                          # UI Vector/Raster Assets
                 ├── hero.png
                 ├── quizzy-icon.png
                 ├── quizzy-logo.png
@@ -229,15 +242,16 @@ Quizzy/
 
 ---
 
-## 🗄️ Database Overview
+## 🗄️ Database Schema Architecture
 
-The relational database **`QUIZZYDB`** contains 6 core entities:
-- **`Users`**: User accounts and credentials (`UserID`, `Username`, `Password`, `FullName`, `Role`, `CreatedAt`).
-- **`Topic`**: Quiz categories (`TopicID`, `TopicName`, `Description`).
-- **`Quiz`**: Quiz configurations (`QuizID`, `TopicID`, `QuizName`, `NumberOfQuestions`, `TimeLimit`, `CreatedAt`).
-- **`Question`**: Assessment questions (`QuestionID`, `QuizID`, `Content`, `Difficulty`, `CreatedAt`).
-- **`Answer`**: Question multiple-choice options (`AnswerID`, `QuestionID`, `AnswerContent`, `IsCorrect`).
-- **`Result`**: User test performance history (`ResultID`, `UserID`, `QuizID`, `Score`, `TotalQuestions`, `CorrectAnswers`, `StartedAt`, `FinishedAt`).
+The relational database model comprises 6 core business entities:
+
+- **`Users`**: User identities, role privileges (`Admin` / `Player`), and salted BCrypt password hashes.
+- **`Topic`**: Knowledge domains and subject categories.
+- **`Quiz`**: Assessment definitions, associated topic relationships, question count thresholds, and time limits.
+- **`Question`**: Assessment questions categorized by difficulty level (`Easy`, `Medium`, `Hard`).
+- **`Answer`**: Multiple-choice options linked to parent questions with correctness flags.
+- **`Result`**: Candidate assessment logs including total score, accuracy ratio, start timestamp, and finish timestamp.
 
 ---
 
@@ -245,37 +259,35 @@ The relational database **`QUIZZYDB`** contains 6 core entities:
 
 ### Prerequisites
 - **Java Development Kit (JDK)**: Version 21 (LTS) or higher.
-- **Apache Maven**: Version 3.8+ added to system `PATH`.
-- **Microsoft SQL Server**: 2017+ with TCP/IP enabled on port `1433`.
-
-### Database Setup
-1. Create a database named **`QUIZZYDB`** in Microsoft SQL Server with the required tables (`Users`, `Topic`, `Quiz`, `Question`, `Answer`, `Result`).
-2. Seed an initial administrator account (`Role = 'Admin'`) to access management features.
+- **Apache Maven**: Version 3.8+ configured in system `PATH`.
+- **Microsoft SQL Server**: 2017+ instance reachable over TCP/IP (default port `1433`).
 
 ### Configuration
-Update connection settings in [`DatabaseConnection.java`](file:///d:/LearningProgramming/projects/Quizzy/src/main/java/com/quizzy/util/DatabaseConnection.java):
+Configure database connectivity parameters via system environment variables or local properties in [`DatabaseConnection.java`](file:///d:/LearningProgramming/projects/Quizzy/src/main/java/com/quizzy/util/DatabaseConnection.java):
+
 ```java
+// Example configuration template
 public class DatabaseConnection {
-    public static final String URL = "jdbc:sqlserver://localhost:1433;"
-            + "databaseName=QUIZZYDB;"
+    public static final String URL = "jdbc:sqlserver://${DB_HOST}:${DB_PORT};"
+            + "databaseName=${DB_NAME};"
             + "encrypt=true;"
             + "trustServerCertificate=true";
-    public static final String USERNAME = "YOUR_DB_USERNAME";
-    public static final String PASSWORD = "YOUR_DB_PASSWORD";
+    public static final String USERNAME = "${DB_USER}";
+    public static final String PASSWORD = "${DB_PASSWORD}";
 }
 ```
 
 ### Build & Run Commands
 
 ```bash
-# 1. Clone Repository
+# 1. Clone repository
 git clone https://github.com/alvareztran/quizzy.git
 cd quizzy
 
-# 2. Clean and Compile
-mvn clean compile
+# 2. Build and verify compilation
+mvn clean test-compile
 
-# 3. Launch Application via OpenJFX Plugin
+# 3. Launch application
 mvn javafx:run
 ```
 
@@ -284,32 +296,32 @@ mvn javafx:run
 ## 🔄 Application Workflow
 
 ```text
-                     [ Home Landing Page ]
-                               │
-               ┌───────────────┴───────────────┐
-               ▼                               ▼
-       [ Login Screen ] ◄─────────────── [ Register Screen ]
-               │
-       ┌───────┴───────────────────────────────┐
-       ▼                                       ▼
- (Admin Role)                           (Player Role)
-[ Admin Dashboard ]                    [ Select Quiz ]
-   ├── Topic Management                   └── [ Take Quiz ]
-   ├── Quiz Management                           └── [ View Personal Results ]
-   ├── Question Management
-   ├── Answer Management
+                      [ Home Landing Page ]
+                                │
+                ┌───────────────┴───────────────┐
+                ▼                               ▼
+        [ Login Screen ] ◄─────────────── [ Register Screen ]
+                │
+        ┌───────┴───────────────────────────────┐
+        ▼                                       ▼
+  (Admin Role)                            (Player Role)
+[ Admin Dashboard ]                     [ Player Dashboard ]
+   ├── Topic Management                    └── [ Choose Topic & Quiz ] (Live Search)
+   ├── Quiz Management                                └── [ Take Timed Exam ]
+   ├── Question Bank                                         └── [ View Results & Review ]
+   ├── Answer Bank
    ├── User Management
-   └── System-wide Results
+   └── Result Audit Logs
 ```
 
 ---
 
-## 🛡️ Security Audit & Data Integrity
+## 🛡️ Security & Data Integrity
 
-- **SQL Injection Prevention**: 100% of database interactions in DAO implementation classes use parameterized `PreparedStatement` instances. String concatenation for SQL queries is strictly prohibited.
-- **Resource Management**: All JDBC connections, statements, and result sets use Java `try-with-resources` blocks to prevent connection leaks.
-- **RBAC Security**: Service-layer assertion (`SessionManager.requireAdmin()`) prevents unauthorized code execution regardless of UI state.
-- **Data Isolation**: Players can only view their own test history. Database queries filter by `UserID = session.userId`.
+- **SQL Injection Defense**: 100% of queries use parameterized `PreparedStatement` instances; dynamic SQL string concatenation is strictly prohibited.
+- **Resource Management**: All JDBC connections, prepared statements, and result sets are managed via `try-with-resources` blocks to guarantee immediate connection release.
+- **Cryptographic Security**: Passwords are saved as one-way cryptographic hashes using BCrypt with configurable work factor ($2a$12$).
+- **Data Isolation**: Multi-tenant data segregation guarantees players can only query their own test history.
 
 ---
 

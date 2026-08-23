@@ -64,6 +64,11 @@ public class RegisterController {
             return;
         }
 
+        if (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$")) {
+            showError("Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&).");
+            return;
+        }
+        
         if (confirmPassword == null || confirmPassword.isBlank()) {
             showError("Confirm Password is required.");
             return;

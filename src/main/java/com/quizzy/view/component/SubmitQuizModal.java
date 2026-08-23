@@ -29,7 +29,6 @@ public class SubmitQuizModal {
         dialogPane.setMaxWidth(480);
         dialogPane.setStyle("-fx-background-color: #ffffff; -fx-background-radius: 16px; -fx-border-radius: 16px; -fx-border-color: #e5e7eb; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.18), 24, 0, 0, 8);");
 
-        // Custom Header Bar
         HBox headerBar = new HBox(10);
         headerBar.setAlignment(Pos.CENTER_LEFT);
         headerBar.setPadding(new Insets(16, 20, 16, 20));
@@ -43,7 +42,6 @@ public class SubmitQuizModal {
 
         headerBar.getChildren().addAll(iconL, titleL);
 
-        // Body Content
         VBox bodyContent = new VBox(18);
         bodyContent.setPadding(new Insets(24, 24, 20, 24));
 
@@ -68,7 +66,6 @@ public class SubmitQuizModal {
         textGroup.getChildren().addAll(summaryL, promptL);
         warningRow.getChildren().addAll(warnIcon, textGroup);
 
-        // Question Stepper Pills Status Review
         HBox stepperRow = new HBox(8);
         stepperRow.setAlignment(Pos.CENTER);
         stepperRow.setPadding(new Insets(6, 0, 0, 0));
@@ -92,7 +89,6 @@ public class SubmitQuizModal {
         VBox mainContainer = new VBox(0, headerBar, bodyContent);
         dialogPane.setContent(mainContainer);
 
-        // Footer Action Buttons
         ButtonType cancelType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
         ButtonType submitType = new ButtonType("Submit Quiz →", ButtonBar.ButtonData.OK_DONE);
 

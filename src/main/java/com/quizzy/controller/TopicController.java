@@ -5,6 +5,7 @@ import com.quizzy.model.Quiz;
 import com.quizzy.model.Topic;
 import com.quizzy.service.QuizService;
 import com.quizzy.service.TopicService;
+import com.quizzy.util.NavIconHelper;
 import com.quizzy.util.SceneManager;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.TopicView;
@@ -46,7 +47,6 @@ public class TopicController {
     }
 
     private void initEventHandlers() {
-        // Navigation Buttons
         view.getDashBtn().setOnAction(e -> SceneManager.showMain());
         view.getTopicBtn().setOnAction(e -> loadTopics());
         view.getQuizBtn().setOnAction(e -> SceneManager.showQuiz());
@@ -55,13 +55,9 @@ public class TopicController {
         view.getUserBtn().setOnAction(e -> SceneManager.showUser());
         view.getResultBtn().setOnAction(e -> SceneManager.showAdminResult());
 
-        // Logout via User Profile ContextMenu Item
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
-
-        // Header Action
         view.getCreateTopicBtn().setOnAction(e -> openCreateTopicDialog());
 
-        // Search & Filters
         view.getSearchTopicsField().textProperty().addListener(
                 (observable, oldValue, newValue) -> filterTopics(newValue)
         );
@@ -76,10 +72,9 @@ public class TopicController {
             filterTopics(null);
         });
 
-        // Setup Actions Table Column Center Aligned
         view.getActionsColumn().setCellFactory(col -> new TableCell<>() {
-            private final Button editBtn = com.quizzy.util.NavIconHelper.createEditActionButton();
-            private final Button deleteBtn = com.quizzy.util.NavIconHelper.createDeleteActionButton();
+            private final Button editBtn = NavIconHelper.createEditActionButton();
+            private final Button deleteBtn = NavIconHelper.createDeleteActionButton();
             private final HBox btnBox = new HBox(8, editBtn, deleteBtn);
 
             {

@@ -3,6 +3,7 @@ package com.quizzy.controller;
 import com.quizzy.factory.ServiceFactory;
 import com.quizzy.model.User;
 import com.quizzy.service.UserService;
+import com.quizzy.util.NavIconHelper;
 import com.quizzy.util.SceneManager;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.UserView;
@@ -43,7 +44,6 @@ public class UserController {
     }
 
     private void initEventHandlers() {
-        // Navigation Buttons
         view.getDashBtn().setOnAction(e -> SceneManager.showMain());
         view.getTopicBtn().setOnAction(e -> SceneManager.showTopic());
         view.getQuizBtn().setOnAction(e -> SceneManager.showQuiz());
@@ -52,13 +52,9 @@ public class UserController {
         view.getUserBtn().setOnAction(e -> loadUsers());
         view.getResultBtn().setOnAction(e -> SceneManager.showAdminResult());
 
-        // Logout via User Profile ContextMenu Item
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
-
-        // Header Action
         view.getCreateUserBtn().setOnAction(e -> openCreateUserDialog());
 
-        // Search & Filters
         view.getSearchUsersField().textProperty().addListener((obs, oldV, newV) -> filterUsers());
         view.getRoleFilterComboBox().valueProperty().addListener((obs, oldV, newV) -> filterUsers());
         view.getSortComboBox().valueProperty().addListener((obs, oldV, newV) -> filterUsers());
@@ -70,10 +66,9 @@ public class UserController {
             filterUsers();
         });
 
-        // Setup Actions Column Center Aligned
         view.getActionsColumn().setCellFactory(col -> new TableCell<>() {
-            private final Button editBtn = com.quizzy.util.NavIconHelper.createEditActionButton();
-            private final Button deleteBtn = com.quizzy.util.NavIconHelper.createDeleteActionButton();
+            private final Button editBtn = NavIconHelper.createEditActionButton();
+            private final Button deleteBtn = NavIconHelper.createDeleteActionButton();
             private final HBox btnBox = new HBox(8, editBtn, deleteBtn);
 
             {

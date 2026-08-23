@@ -3,6 +3,7 @@ package com.quizzy.service;
 import com.quizzy.dao.UserDAO;
 import com.quizzy.factory.DAOFactory;
 import com.quizzy.model.User;
+import com.quizzy.util.PasswordHasher;
 import com.quizzy.util.SessionManager;
 import java.util.List;
 
@@ -41,7 +42,10 @@ public class UserService {
         }
         User existing = userDAO.findByUsername(user.getUserName());
         if (existing != null) {
-            return false; // Username already exists
+            return false;
+        }
+        if (user.getPassword() != null && !user.getPassword().isBlank()) {
+            user.setPassword(PasswordHasher.hash(user.getPassword()));
         }
         return userDAO.insert(user);
     }
@@ -51,6 +55,14 @@ public class UserService {
 
         if (user == null || user.getUserId() <= 0) {
             return false;
+        }
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            User existing = userDAO.findById(user.getUserId());
+            if (existing != null) {
+                user.setPassword(existing.getPassword());
+            }
+        } else {
+            user.setPassword(PasswordHasher.hash(user.getPassword()));
         }
         return userDAO.update(user);
     }

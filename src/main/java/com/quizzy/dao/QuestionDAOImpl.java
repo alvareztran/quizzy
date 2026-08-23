@@ -2,43 +2,51 @@ package com.quizzy.dao;
 
 import com.quizzy.model.Question;
 import com.quizzy.util.DatabaseConnection;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 public class QuestionDAOImpl implements QuestionDAO {
-    
+
+    private Question mapQuestion(ResultSet rs) throws SQLException {
+        Timestamp ts = rs.getTimestamp("CreatedAt");
+        LocalDateTime createdAt = (ts != null) ? ts.toLocalDateTime() : null;
+        return new Question(
+                rs.getInt("QuestionID"),
+                rs.getInt("QuizID"),
+                rs.getString("Content"),
+                rs.getString("Difficulty"),
+                createdAt
+        );
+    }
+
     @Override
     public Question findById(int questionId) {
-        
         String sql = """
                      SELECT * 
                      FROM Question
                      WHERE QuestionID=?
                      """;
-                
+
         try (Connection cn = DatabaseConnection.getConnection();
-             PreparedStatement ps = cn.prepareStatement(sql);) {
-            
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
             ps.setInt(1, questionId);
-            try (ResultSet rs = ps.executeQuery();) {
+            try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return new Question(
-                        rs.getInt("QuestionID"),
-                        rs.getInt("QuizID"),
-                        rs.getString("Content"),
-                        rs.getString("Difficulty"),
-                        toLocalDateTime(rs.getTimestamp("CreatedAt"))
-                    );
+                    return mapQuestion(rs);
                 }
             }
-            
+
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("QuestionDAO.findById error: " + e.getMessage());
         }
         return null;
-        
     }
 
     @Override
@@ -51,124 +59,94 @@ public class QuestionDAOImpl implements QuestionDAO {
                      """;
         try (Connection cn = DatabaseConnection.getConnection();
              PreparedStatement ps = cn.prepareStatement(sql);
-             ResultSet rs = ps.executeQuery();) {
+             ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                Question question = new Question(
-                    rs.getInt("QuestionID"),
-                    rs.getInt("QuizID"),
-                    rs.getString("Content"),
-                    rs.getString("Difficulty"),
-                    toLocalDateTime(rs.getTimestamp("CreatedAt"))
-                );
-                questions.add(question);
+                questions.add(mapQuestion(rs));
             }
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("QuestionDAO.findAll error: " + e.getMessage());
         }
         return questions;
     }
-    
+
     @Override
     public List<Question> findByQuizId(int quizId) {
-        
         List<Question> questions = new ArrayList<>();
-        
         String sql = """
                      SELECT * 
                      FROM Question
                      WHERE QuizID=?
                      ORDER BY QuestionID
                      """;
-        
+
         try (Connection cn = DatabaseConnection.getConnection();
-             PreparedStatement ps = cn.prepareStatement(sql);) {
-            
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
             ps.setInt(1, quizId);
-            try (ResultSet rs = ps.executeQuery();) {
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Question question = new Question(
-                        rs.getInt("QuestionID"),
-                        rs.getInt("QuizID"),
-                        rs.getString("Content"),
-                        rs.getString("Difficulty"),
-                        toLocalDateTime(rs.getTimestamp("CreatedAt"))
-                    );
-                    questions.add(question);
+                    questions.add(mapQuestion(rs));
                 }
             }
-            
+
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("QuestionDAO.findByQuizId error: " + e.getMessage());
         }
         return questions;
-
     }
-    
+
     @Override
     public List<Question> findRandomByQuizId(int quizId, int numberOfQuestions) {
-        
         List<Question> questions = new ArrayList<>();
-        
         String sql = """
                      SELECT TOP(?) *
                      FROM Question
                      WHERE QuizID=?
                      ORDER BY NEWID()
                      """;
-        
+
         try (Connection cn = DatabaseConnection.getConnection();
-             PreparedStatement ps = cn.prepareStatement(sql);) {
-            
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
             ps.setInt(1, numberOfQuestions);
             ps.setInt(2, quizId);
-            
-            try (ResultSet rs = ps.executeQuery();) {
+
+            try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
-                    Question question = new Question(
-                        rs.getInt("QuestionID"),
-                        rs.getInt("QuizID"),
-                        rs.getString("Content"),
-                        rs.getString("Difficulty"),
-                        toLocalDateTime(rs.getTimestamp("CreatedAt"))
-                    );
-                    questions.add(question);
+                    questions.add(mapQuestion(rs));
                 }
             }
-            
+
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("QuestionDAO.findRandomByQuizId error: " + e.getMessage());
         }
         return questions;
-        
     }
-    
+
     @Override
     public boolean insert(Question question) {
-        
         String sql = """
                      INSERT INTO Question (QuizID, Content, Difficulty)
                      VALUES (?,?,?)
                      """;
-        
+
         try (Connection cn = DatabaseConnection.getConnection();
-             PreparedStatement ps = cn.prepareStatement(sql);) {
-            
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
             ps.setInt(1, question.getQuizId());
             ps.setString(2, question.getContent());
             ps.setString(3, question.getDifficulty());
-            
+
             return ps.executeUpdate() > 0;
-            
+
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("QuestionDAO.insert error: " + e.getMessage());
         }
         return false;
-        
     }
-    
+
     @Override
-    public boolean update (Question question) {
-        
+    public boolean update(Question question) {
         String sql = """
                      UPDATE Question 
                      SET QuizID=?, 
@@ -176,47 +154,39 @@ public class QuestionDAOImpl implements QuestionDAO {
                          Difficulty=?
                      WHERE QuestionID=?
                      """;
-        
+
         try (Connection cn = DatabaseConnection.getConnection();
-             PreparedStatement ps = cn.prepareStatement(sql);) {
-            
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
             ps.setInt(1, question.getQuizId());
             ps.setString(2, question.getContent());
             ps.setString(3, question.getDifficulty());
             ps.setInt(4, question.getQuestionId());
-            
+
             return ps.executeUpdate() > 0;
-            
+
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("QuestionDAO.update error: " + e.getMessage());
         }
         return false;
-        
     }
-    
+
     @Override
     public boolean delete(int questionId) {
-        
         String sql = """
                      DELETE FROM Question
                      WHERE QuestionID=?
                      """;
-        
+
         try (Connection cn = DatabaseConnection.getConnection();
-             PreparedStatement ps = cn.prepareStatement(sql);) {
-            
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
             ps.setInt(1, questionId);
             return ps.executeUpdate() > 0;
-            
+
         } catch (SQLException e) {
-            System.out.println("Error: " + e.getMessage());
+            System.err.println("QuestionDAO.delete error: " + e.getMessage());
         }
         return false;
-        
     }
-
-    private LocalDateTime toLocalDateTime(Timestamp ts) {
-        return ts != null ? ts.toLocalDateTime() : null;
-    }
-
 }

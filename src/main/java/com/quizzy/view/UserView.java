@@ -29,7 +29,6 @@ public class UserView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Sidebar Navigation Buttons
     private final Button dashBtn = new Button();
     private final Button topicBtn = new Button();
     private final Button quizBtn = new Button();
@@ -38,22 +37,18 @@ public class UserView {
     private final Button userBtn = new Button();
     private final Button resultBtn = new Button();
 
-    // Page Header Action
     private final Button createUserBtn = new Button("+ Create User");
 
-    // Stat Cards
     private final StatCard totalUsersCard = new StatCard("👥", "Total Users", "0", "All system accounts", "#E0F2FE", "#0284C7");
     private final StatCard adminUsersCard = new StatCard("🛡️", "Admins", "0", "System administrators", "#EEF2FF", "#4F46E5");
     private final StatCard playerUsersCard = new StatCard("🎯", "Players", "0", "Registered quiz takers", "#DCFCE7", "#16A34A");
     private final StatCard activeUsersCard = new StatCard("🟢", "Active Accounts", "0", "Verified users", "#FEF3C7", "#D97706");
 
-    // Toolbar Components
     private final TextField searchUsersField = new TextField();
     private final ComboBox<String> roleFilterComboBox = new ComboBox<>();
     private final ComboBox<String> sortComboBox = new ComboBox<>();
     private final Button resetFilterBtn = new Button("🔄  Reset");
 
-    // TableView Components (Cleaned up: Left-Aligned Data Columns, Center-Aligned ACTIONS)
     private final TableView<User> userTable = new TableView<>();
     private final TableColumn<User, Integer> idColumn = new TableColumn<>("#");
     private final TableColumn<User, String> fullNameColumn = new TableColumn<>("FULL NAME");
@@ -132,12 +127,10 @@ public class UserView {
         );
         root.setLeft(sidebar);
 
-        // Main Workspace Content (Full height from top)
         VBox mainContent = new VBox(12);
         mainContent.setPadding(new Insets(14, 24, 14, 24));
         mainContent.setStyle("-fx-background-color: #f8fafc;");
 
-        // Page Header
         HBox pageHeader = new HBox(16);
         pageHeader.setAlignment(Pos.CENTER_LEFT);
 
@@ -157,7 +150,6 @@ public class UserView {
 
         pageHeader.getChildren().addAll(titleCol, headerSpacer, createUserBtn);
 
-        // 4 Stat Cards Row
         HBox statCardsRow = new HBox(12);
         HBox.setHgrow(totalUsersCard.getRoot(), Priority.ALWAYS);
         HBox.setHgrow(adminUsersCard.getRoot(), Priority.ALWAYS);
@@ -171,7 +163,6 @@ public class UserView {
                 activeUsersCard.getRoot()
         );
 
-        // Search & Filter Toolbar
         HBox toolbar = new HBox(10);
         toolbar.setAlignment(Pos.CENTER_LEFT);
         toolbar.getStyleClass().add("card");
@@ -198,8 +189,7 @@ public class UserView {
 
         toolbar.getChildren().addAll(searchUsersField, roleFilterComboBox, sortComboBox, resetFilterBtn, toolbarSpacer);
 
-        // Full Width Data TableView (Left-Aligned Data Columns, Center-Aligned ACTIONS)
-        userTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        userTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         idColumn.setMaxWidth(60);
         idColumn.setMinWidth(45);
@@ -249,7 +239,6 @@ public class UserView {
         );
         VBox.setVgrow(userTable, Priority.ALWAYS);
 
-        // Pagination Bar
         HBox paginationBar = new HBox(12);
         paginationBar.setAlignment(Pos.CENTER_LEFT);
         paginationBar.setPadding(new Insets(4, 2, 0, 2));

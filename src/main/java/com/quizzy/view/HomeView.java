@@ -17,13 +17,11 @@ public class HomeView {
     private final BorderPane root = new BorderPane();
     private final ScrollPane scrollPane = new ScrollPane();
 
-    // Header Branding & Nav Buttons
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
     private final Button headerLoginBtn = new Button("Login");
     private final Button headerRegisterBtn = new Button("Register");
 
-    // Hero CTAs
     private final Button heroGetStartedBtn = new Button("Get Started →");
     private final Button heroLoginBtn = new Button("Login");
 
@@ -34,9 +32,6 @@ public class HomeView {
     private void createUI() {
         root.setPrefSize(1240, 760);
 
-        // ==========================================
-        // 1. TOP NAVBAR
-        // ==========================================
         HBox navbar = new HBox(12);
         navbar.setAlignment(Pos.CENTER_LEFT);
         navbar.setPadding(new Insets(16, 52, 16, 52));
@@ -48,8 +43,7 @@ public class HomeView {
             logoImageView.setFitHeight(30);
             logoImageView.setPreserveRatio(true);
             logoImageView.setSmooth(true);
-        } catch (Exception e) {
-            // Fallback
+        } catch (Exception ignored) {
         }
 
         brandNameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #191c1e; -fx-letter-spacing: 1px;");
@@ -67,20 +61,15 @@ public class HomeView {
         navbar.getChildren().addAll(logoBrandBox, navSpacer, headerLoginBtn, headerRegisterBtn);
         root.setTop(navbar);
 
-        // ==========================================
-        // 2. MAIN SCROLLABLE HERO & CONTENT CANVAS
-        // ==========================================
         VBox contentContainer = new VBox(40);
         contentContainer.setAlignment(Pos.CENTER);
         contentContainer.setPadding(new Insets(48, 52, 40, 52));
         contentContainer.setStyle("-fx-background-color: #f8f9fb;");
 
-        // 2-Column Hero Section
         HBox heroRow = new HBox(48);
         heroRow.setAlignment(Pos.CENTER);
         heroRow.setMaxWidth(1140);
 
-        // LEFT COLUMN: Typography & Actions
         VBox heroLeftCol = new VBox(22);
         heroLeftCol.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(heroLeftCol, Priority.ALWAYS);
@@ -112,15 +101,13 @@ public class HomeView {
 
         heroLeftCol.getChildren().addAll(titleBox, subtitleLabel, ctaRow);
 
-        // RIGHT COLUMN: Clean Quiz Card Mockup (Matching media_1787420678678.png)
         VBox heroRightCol = new VBox();
         heroRightCol.setAlignment(Pos.CENTER);
 
-        VBox quizMockupCard = createDesignQuizMockupCard();
+        VBox quizMockupCard = createQuizMockupCard();
         heroRightCol.getChildren().add(quizMockupCard);
 
         heroRow.getChildren().addAll(heroLeftCol, heroRightCol);
-
         contentContainer.getChildren().add(heroRow);
 
         scrollPane.setContent(contentContainer);
@@ -129,9 +116,6 @@ public class HomeView {
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8f9fb;");
         root.setCenter(scrollPane);
 
-        // ==========================================
-        // 3. BOTTOM FOOTER BAR (Matching media_1787420678678.png)
-        // ==========================================
         HBox footerBar = new HBox(20);
         footerBar.setAlignment(Pos.CENTER_LEFT);
         footerBar.setPadding(new Insets(18, 52, 18, 52));
@@ -161,16 +145,12 @@ public class HomeView {
         root.setBottom(footerBar);
     }
 
-    /**
-     * Builds the Quiz Card Mockup matching media_1787420678678.png
-     */
-    private VBox createDesignQuizMockupCard() {
+    private VBox createQuizMockupCard() {
         VBox card = new VBox(18);
         card.setPrefWidth(440);
         card.setMaxWidth(440);
         card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-padding: 28; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.06), 20, 0, 0, 6);");
 
-        // Top Row: Category Pill & Question Counter
         HBox topRow = new HBox(12);
         topRow.setAlignment(Pos.CENTER_LEFT);
 
@@ -185,12 +165,10 @@ public class HomeView {
 
         topRow.getChildren().addAll(catPill, spacer, qCountLabel);
 
-        // Question Title
         Label qTitle = new Label("What is the primary principle of Object-Oriented Programming?");
         qTitle.setStyle("-fx-font-size: 18px; -fx-font-weight: bold; -fx-text-fill: #191c1e; -fx-line-spacing: 4px;");
         qTitle.setWrapText(true);
 
-        // Option 1 (Normal)
         HBox opt1 = new HBox(12);
         opt1.setAlignment(Pos.CENTER_LEFT);
         opt1.setPadding(new Insets(12, 16, 12, 16));
@@ -201,7 +179,6 @@ public class HomeView {
         opt1Text.setStyle("-fx-text-fill: #334155; -fx-font-size: 14px;");
         opt1.getChildren().addAll(circle1, opt1Text);
 
-        // Option 2 (Selected & Active Highlight)
         HBox opt2 = new HBox(12);
         opt2.setAlignment(Pos.CENTER_LEFT);
         opt2.setPadding(new Insets(12, 16, 12, 16));
@@ -212,7 +189,6 @@ public class HomeView {
         opt2Text.setStyle("-fx-font-weight: bold; -fx-text-fill: #4338ca; -fx-font-size: 14px;");
         opt2.getChildren().addAll(check2, opt2Text);
 
-        // Option 3 (Normal)
         HBox opt3 = new HBox(12);
         opt3.setAlignment(Pos.CENTER_LEFT);
         opt3.setPadding(new Insets(12, 16, 12, 16));
@@ -223,7 +199,6 @@ public class HomeView {
         opt3Text.setStyle("-fx-text-fill: #334155; -fx-font-size: 14px;");
         opt3.getChildren().addAll(circle3, opt3Text);
 
-        // Bottom Action Link
         HBox bottomRow = new HBox();
         bottomRow.setAlignment(Pos.CENTER_RIGHT);
 

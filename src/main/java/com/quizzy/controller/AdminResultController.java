@@ -63,7 +63,6 @@ public class AdminResultController {
     }
 
     private void initEventHandlers() {
-        // Navigation sidebar handlers
         view.getDashBtn().setOnAction(e -> SceneManager.showMain());
         view.getTopicBtn().setOnAction(e -> SceneManager.showTopic());
         view.getQuizBtn().setOnAction(e -> SceneManager.showQuiz());
@@ -74,7 +73,6 @@ public class AdminResultController {
 
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
 
-        // Search & Filter event handlers
         view.getSearchField().textProperty().addListener((obs, oldVal, newVal) -> applyFilters());
         view.getTopicFilterComboBox().setOnAction(e -> applyFilters());
         view.getDateFilterComboBox().setOnAction(e -> applyFilters());
@@ -88,7 +86,6 @@ public class AdminResultController {
             applyFilters();
         });
 
-        // Pagination
         view.getPrevPageBtn().setOnAction(e -> {
             if (currentPage > 1) {
                 currentPage--;
@@ -108,7 +105,6 @@ public class AdminResultController {
     private void setupTableCells() {
         view.getResultTable().setItems(displayedItems);
 
-        // 1. User Column
         view.getUserColumn().setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         view.getUserColumn().setCellFactory(col -> new TableCell<>() {
             @Override
@@ -141,7 +137,6 @@ public class AdminResultController {
             }
         });
 
-        // 2. Quiz Column
         view.getQuizColumn().setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         view.getQuizColumn().setCellFactory(col -> new TableCell<>() {
             @Override
@@ -165,7 +160,6 @@ public class AdminResultController {
             }
         });
 
-        // 3. Score Column (Pill Badge)
         view.getScoreColumn().setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         view.getScoreColumn().setCellFactory(col -> new TableCell<>() {
             @Override
@@ -188,7 +182,6 @@ public class AdminResultController {
             }
         });
 
-        // 4. Date & Time Column
         view.getDateTimeColumn().setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         view.getDateTimeColumn().setCellFactory(col -> new TableCell<>() {
             @Override
@@ -212,7 +205,6 @@ public class AdminResultController {
             }
         });
 
-        // 5. Duration Column
         view.getDurationColumn().setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         view.getDurationColumn().setCellFactory(col -> new TableCell<>() {
             @Override
@@ -228,7 +220,6 @@ public class AdminResultController {
             }
         });
 
-        // 6. Action Column (View Details Button)
         view.getActionColumn().setCellValueFactory(cellData -> new SimpleObjectProperty<>(cellData.getValue()));
         view.getActionColumn().setCellFactory(col -> new TableCell<>() {
             private final Button detailsBtn = new Button("View Details");

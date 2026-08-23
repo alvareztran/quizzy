@@ -28,7 +28,6 @@ public class TopicView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Sidebar Navigation Buttons
     private final Button dashBtn = new Button();
     private final Button topicBtn = new Button();
     private final Button quizBtn = new Button();
@@ -37,22 +36,18 @@ public class TopicView {
     private final Button userBtn = new Button();
     private final Button resultBtn = new Button();
 
-    // Page Header Action
     private final Button createTopicBtn = new Button("+ Create Topic");
 
-    // Stat Cards
     private final StatCard totalTopicsCard = new StatCard("📁", "Total Topics", "0", "All topics in system", "#EEF2FF", "#4F46E5");
     private final StatCard totalQuizzesCard = new StatCard("📝", "Total Quizzes", "0", "Across all topics", "#DCFCE7", "#16A34A");
     private final StatCard totalQuestionsCard = new StatCard("❓", "Total Questions", "0", "Across all topics", "#FEF3C7", "#D97706");
     private final StatCard activeTopicsCard = new StatCard("👥", "Active Topics", "0", "Active topics", "#E0F2FE", "#0284C7");
 
-    // Toolbar Components
     private final TextField searchTopicsField = new TextField();
     private final ComboBox<String> statusFilterComboBox = new ComboBox<>();
     private final ComboBox<String> sortComboBox = new ComboBox<>();
     private final Button resetFilterBtn = new Button("🔄  Reset");
 
-    // TableView Components
     private final TableView<Topic> topicTable = new TableView<>();
     private final TableColumn<Topic, Integer> idColumn = new TableColumn<>("#");
     private final TableColumn<Topic, String> nameColumn = new TableColumn<>("TOPIC NAME");
@@ -130,12 +125,10 @@ public class TopicView {
         );
         root.setLeft(sidebar);
 
-        // Main Content Area (Full height from top)
         VBox mainContent = new VBox(12);
         mainContent.setPadding(new Insets(14, 24, 14, 24));
         mainContent.setStyle("-fx-background-color: #f8fafc;");
 
-        // Page Header
         HBox pageHeader = new HBox(16);
         pageHeader.setAlignment(Pos.CENTER_LEFT);
 
@@ -155,7 +148,6 @@ public class TopicView {
 
         pageHeader.getChildren().addAll(titleCol, headerSpacer, createTopicBtn);
 
-        // 4 Stat Cards Row (Expanding 100% Width)
         HBox statCardsRow = new HBox(12);
         HBox.setHgrow(totalTopicsCard.getRoot(), Priority.ALWAYS);
         HBox.setHgrow(totalQuizzesCard.getRoot(), Priority.ALWAYS);
@@ -169,7 +161,6 @@ public class TopicView {
                 activeTopicsCard.getRoot()
         );
 
-        // Search & Filter Toolbar Card
         HBox toolbar = new HBox(10);
         toolbar.setAlignment(Pos.CENTER_LEFT);
         toolbar.getStyleClass().add("card");
@@ -196,8 +187,7 @@ public class TopicView {
 
         toolbar.getChildren().addAll(searchTopicsField, statusFilterComboBox, sortComboBox, resetFilterBtn, toolbarSpacer);
 
-        // Full Width Data TableView (All data columns Left Aligned, ACTIONS Center Aligned)
-        topicTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        topicTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         idColumn.setMaxWidth(60);
         idColumn.setMinWidth(45);
@@ -229,7 +219,6 @@ public class TopicView {
         topicTable.getColumns().addAll(idColumn, nameColumn, descriptionColumn, actionsColumn);
         VBox.setVgrow(topicTable, Priority.ALWAYS);
 
-        // Table Pagination Footer
         HBox paginationBar = new HBox(12);
         paginationBar.setAlignment(Pos.CENTER_LEFT);
         paginationBar.setPadding(new Insets(4, 2, 0, 2));

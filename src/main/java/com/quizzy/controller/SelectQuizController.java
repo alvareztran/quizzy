@@ -30,9 +30,11 @@ public class SelectQuizController {
     private final TopicService topicService = ServiceFactory.getTopicService();
     private final QuizService quizService = ServiceFactory.getQuizService();
     private final ObservableList<Topic> topicList = FXCollections.observableArrayList();
+    private final List<Topic> allTopics = new ArrayList<>();
 
     private Quiz selectedQuiz = null;
     private final List<QuizCardHolder> quizCardHolders = new ArrayList<>();
+    private List<Quiz> currentTopicQuizzes = new ArrayList<>();
 
     public SelectQuizController() {
         this.view = new SelectQuizView();
@@ -57,6 +59,9 @@ public class SelectQuizController {
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
         view.getLogoImageView().setOnMouseClicked(e -> SceneManager.showHome());
         view.getBrandNameLabel().setOnMouseClicked(e -> SceneManager.showHome());
+
+        view.getSearchTopicField().textProperty().addListener((obs, oldVal, query) -> filterTopics(query));
+        view.getSearchQuizField().textProperty().addListener((obs, oldVal, query) -> filterQuizzes(query));
 
         view.getTopicListView().getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, selectedTopic) -> loadQuizzesByTopic(selectedTopic)
@@ -101,49 +106,97 @@ public class SelectQuizController {
 
     private void loadTopics() {
         try {
-            topicList.setAll(topicService.getAllTopics());
-            if (!topicList.isEmpty()) {
-                view.getTopicListView().getSelectionModel().select(0);
+            allTopics.clear();
+            List<Topic> topics = topicService.getAllTopics();
+            if (topics != null) {
+                allTopics.addAll(topics);
             }
+            filterTopics(view.getSearchTopicField().getText());
         } catch (Exception e) {
             showError("Failed to load topics from database.");
         }
     }
 
-    private void loadQuizzesByTopic(Topic topic) {
-        quizCardHolders.clear();
-        view.getQuizCardsContainer().getChildren().clear();
-        selectedQuiz = null;
+    private void filterTopics(String query) {
+        String search = (query != null) ? query.trim().toLowerCase() : "";
+        List<Topic> filtered = new ArrayList<>();
+        for (Topic t : allTopics) {
+            if (search.isEmpty() || (t.getTopicName() != null && t.getTopicName().toLowerCase().contains(search))) {
+                filtered.add(t);
+            }
+        }
+        topicList.setAll(filtered);
+        if (!topicList.isEmpty()) {
+            view.getTopicListView().getSelectionModel().select(0);
+        } else {
+            view.getTopicListView().getSelectionModel().clearSelection();
+            loadQuizzesByTopic(null);
+        }
+    }
 
+    private void loadQuizzesByTopic(Topic topic) {
+        currentTopicQuizzes.clear();
         if (topic == null) {
+            filterQuizzes(view.getSearchQuizField().getText());
             return;
         }
 
         try {
             List<Quiz> quizzes = quizService.getQuizzesByTopicId(topic.getTopicId());
-            if (quizzes == null || quizzes.isEmpty()) {
-                VBox emptyBox = new VBox(12);
-                emptyBox.setPadding(new Insets(40, 20, 40, 20));
-                Label emptyLabel = new Label("No quizzes available under \"" + topic.getTopicName() + "\" yet.");
-                emptyLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #64748b; -fx-font-weight: 600;");
-                emptyBox.getChildren().add(emptyLabel);
-                view.getQuizCardsContainer().getChildren().add(emptyBox);
-                return;
+            if (quizzes != null) {
+                currentTopicQuizzes = quizzes;
             }
-
-            selectedQuiz = quizzes.get(0);
-
-            for (Quiz quiz : quizzes) {
-                QuizCardHolder holder = createQuizCard(quiz, topic.getTopicName());
-                quizCardHolders.add(holder);
-                view.getQuizCardsContainer().getChildren().add(holder.card);
-            }
-
-            updateCardStyles();
-
+            filterQuizzes(view.getSearchQuizField().getText());
         } catch (Exception e) {
             showError("Failed to load quizzes for selected topic.");
         }
+    }
+
+    private void filterQuizzes(String query) {
+        quizCardHolders.clear();
+        view.getQuizCardsContainer().getChildren().clear();
+        selectedQuiz = null;
+
+        Topic selTopic = view.getTopicListView().getSelectionModel().getSelectedItem();
+        String topicName = (selTopic != null) ? selTopic.getTopicName() : "General";
+
+        if (currentTopicQuizzes == null || currentTopicQuizzes.isEmpty()) {
+            VBox emptyBox = new VBox(12);
+            emptyBox.setPadding(new Insets(40, 20, 40, 20));
+            Label emptyLabel = new Label("No quizzes available under \"" + topicName + "\" yet.");
+            emptyLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+            emptyBox.getChildren().add(emptyLabel);
+            view.getQuizCardsContainer().getChildren().add(emptyBox);
+            return;
+        }
+
+        String search = (query != null) ? query.trim().toLowerCase() : "";
+        List<Quiz> filtered = new ArrayList<>();
+        for (Quiz q : currentTopicQuizzes) {
+            boolean matchName = (q.getQuizName() != null && q.getQuizName().toLowerCase().contains(search));
+            if (search.isEmpty() || matchName) {
+                filtered.add(q);
+            }
+        }
+
+        if (filtered.isEmpty()) {
+            VBox emptyBox = new VBox(12);
+            emptyBox.setPadding(new Insets(40, 20, 40, 20));
+            Label emptyLabel = new Label("No quizzes match \"" + query + "\".");
+            emptyLabel.setStyle("-fx-font-size: 15px; -fx-text-fill: #64748b; -fx-font-weight: 600;");
+            emptyBox.getChildren().add(emptyLabel);
+            view.getQuizCardsContainer().getChildren().add(emptyBox);
+            return;
+        }
+
+        selectedQuiz = filtered.get(0);
+        for (Quiz quiz : filtered) {
+            QuizCardHolder holder = createQuizCard(quiz, topicName);
+            quizCardHolders.add(holder);
+            view.getQuizCardsContainer().getChildren().add(holder.card);
+        }
+
+        updateCardStyles();
     }
 
     private void updateCardStyles() {
@@ -170,17 +223,14 @@ public class SelectQuizController {
         card.setPadding(new Insets(24, 24, 22, 24));
         card.getStyleClass().add("card");
 
-        // Quiz Name
         Label titleL = new Label(quiz.getQuizName());
         titleL.setStyle("-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
 
-        // Quiz Description
         Label descL = new Label("Comprehensive practice assessment covering " + topicName + " fundamentals.");
         descL.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b; -fx-line-spacing: 2px;");
         descL.setWrapText(true);
         descL.setMinHeight(42);
 
-        // Stats Box (2 Columns with vertical separator)
         HBox statsBox = new HBox();
         statsBox.setAlignment(Pos.CENTER);
         statsBox.setPadding(new Insets(10, 0, 10, 0));
@@ -213,7 +263,6 @@ public class SelectQuizController {
 
         statsBox.getChildren().addAll(qBox, vDivider, tBox);
 
-        // Action Button
         Button startQuizBtn = new Button("Start Quiz  →");
         startQuizBtn.setMaxWidth(Double.MAX_VALUE);
         startQuizBtn.setPrefHeight(42);

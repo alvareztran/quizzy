@@ -73,15 +73,13 @@ public class ResultController {
                 if (userResults != null && !userResults.isEmpty()) {
                     result = userResults.get(userResults.size() - 1);
                 }
-            } catch (Exception e) {
-                // Graceful fallback
+            } catch (Exception ignored) {
             }
         }
 
         if (result != null) {
             populateResultDetails(result);
         } else {
-            // Default placeholder display
             view.getQuizTitleLabel().setText("General Practice Quiz");
             view.getPercentDisplayLabel().setText("82%");
             view.getCorrectRatioBadgeLabel().setText("8 / 10 Correct");
@@ -108,7 +106,6 @@ public class ResultController {
         view.getIncorrectValLabel().setText(String.valueOf(incorrectQ));
         view.getAccuracyValLabel().setText(pctStr);
 
-        // Calculate Duration
         if (result.getStartedAt() != null && result.getFinishedAt() != null) {
             Duration d = Duration.between(result.getStartedAt(), result.getFinishedAt());
             long mins = Math.max(0, d.toMinutes());
@@ -118,14 +115,12 @@ public class ResultController {
             view.getDurationValLabel().setText("12:34");
         }
 
-        // Quiz Title
         try {
             Quiz quiz = quizService.getQuizById(result.getQuizId());
             if (quiz != null && quiz.getQuizName() != null) {
                 view.getQuizTitleLabel().setText(quiz.getQuizName());
             }
-        } catch (Exception e) {
-            // Keep default
+        } catch (Exception ignored) {
         }
 
         populateSampleQuestionReview(correctQ, totalQ);
@@ -143,7 +138,6 @@ public class ResultController {
         for (int i = 1; i <= displayCount; i++) {
             boolean isCorrect;
             if (displayCount == 10 && correctCount == 8) {
-                // Match the visual pattern in design where questions 2 and 9 are incorrect
                 isCorrect = (i != 2 && i != 9);
             } else {
                 isCorrect = (i <= correctCount);

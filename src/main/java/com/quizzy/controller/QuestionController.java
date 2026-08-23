@@ -7,6 +7,7 @@ import com.quizzy.model.Quiz;
 import com.quizzy.service.AnswerService;
 import com.quizzy.service.QuestionService;
 import com.quizzy.service.QuizService;
+import com.quizzy.util.NavIconHelper;
 import com.quizzy.util.SceneManager;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.QuestionView;
@@ -54,7 +55,6 @@ public class QuestionController {
     }
 
     private void initEventHandlers() {
-        // Navigation Buttons
         view.getDashBtn().setOnAction(e -> SceneManager.showMain());
         view.getTopicBtn().setOnAction(e -> SceneManager.showTopic());
         view.getQuizBtn().setOnAction(e -> SceneManager.showQuiz());
@@ -63,13 +63,9 @@ public class QuestionController {
         view.getUserBtn().setOnAction(e -> SceneManager.showUser());
         view.getResultBtn().setOnAction(e -> SceneManager.showAdminResult());
 
-        // Logout via User Profile ContextMenu Item
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
-
-        // Header Action
         view.getCreateQuestionBtn().setOnAction(e -> openCreateQuestionDialog());
 
-        // Search & Filters
         view.getSearchQuestionsField().textProperty().addListener((obs, oldV, newV) -> filterQuestions());
         view.getQuizFilterComboBox().valueProperty().addListener((obs, oldV, newV) -> filterQuestions());
         view.getDifficultyFilterComboBox().valueProperty().addListener((obs, oldV, newV) -> filterQuestions());
@@ -81,17 +77,15 @@ public class QuestionController {
             filterQuestions();
         });
 
-        // Quiz Name Column Factory
         view.getQuizNameColumn().setCellValueFactory(cellData -> {
             int qId = cellData.getValue().getQuizId();
             String name = quizMap.getOrDefault(qId, "Quiz #" + qId);
             return new SimpleStringProperty(name);
         });
 
-        // Setup Actions Column Center Aligned
         view.getActionsColumn().setCellFactory(col -> new TableCell<>() {
-            private final Button editBtn = com.quizzy.util.NavIconHelper.createEditActionButton();
-            private final Button deleteBtn = com.quizzy.util.NavIconHelper.createDeleteActionButton();
+            private final Button editBtn = NavIconHelper.createEditActionButton();
+            private final Button deleteBtn = NavIconHelper.createDeleteActionButton();
             private final HBox btnBox = new HBox(8, editBtn, deleteBtn);
 
             {

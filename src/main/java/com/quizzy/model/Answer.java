@@ -39,6 +39,10 @@ public class Answer {
         return isCorrect;
     }
 
+    public boolean isCorrect() {
+        return isCorrect;
+    }
+
     public void setAnswerId(int answerId) {
         this.answerId = answerId;
     }

@@ -8,6 +8,7 @@ import com.quizzy.model.User;
 import com.quizzy.service.QuizService;
 import com.quizzy.service.ResultService;
 import com.quizzy.service.TopicService;
+import com.quizzy.util.NavIconHelper;
 import com.quizzy.util.SceneManager;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.QuizHistoryView;
@@ -44,6 +45,7 @@ public class QuizHistoryController {
     private final TopicService topicService = ServiceFactory.getTopicService();
 
     private final ObservableList<Topic> topicList = FXCollections.observableArrayList();
+    private final List<Topic> allTopicsList = new ArrayList<>();
     private final List<HistoryItemDTO> allHistoryItems = new ArrayList<>();
     private final List<HistoryItemDTO> filteredHistoryItems = new ArrayList<>();
     private final Map<Integer, Topic> topicMap = new HashMap<>();
@@ -73,6 +75,8 @@ public class QuizHistoryController {
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
         view.getLogoImageView().setOnMouseClicked(e -> SceneManager.showHome());
         view.getBrandNameLabel().setOnMouseClicked(e -> SceneManager.showHome());
+
+        view.getSearchTopicField().textProperty().addListener((obs, oldVal, query) -> filterSidebarTopics(query));
 
         view.getTopicFilterComboBox().setOnAction(e -> {
             currentPage = 1;
@@ -135,11 +139,12 @@ public class QuizHistoryController {
             topicMap.clear();
             quizMap.clear();
             allHistoryItems.clear();
+            allTopicsList.clear();
 
             // Load Topics
             List<Topic> topics = topicService.getAllTopics();
             if (topics != null) {
-                topicList.setAll(topics);
+                allTopicsList.addAll(topics);
                 view.getTopicFilterComboBox().getItems().setAll("All Topics");
                 for (Topic t : topics) {
                     topicMap.put(t.getTopicId(), t);
@@ -147,6 +152,7 @@ public class QuizHistoryController {
                 }
                 view.getTopicFilterComboBox().setValue("All Topics");
             }
+            filterSidebarTopics(view.getSearchTopicField().getText());
 
             // Load Quizzes
             List<Quiz> quizzes = quizService.getAllQuizzes();
@@ -246,6 +252,17 @@ public class QuizHistoryController {
         view.getDaysActiveValLabel().setText(String.valueOf(Math.max(activeDays.size(), 1)));
     }
 
+    private void filterSidebarTopics(String query) {
+        String search = (query != null) ? query.trim().toLowerCase() : "";
+        List<Topic> filtered = new ArrayList<>();
+        for (Topic t : allTopicsList) {
+            if (search.isEmpty() || (t.getTopicName() != null && t.getTopicName().toLowerCase().contains(search))) {
+                filtered.add(t);
+            }
+        }
+        topicList.setAll(filtered);
+    }
+
     private void applyFilter() {
         String selectedTopicFilter = view.getTopicFilterComboBox().getValue();
         String selectedDateFilter = view.getDateFilterComboBox().getValue();
@@ -289,7 +306,6 @@ public class QuizHistoryController {
         GridPane grid = view.getAttemptsGrid();
         grid.getChildren().clear();
 
-        // 1. Header Row in GridPane (Row 0)
         Label colQuiz = new Label("Quiz");
         colQuiz.setStyle("-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #64748b; -fx-padding: 10 14;");
 
@@ -311,7 +327,6 @@ public class QuizHistoryController {
         grid.add(colDate, 3, 0);
         grid.add(colAction, 4, 0);
 
-        // Divider under Header (Row 1 spanning all 5 columns)
         Region headerDivider = new Region();
         headerDivider.setPrefHeight(1);
         headerDivider.setMaxHeight(1);
@@ -357,7 +372,6 @@ public class QuizHistoryController {
             addGridDataRow(grid, item, dtf, gridRow);
             gridRow++;
 
-            // Row divider
             if (i < endIdx - 1) {
                 Region rowDivider = new Region();
                 rowDivider.setPrefHeight(1);
@@ -372,15 +386,12 @@ public class QuizHistoryController {
     }
 
     private void addGridDataRow(GridPane grid, HistoryItemDTO item, DateTimeFormatter dtf, int rowIdx) {
-        // 1. Quiz Label
         Label quizLbl = new Label(item.quizName);
         quizLbl.setStyle("-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #0f172a; -fx-padding: 10 14; -fx-cursor: hand;");
 
-        // 2. Topic Label
         Label topicLbl = new Label(item.topicName);
         topicLbl.setStyle("-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #64748b; -fx-padding: 10 14; -fx-cursor: hand;");
 
-        // 3. Score Badge
         double scoreVal = item.result != null && item.result.getScore() != null ? (item.result.getScore().doubleValue() / 10.0) * 100 : 0;
         Label scoreBadge = new Label(String.format("%.0f%%", scoreVal));
         scoreBadge.setAlignment(Pos.CENTER);
@@ -399,15 +410,13 @@ public class QuizHistoryController {
         scoreBox.setPadding(new Insets(10, 0, 10, 0));
         scoreBox.setStyle("-fx-cursor: hand;");
 
-        // 4. Date Label
         String dateStr = (item.result != null && item.result.getFinishedAt() != null)
                 ? item.result.getFinishedAt().format(dtf)
                 : LocalDateTime.now().format(dtf);
         Label dateLbl = new Label(dateStr);
         dateLbl.setStyle("-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #64748b; -fx-padding: 10 14; -fx-cursor: hand;");
 
-        // 5. Action Button with new detail_icon
-        Button actionBtn = com.quizzy.util.NavIconHelper.createDetailActionButton();
+        Button actionBtn = NavIconHelper.createDetailActionButton();
 
         HBox actionBox = new HBox(actionBtn);
         actionBox.setAlignment(Pos.CENTER);
@@ -419,7 +428,6 @@ public class QuizHistoryController {
         grid.add(dateLbl, 3, rowIdx);
         grid.add(actionBox, 4, rowIdx);
 
-        // Click actions
         quizLbl.setOnMouseClicked(e -> openResult(item.result));
         topicLbl.setOnMouseClicked(e -> openResult(item.result));
         scoreBox.setOnMouseClicked(e -> openResult(item.result));
@@ -430,7 +438,6 @@ public class QuizHistoryController {
     private void renderPagination(int totalPages) {
         view.getPaginationButtonsBox().getChildren().clear();
 
-        // Prev Button
         Button prevBtn = new Button("<");
         stylePaginationBtn(prevBtn, false);
         prevBtn.setDisable(currentPage <= 1);
@@ -442,7 +449,6 @@ public class QuizHistoryController {
         });
         view.getPaginationButtonsBox().getChildren().add(prevBtn);
 
-        // Page Number Buttons (always show pages)
         for (int p = 1; p <= totalPages; p++) {
             final int pageNum = p;
             Button pageBtn = new Button(String.valueOf(pageNum));
@@ -455,7 +461,6 @@ public class QuizHistoryController {
             view.getPaginationButtonsBox().getChildren().add(pageBtn);
         }
 
-        // Next Button
         Button nextBtn = new Button(">");
         stylePaginationBtn(nextBtn, false);
         nextBtn.setDisable(currentPage >= totalPages);

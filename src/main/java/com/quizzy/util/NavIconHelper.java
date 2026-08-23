@@ -1,7 +1,6 @@
 package com.quizzy.util;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.RoundRectangle2D;
@@ -16,6 +15,10 @@ import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.image.PixelReader;
+import javafx.scene.image.PixelWriter;
+import javafx.scene.image.WritableImage;
+import javafx.scene.paint.Color;
 
 public class NavIconHelper {
 
@@ -60,7 +63,7 @@ public class NavIconHelper {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
 
-        g2.setColor(new Color(255, 255, 255, 255));
+        g2.setColor(new java.awt.Color(255, 255, 255, 255));
         g2.setStroke(new BasicStroke(2.2f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
         // Folder tab
@@ -180,9 +183,8 @@ public class NavIconHelper {
     /**
      * Creates a tinted icon ImageView for table action buttons (edit/delete).
      * Replaces the icon strokes with the specified vibrant target color.
-     * Works seamlessly for both transparent PNGs (white/grey strokes) and opaque PNGs (white backgrounds).
      */
-    public static ImageView createTintedActionIcon(String iconFileName, javafx.scene.paint.Color targetColor) {
+    public static ImageView createTintedActionIcon(String iconFileName, Color targetColor) {
         Image original = loadIcon(iconFileName);
         if (original == null) {
             return null;
@@ -197,7 +199,7 @@ public class NavIconHelper {
             return iv;
         }
 
-        javafx.scene.image.PixelReader reader = original.getPixelReader();
+        PixelReader reader = original.getPixelReader();
         if (reader == null) {
             ImageView iv = new ImageView(original);
             iv.setFitWidth(16);
@@ -214,40 +216,42 @@ public class NavIconHelper {
                     break;
                 }
             }
-            if (hasTransparency) break;
+            if (hasTransparency) {
+                break;
+            }
         }
 
-        javafx.scene.image.WritableImage tinted = new javafx.scene.image.WritableImage(w, h);
-        javafx.scene.image.PixelWriter writer = tinted.getPixelWriter();
+        WritableImage tinted = new WritableImage(w, h);
+        PixelWriter writer = tinted.getPixelWriter();
 
         for (int y = 0; y < h; y++) {
             for (int x = 0; x < w; x++) {
-                javafx.scene.paint.Color c = reader.getColor(x, y);
+                Color c = reader.getColor(x, y);
                 if (hasTransparency) {
                     double opacity = c.getOpacity();
                     if (opacity > 0.05) {
-                        writer.setColor(x, y, new javafx.scene.paint.Color(
+                        writer.setColor(x, y, new Color(
                                 targetColor.getRed(),
                                 targetColor.getGreen(),
                                 targetColor.getBlue(),
                                 Math.min(1.0, opacity * 1.5)
                         ));
                     } else {
-                        writer.setColor(x, y, javafx.scene.paint.Color.TRANSPARENT);
+                        writer.setColor(x, y, Color.TRANSPARENT);
                     }
                 } else {
                     // Opaque image with white background: convert darkness to alpha
                     double brightness = (c.getRed() + c.getGreen() + c.getBlue()) / 3.0;
                     double strokeAlpha = 1.0 - brightness;
                     if (strokeAlpha > 0.1) {
-                        writer.setColor(x, y, new javafx.scene.paint.Color(
+                        writer.setColor(x, y, new Color(
                                 targetColor.getRed(),
                                 targetColor.getGreen(),
                                 targetColor.getBlue(),
                                 Math.min(1.0, strokeAlpha * 1.5)
                         ));
                     } else {
-                        writer.setColor(x, y, javafx.scene.paint.Color.TRANSPARENT);
+                        writer.setColor(x, y, Color.TRANSPARENT);
                     }
                 }
             }
@@ -266,9 +270,9 @@ public class NavIconHelper {
      */
     public static Button createEditActionButton() {
         Button btn = new Button();
-        ImageView iv = createTintedActionIcon("pen_icon.png", javafx.scene.paint.Color.web("#2563eb"));
+        ImageView iv = createTintedActionIcon("pen_icon.png", Color.web("#2563eb"));
         if (iv == null) {
-            iv = createTintedActionIcon("pen-update.png", javafx.scene.paint.Color.web("#2563eb"));
+            iv = createTintedActionIcon("pen-update.png", Color.web("#2563eb"));
         }
         if (iv != null) {
             btn.setGraphic(iv);
@@ -286,9 +290,9 @@ public class NavIconHelper {
      */
     public static Button createDeleteActionButton() {
         Button btn = new Button();
-        ImageView iv = createTintedActionIcon("trash_icon.png", javafx.scene.paint.Color.web("#dc2626"));
+        ImageView iv = createTintedActionIcon("trash_icon.png", Color.web("#dc2626"));
         if (iv == null) {
-            iv = createTintedActionIcon("trash-delete.png", javafx.scene.paint.Color.web("#dc2626"));
+            iv = createTintedActionIcon("trash-delete.png", Color.web("#dc2626"));
         }
         if (iv != null) {
             btn.setGraphic(iv);
@@ -306,9 +310,9 @@ public class NavIconHelper {
      */
     public static Button createDetailActionButton() {
         Button btn = new Button();
-        ImageView iv = createTintedActionIcon("detail_icon.png", javafx.scene.paint.Color.web("#4f46e5"));
+        ImageView iv = createTintedActionIcon("detail_icon.png", Color.web("#4f46e5"));
         if (iv == null) {
-            iv = createTintedActionIcon("detail-icon.png", javafx.scene.paint.Color.web("#4f46e5"));
+            iv = createTintedActionIcon("detail-icon.png", Color.web("#4f46e5"));
         }
         if (iv != null) {
             btn.setGraphic(iv);

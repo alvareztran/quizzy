@@ -20,29 +20,23 @@ public class ResultView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Top Navbar Controls
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
     private final Button navTopicsBtn = new Button("Topics");
     private final Button navHistoryBtn = new Button("History");
 
-    // Header Hero Controls
     private final Label quizTitleLabel = new Label("Computer Science Basic");
 
-    // Left Large Score Card Controls
     private final Label percentDisplayLabel = new Label("82%");
     private final Label correctRatioBadgeLabel = new Label("8 / 10 Correct");
 
-    // Right 2x2 Grid Stat Cards Controls
     private final Label correctValLabel = new Label("8");
     private final Label incorrectValLabel = new Label("2");
     private final Label accuracyValLabel = new Label("80%");
     private final Label durationValLabel = new Label("12:34");
 
-    // Question Review Container
     private final VBox questionReviewBox = new VBox(0);
 
-    // Bottom Action Buttons Controls
     private final Button reviewAnswersBtn = new Button("👁  Review Answers");
     private final Button tryAgainBtn = new Button("🔄  Try Again");
     private final Button backTopicsBtn = new Button("⊞  Back to Topics");
@@ -59,9 +53,6 @@ public class ResultView {
         root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");
 
-        // ==========================================
-        // 1. TOP NAVBAR (Matching design screenshot)
-        // ==========================================
         HBox navbar = new HBox(20);
         navbar.setAlignment(Pos.CENTER_LEFT);
         navbar.setPadding(new Insets(12, 48, 12, 48));
@@ -82,7 +73,6 @@ public class ResultView {
         HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Center Nav Tabs (Topics, History centered)
         navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
         navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
 
@@ -104,9 +94,6 @@ public class ResultView {
         navbar.getChildren().addAll(logoBrandBox, leftSpacer, navTabs, rightSpacer, userBox);
         root.setTop(navbar);
 
-        // ==========================================
-        // 2. MAIN RESULT CONTENT
-        // ==========================================
         VBox contentContainer = new VBox(22);
         contentContainer.setAlignment(Pos.TOP_CENTER);
         contentContainer.setPadding(new Insets(24, 48, 28, 48));
@@ -116,7 +103,6 @@ public class ResultView {
         mainBox.setMaxWidth(780);
         mainBox.setAlignment(Pos.TOP_CENTER);
 
-        // Header Hero Banner (Trophy + Title + Subtitle)
         VBox headerBox = new VBox(6);
         headerBox.setAlignment(Pos.CENTER);
 
@@ -137,11 +123,9 @@ public class ResultView {
 
         headerBox.getChildren().addAll(trophyBadge, headlineLabel, quizTitleLabel);
 
-        // Performance Metrics Cards Container (Score Card + 2x2 Grid)
         HBox metricsRow = new HBox(18);
         metricsRow.setAlignment(Pos.CENTER);
 
-        // Left Large Score Card
         VBox leftScoreCard = new VBox(8);
         leftScoreCard.setPrefWidth(340);
         leftScoreCard.setAlignment(Pos.CENTER);
@@ -158,7 +142,6 @@ public class ResultView {
 
         leftScoreCard.getChildren().addAll(yourScoreLabel, percentDisplayLabel, correctRatioBadgeLabel);
 
-        // Right 2x2 Grid Stat Cards
         GridPane gridPane = new GridPane();
         gridPane.setHgap(14);
         gridPane.setVgap(14);
@@ -176,7 +159,6 @@ public class ResultView {
 
         metricsRow.getChildren().addAll(leftScoreCard, gridPane);
 
-        // Question Review Section Container
         VBox reviewSectionCard = new VBox(0);
         reviewSectionCard.getStyleClass().add("card");
         reviewSectionCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2);");
@@ -190,7 +172,6 @@ public class ResultView {
 
         reviewSectionCard.getChildren().addAll(reviewHeader, questionReviewBox);
 
-        // Bottom Action Buttons Row
         actionBtnRow.setAlignment(Pos.CENTER);
 
         reviewAnswersBtn.setStyle("-fx-background-color: #4338ca; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 10 24; -fx-font-weight: 700; -fx-background-radius: 8px; -fx-cursor: hand;");

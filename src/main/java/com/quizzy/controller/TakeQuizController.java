@@ -26,10 +26,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
+import java.util.Optional;
 
 public class TakeQuizController {
 
@@ -99,7 +102,7 @@ public class TakeQuizController {
     private void startTimer() {
         int timeLimitMinutes = selectedQuiz.getTimeLimit();
         if (timeLimitMinutes <= 0) {
-            timeLimitMinutes = 15; // Default 15 minutes fallback
+            timeLimitMinutes = 15;
         }
 
         remainingSeconds = timeLimitMinutes * 60;
@@ -173,7 +176,6 @@ public class TakeQuizController {
             return;
         }
 
-        // Final Question - Confirm Submission Modal
         confirmAndFinishQuiz();
     }
 
@@ -240,8 +242,7 @@ public class TakeQuizController {
         if (currentUser != null) {
             try {
                 resultService.createResult(result);
-            } catch (Exception e) {
-                // Log and gracefully continue displaying result
+            } catch (Exception ignored) {
             }
         }
 
@@ -255,11 +256,11 @@ public class TakeQuizController {
         alert.setHeaderText("Cancel Quiz Attempt?");
         alert.setContentText("Are you sure you want to exit? Your current quiz progress will be cancelled and will NOT be saved.");
 
-        javafx.scene.control.ButtonType exitBtn = new javafx.scene.control.ButtonType("Exit & Discard", javafx.scene.control.ButtonBar.ButtonData.OK_DONE);
-        javafx.scene.control.ButtonType cancelBtn = new javafx.scene.control.ButtonType("Continue Quiz", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType exitBtn = new ButtonType("Exit & Discard", ButtonBar.ButtonData.OK_DONE);
+        ButtonType cancelBtn = new ButtonType("Continue Quiz", ButtonBar.ButtonData.CANCEL_CLOSE);
         alert.getButtonTypes().setAll(exitBtn, cancelBtn);
 
-        java.util.Optional<javafx.scene.control.ButtonType> opt = alert.showAndWait();
+        Optional<ButtonType> opt = alert.showAndWait();
         if (opt.isPresent() && opt.get() == exitBtn) {
             stopTimer();
             SessionManager.setQuizStartTime(null);

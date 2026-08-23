@@ -28,7 +28,6 @@ public class StatCard {
         root.setMinWidth(140);
         root.setPrefWidth(180);
 
-        // Circle Icon Container
         StackPane iconPane = new StackPane();
         Circle circle = new Circle(19);
         circle.setFill(Color.web(iconBgHex));
@@ -38,7 +37,6 @@ public class StatCard {
 
         iconPane.getChildren().addAll(circle, iconLbl);
 
-        // Metric Text Column
         VBox textCol = new VBox(1);
         titleLabel.setText(title);
         titleLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #767586;");

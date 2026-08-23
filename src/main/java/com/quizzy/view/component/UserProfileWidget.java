@@ -63,8 +63,7 @@ public class UserProfileWidget {
             avatarImageView.setPreserveRatio(false);
             avatarImageView.setSmooth(true);
             avatarImageView.setClip(new Circle(18, 18, 18));
-        } catch (Exception e) {
-            // The colored avatar ring is the fallback.
+        } catch (Exception ignored) {
         }
 
         avatarPane.getChildren().setAll(avatarRing, avatarImageView);

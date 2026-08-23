@@ -22,20 +22,17 @@ public class HistoryDetailView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Top Navbar Controls
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
     private final Button navTopicsBtn = new Button("Topics");
     private final Button navHistoryBtn = new Button("History");
 
-    // Left Sidebar Controls
     private final Button backToHistoryBtn = new Button("←  Back to History");
     private final Label quizTitleInfoLabel = new Label("Java Basic");
     private final Label quizDateInfoLabel = new Label("Aug 23, 2026 • 10:21");
     private final Label quizQuestionsInfoLabel = new Label("10 Questions");
     private final VBox questionsIndexContainer = new VBox(6);
 
-    // Summary Card Controls
     private final Label percentDisplayLabel = new Label("90%");
     private final Label praiseTitleLabel = new Label("Great Job! 🎉");
     private final Label praiseSubtitleLabel = new Label("You scored 9 out of 10");
@@ -44,7 +41,6 @@ public class HistoryDetailView {
     private final Label accuracyPercentLabel = new Label("90%");
     private final Label timeTakenLabel = new Label("10:21");
 
-    // Main Question Review Cards Container
     private final VBox questionCardsContainer = new VBox(16);
     private final ScrollPane scrollPane = new ScrollPane();
 
@@ -56,9 +52,6 @@ public class HistoryDetailView {
         root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");
 
-        // ==========================================
-        // 1. TOP NAVBAR
-        // ==========================================
         HBox navbar = new HBox(24);
         navbar.setAlignment(Pos.CENTER_LEFT);
         navbar.setPadding(new Insets(12, 48, 12, 48));
@@ -79,7 +72,6 @@ public class HistoryDetailView {
         HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Center Nav Tabs with Active Underline Indicator for History
         navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
         navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 8 16 4 16; -fx-cursor: hand;");
 
@@ -112,9 +104,6 @@ public class HistoryDetailView {
         navbar.getChildren().addAll(logoBrandBox, leftSpacer, navTabs, rightSpacer, userBox);
         root.setTop(navbar);
 
-        // ==========================================
-        // 2. LEFT SIDEBAR (Quiz Info & Question Navigation)
-        // ==========================================
         VBox leftSidebar = new VBox(18);
         leftSidebar.setPrefWidth(260);
         leftSidebar.setMinWidth(240);
@@ -125,7 +114,6 @@ public class HistoryDetailView {
         backToHistoryBtn.setFocusTraversable(false);
         backToHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 13px; -fx-font-weight: 700; -fx-padding: 0; -fx-cursor: hand;");
 
-        // Quiz Info Box
         VBox quizInfoCard = new VBox(8);
         quizInfoCard.setPadding(new Insets(14, 14, 14, 14));
         quizInfoCard.setStyle("-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px;");
@@ -149,7 +137,6 @@ public class HistoryDetailView {
 
         quizInfoCard.getChildren().addAll(quizInfoTag, quizTitleInfoLabel, dateRow, countRow);
 
-        // Questions List Header
         Label questionsTag = new Label("QUESTIONS");
         questionsTag.setStyle("-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: #94a3b8; -fx-letter-spacing: 0.5px; -fx-padding: 4 0 0 0;");
 
@@ -161,9 +148,6 @@ public class HistoryDetailView {
         leftSidebar.getChildren().addAll(backToHistoryBtn, quizInfoCard, questionsTag, questionsNavScroll);
         root.setLeft(leftSidebar);
 
-        // ==========================================
-        // 3. MAIN CONTENT (Result Summary + Question Cards)
-        // ==========================================
         VBox mainContent = new VBox(20);
         mainContent.setPadding(new Insets(20, 36, 24, 36));
         mainContent.setStyle("-fx-background-color: #f8fafc;");
@@ -172,7 +156,6 @@ public class HistoryDetailView {
         VBox contentWrapper = new VBox(18);
         contentWrapper.setMaxWidth(960);
 
-        // A. "Your Result" Summary Card
         VBox summaryCard = new VBox(14);
         summaryCard.setPadding(new Insets(20, 24, 20, 24));
         summaryCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2);");
@@ -183,7 +166,6 @@ public class HistoryDetailView {
         HBox metricsRow = new HBox(18);
         metricsRow.setAlignment(Pos.CENTER_LEFT);
 
-        // 1. Circular Gauge / Percent with Praise Box
         StackPane circularScoreRing = new StackPane();
         Circle outerRing = new Circle(32);
         outerRing.setStyle("-fx-fill: transparent; -fx-stroke: #4f46e5; -fx-stroke-width: 5px;");
@@ -199,19 +181,15 @@ public class HistoryDetailView {
         scoreCol.setAlignment(Pos.CENTER_LEFT);
         HBox.setHgrow(scoreCol, Priority.ALWAYS);
 
-        // 2. Correct Stat
         VBox correctCol = createSummaryStatItem("✓", "#22c55e", "#dcfce7", correctCountLabel, "Correct");
         HBox.setHgrow(correctCol, Priority.ALWAYS);
 
-        // 3. Incorrect Stat
         VBox incorrectCol = createSummaryStatItem("✕", "#ef4444", "#fee2e2", incorrectCountLabel, "Incorrect");
         HBox.setHgrow(incorrectCol, Priority.ALWAYS);
 
-        // 4. Accuracy Stat
         VBox accuracyCol = createSummaryStatItem("🎯", "#7c3aed", "#f3e8ff", accuracyPercentLabel, "Accuracy");
         HBox.setHgrow(accuracyCol, Priority.ALWAYS);
 
-        // 5. Time Taken Stat
         VBox timeCol = createSummaryStatItem("🕒", "#0284c7", "#e0f2fe", timeTakenLabel, "Time Taken");
         HBox.setHgrow(timeCol, Priority.ALWAYS);
 
@@ -225,7 +203,6 @@ public class HistoryDetailView {
 
         summaryCard.getChildren().addAll(summaryHeader, metricsRow);
 
-        // B. Questions List
         contentWrapper.getChildren().addAll(summaryCard, questionCardsContainer);
         mainContent.getChildren().add(contentWrapper);
 

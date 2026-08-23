@@ -11,6 +11,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -26,26 +27,22 @@ public class QuizHistoryView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Top Navbar Controls
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
     private final Button navTopicsBtn = new Button("Topics");
     private final Button navHistoryBtn = new Button("History");
 
-    // Left Sidebar ("Learning Topics")
+    private final TextField searchTopicField = new TextField();
     private final ListView<Topic> topicListView = new ListView<>();
 
-    // 4 Stat Cards Labels
     private final Label totalQuizzesValLabel = new Label("0");
     private final Label avgScoreValLabel = new Label("0%");
     private final Label bestScoreValLabel = new Label("0%");
     private final Label daysActiveValLabel = new Label("0");
 
-    // Filter Controls
     private final ComboBox<String> topicFilterComboBox = new ComboBox<>();
     private final ComboBox<String> dateFilterComboBox = new ComboBox<>();
 
-    // Table Section: Unified GridPane for Perfect Column Alignment
     private final GridPane attemptsGrid = new GridPane();
     private final Label paginationInfoLabel = new Label("Showing 1 to 5 of 5 attempts");
     private final HBox paginationButtonsBox = new HBox(8);
@@ -58,9 +55,6 @@ public class QuizHistoryView {
         root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");
 
-        // ==========================================
-        // 1. TOP NAVBAR
-        // ==========================================
         HBox navbar = new HBox(24);
         navbar.setAlignment(Pos.CENTER_LEFT);
         navbar.setPadding(new Insets(12, 48, 12, 48));
@@ -81,7 +75,6 @@ public class QuizHistoryView {
         HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Center Nav Tabs with Active Underline Indicator for History
         navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
         navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 8 16 4 16; -fx-cursor: hand;");
 
@@ -114,15 +107,12 @@ public class QuizHistoryView {
         navbar.getChildren().addAll(logoBrandBox, leftSpacer, navTabs, rightSpacer, userBox);
         root.setTop(navbar);
 
-        // ==========================================
-        // 2. LEFT SIDEBAR ("Learning Topics")
-        // ==========================================
-        VBox leftSidebar = new VBox(16);
+        VBox leftSidebar = new VBox(14);
         leftSidebar.setPrefWidth(260);
         leftSidebar.setMinWidth(240);
         leftSidebar.setMaxWidth(280);
         leftSidebar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 1px 0 0;");
-        leftSidebar.setPadding(new Insets(24, 16, 24, 20));
+        leftSidebar.setPadding(new Insets(20, 16, 20, 20));
 
         VBox topicsHeaderBox = new VBox(4);
         Label topicsHeader = new Label("Learning Topics");
@@ -132,18 +122,21 @@ public class QuizHistoryView {
         topicsSubHeader.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b;");
         topicsHeaderBox.getChildren().addAll(topicsHeader, topicsSubHeader);
 
+        searchTopicField.setPromptText("🔍  Search topics...");
+        searchTopicField.setPrefHeight(34);
+        searchTopicField.setStyle("-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-font-size: 12px; -fx-padding: 0 10; -fx-text-fill: #0f172a;");
+
         topicListView.getStyleClass().add("topic-list-view");
         topicListView.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         VBox.setVgrow(topicListView, Priority.ALWAYS);
 
-        // Motivational Card at bottom of sidebar
         HBox motivCard = new HBox(12);
         motivCard.setAlignment(Pos.CENTER_LEFT);
-        motivCard.setPadding(new Insets(14, 14, 14, 14));
+        motivCard.setPadding(new Insets(12, 12, 12, 12));
         motivCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.03), 6, 0, 0, 2);");
 
         Label bulbIcon = new Label("💡");
-        bulbIcon.setStyle("-fx-font-size: 20px; -fx-background-color: #fef9c3; -fx-padding: 8 10; -fx-background-radius: 10px;");
+        bulbIcon.setStyle("-fx-font-size: 18px; -fx-background-color: #fef9c3; -fx-padding: 6 8; -fx-background-radius: 10px;");
 
         VBox motivTextBox = new VBox(2);
         Label motivTitle = new Label("Keep practicing!");
@@ -156,17 +149,13 @@ public class QuizHistoryView {
 
         motivCard.getChildren().addAll(bulbIcon, motivTextBox);
 
-        leftSidebar.getChildren().addAll(topicsHeaderBox, topicListView, motivCard);
+        leftSidebar.getChildren().addAll(topicsHeaderBox, searchTopicField, topicListView, motivCard);
         root.setLeft(leftSidebar);
 
-        // ==========================================
-        // 3. MAIN WORKSPACE CONTENT CANVAS
-        // ==========================================
         VBox mainContent = new VBox(16);
         mainContent.setPadding(new Insets(18, 36, 20, 36));
         mainContent.setStyle("-fx-background-color: #f8fafc;");
 
-        // Page Header
         VBox headerTitleBox = new VBox(3);
         Label pageTitleL = new Label("Quiz History");
         pageTitleL.setStyle("-fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
@@ -175,7 +164,6 @@ public class QuizHistoryView {
         pageSubTitleL.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b;");
         headerTitleBox.getChildren().addAll(pageTitleL, pageSubTitleL);
 
-        // 4 Stat Cards Row
         HBox statsGrid = new HBox(14);
         statsGrid.setAlignment(Pos.CENTER);
 
@@ -191,12 +179,10 @@ public class QuizHistoryView {
 
         statsGrid.getChildren().addAll(card1, card2, card3, card4);
 
-        // "Your Quiz Attempts" Table Card Container
         VBox tableCard = new VBox(14);
         tableCard.setPadding(new Insets(18, 20, 16, 20));
         tableCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2);");
 
-        // Table Header Section: Title on Left, Date & Topic Filters on Right
         HBox tableHeaderRow = new HBox(12);
         tableHeaderRow.setAlignment(Pos.CENTER_LEFT);
 
@@ -218,7 +204,6 @@ public class QuizHistoryView {
 
         tableHeaderRow.getChildren().addAll(tableTitle, tableSpacer, dateFilterComboBox, topicFilterComboBox);
 
-        // Setup GridPane Column Constraints for Guaranteed Mathematical Alignment
         attemptsGrid.getColumnConstraints().clear();
 
         ColumnConstraints col0 = new ColumnConstraints();
@@ -246,7 +231,6 @@ public class QuizHistoryView {
         attemptsGrid.setVgap(0);
         attemptsGrid.setMaxWidth(Double.MAX_VALUE);
 
-        // Pagination Bar: Info on Left + Buttons on Right/Center
         HBox paginationRow = new HBox(16);
         paginationRow.setAlignment(Pos.CENTER_LEFT);
         paginationRow.setPadding(new Insets(16, 8, 4, 8));
@@ -345,6 +329,10 @@ public class QuizHistoryView {
 
     public ListView<Topic> getTopicListView() {
         return topicListView;
+    }
+
+    public TextField getSearchTopicField() {
+        return searchTopicField;
     }
 
     public Label getTotalQuizzesValLabel() {

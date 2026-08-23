@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -22,20 +23,18 @@ public class SelectQuizView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Top Navbar Controls
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
     private final Button navTopicsBtn = new Button("Topics");
     private final Button navHistoryBtn = new Button("History");
 
-    // Sidebar Controls
+    private final TextField searchTopicField = new TextField();
     private final ListView<Topic> topicListView = new ListView<>();
 
-    // Main Content Controls
     private final Label pageTitleLabel = new Label("Choose a Quiz");
     private final Label pageSubtitleLabel = new Label("Select a topic and choose a quiz to start your practice.");
+    private final TextField searchQuizField = new TextField();
 
-    // Quiz Cards Grid Container
     private final HBox quizCardsContainer = new HBox(20);
     private final Button refreshBtn = new Button("🔄  Refresh");
 
@@ -47,9 +46,6 @@ public class SelectQuizView {
         root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");
 
-        // ==========================================
-        // 1. TOP NAVBAR
-        // ==========================================
         HBox navbar = new HBox(24);
         navbar.setAlignment(Pos.CENTER_LEFT);
         navbar.setPadding(new Insets(12, 48, 12, 48));
@@ -70,7 +66,6 @@ public class SelectQuizView {
         HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Center Nav Tabs with Active Underline Indicator for Topics
         navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 8 16 4 16; -fx-cursor: hand;");
         navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
 
@@ -103,15 +98,12 @@ public class SelectQuizView {
         navbar.getChildren().addAll(logoBrandBox, leftSpacer, navTabs, rightSpacer, userBox);
         root.setTop(navbar);
 
-        // ==========================================
-        // 2. LEFT SIDEBAR ("Learning Topics")
-        // ==========================================
-        VBox leftSidebar = new VBox(16);
+        VBox leftSidebar = new VBox(14);
         leftSidebar.setPrefWidth(260);
         leftSidebar.setMinWidth(240);
         leftSidebar.setMaxWidth(280);
         leftSidebar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 1px 0 0;");
-        leftSidebar.setPadding(new Insets(24, 16, 24, 20));
+        leftSidebar.setPadding(new Insets(20, 16, 20, 20));
 
         VBox topicsHeaderBox = new VBox(4);
         Label topicsHeader = new Label("Learning Topics");
@@ -121,43 +113,70 @@ public class SelectQuizView {
         topicsSubHeader.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b;");
         topicsHeaderBox.getChildren().addAll(topicsHeader, topicsSubHeader);
 
+        searchTopicField.setPromptText("🔍  Search topics...");
+        searchTopicField.setPrefHeight(34);
+        searchTopicField.setStyle("-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-font-size: 12px; -fx-padding: 0 10; -fx-text-fill: #0f172a;");
+
         topicListView.getStyleClass().add("topic-list-view");
         topicListView.setStyle("-fx-background-color: transparent; -fx-border-color: transparent;");
         VBox.setVgrow(topicListView, Priority.ALWAYS);
 
-        leftSidebar.getChildren().addAll(topicsHeaderBox, topicListView);
+        HBox motivCard = new HBox(12);
+        motivCard.setAlignment(Pos.CENTER_LEFT);
+        motivCard.setPadding(new Insets(12, 12, 12, 12));
+        motivCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.03), 6, 0, 0, 2);");
+
+        Label bulbIcon = new Label("💡");
+        bulbIcon.setStyle("-fx-font-size: 18px; -fx-background-color: #fef9c3; -fx-padding: 6 8; -fx-background-radius: 10px;");
+
+        VBox motivTextBox = new VBox(2);
+        Label motivTitle = new Label("Keep practicing!");
+        motivTitle.setStyle("-fx-font-size: 13px; -fx-font-weight: 800; -fx-text-fill: #4338ca;");
+        Label motivSub = new Label("Consistent practice leads to great results.");
+        motivSub.setStyle("-fx-font-size: 11px; -fx-text-fill: #64748b; -fx-line-spacing: 1px;");
+        motivSub.setWrapText(true);
+        motivSub.setMaxWidth(130);
+        motivTextBox.getChildren().addAll(motivTitle, motivSub);
+
+        motivCard.getChildren().addAll(bulbIcon, motivTextBox);
+
+        leftSidebar.getChildren().addAll(topicsHeaderBox, searchTopicField, topicListView, motivCard);
         root.setLeft(leftSidebar);
 
-        // ==========================================
-        // 3. MAIN WORKSPACE CONTENT AREA
-        // ==========================================
         VBox mainContent = new VBox(18);
         mainContent.setPadding(new Insets(24, 36, 24, 36));
         mainContent.setStyle("-fx-background-color: #f8fafc;");
 
-        // Header Titles
+        HBox headerRow = new HBox(16);
+        headerRow.setAlignment(Pos.CENTER_LEFT);
+
         VBox headerTitleBox = new VBox(4);
         pageTitleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
         pageSubtitleLabel.setStyle("-fx-font-size: 14px; -fx-text-fill: #64748b;");
         headerTitleBox.getChildren().addAll(pageTitleLabel, pageSubtitleLabel);
+        HBox.setHgrow(headerTitleBox, Priority.ALWAYS);
 
-        // Divider
+        searchQuizField.setPromptText("🔍  Search quiz name...");
+        searchQuizField.setPrefWidth(260);
+        searchQuizField.setPrefHeight(38);
+        searchQuizField.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-font-size: 13px; -fx-text-fill: #0f172a; -fx-padding: 0 14;");
+
+        headerRow.getChildren().addAll(headerTitleBox, searchQuizField);
+
         Region titleDivider = new Region();
         titleDivider.setPrefHeight(1);
         titleDivider.setMaxHeight(1);
         titleDivider.setStyle("-fx-background-color: #e2e8f0;");
 
-        // Quiz Cards Container
         quizCardsContainer.setAlignment(Pos.TOP_LEFT);
         quizCardsContainer.setPadding(new Insets(8, 0, 8, 0));
         VBox.setVgrow(quizCardsContainer, Priority.ALWAYS);
 
-        // Refresh Button
         HBox refreshRow = new HBox(refreshBtn);
         refreshRow.setAlignment(Pos.CENTER_LEFT);
         refreshBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-text-fill: #475569; -fx-padding: 8 16; -fx-font-size: 13px; -fx-font-weight: 600; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-cursor: hand;");
 
-        mainContent.getChildren().addAll(headerTitleBox, titleDivider, quizCardsContainer, refreshRow);
+        mainContent.getChildren().addAll(headerRow, titleDivider, quizCardsContainer, refreshRow);
 
         ScrollPane scrollPane = new ScrollPane(mainContent);
         scrollPane.setFitToWidth(true);
@@ -220,6 +239,10 @@ public class SelectQuizView {
         return navHistoryBtn;
     }
 
+    public TextField getSearchTopicField() {
+        return searchTopicField;
+    }
+
     public ListView<Topic> getTopicListView() {
         return topicListView;
     }
@@ -230,6 +253,10 @@ public class SelectQuizView {
 
     public Label getPageSubtitleLabel() {
         return pageSubtitleLabel;
+    }
+
+    public TextField getSearchQuizField() {
+        return searchQuizField;
     }
 
     public HBox getQuizCardsContainer() {

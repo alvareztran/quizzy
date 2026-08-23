@@ -3,7 +3,6 @@ package com.quizzy.view.component;
 import com.quizzy.model.Topic;
 import java.util.Optional;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
@@ -25,7 +24,6 @@ public class TopicFormDialog {
         dialog.setTitle(isEdit ? "Edit Topic" : "Create Topic");
         dialog.setHeaderText(null);
 
-        // Custom Buttons
         ButtonType saveButtonType = new ButtonType(isEdit ? "Update Topic" : "Create Topic", ButtonBar.ButtonData.OK_DONE);
         ButtonType cancelButtonType = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
 
@@ -40,7 +38,6 @@ public class TopicFormDialog {
         Button cancelBtn = (Button) dialog.getDialogPane().lookupButton(cancelButtonType);
         cancelBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-text-fill: #334155; -fx-padding: 8 18; -fx-background-radius: 8;");
 
-        // Form Fields
         VBox contentBox = new VBox(14);
         contentBox.setPadding(new Insets(20));
         contentBox.setPrefWidth(400);
@@ -76,14 +73,13 @@ public class TopicFormDialog {
         contentBox.getChildren().addAll(headerTitle, nameLabel, nameField, descLabel, descArea, errorLabel);
         dialog.getDialogPane().setContent(contentBox);
 
-        // Validation & Result Converter
         saveBtn.addEventFilter(javafx.event.ActionEvent.ACTION, event -> {
             String topicName = nameField.getText();
             if (topicName == null || topicName.isBlank()) {
                 errorLabel.setText("Topic name is required.");
                 errorLabel.setVisible(true);
                 errorLabel.setManaged(true);
-                event.consume(); // Prevent dialog close
+                event.consume();
             }
         });
 

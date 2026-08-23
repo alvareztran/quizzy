@@ -104,7 +104,6 @@ public class HistoryDetailController {
             view.getCorrectCountLabel().setText(String.valueOf(correctCount));
             view.getIncorrectCountLabel().setText(String.valueOf(incorrectCount));
 
-            // Time Taken
             if (result.getStartedAt() != null && result.getFinishedAt() != null) {
                 Duration dur = Duration.between(result.getStartedAt(), result.getFinishedAt());
                 long minutes = Math.max(0, dur.toMinutes());
@@ -114,7 +113,6 @@ public class HistoryDetailController {
                 view.getTimeTakenLabel().setText("10:21");
             }
 
-            // Load Questions and Answers
             List<Question> questions = questionService.getQuestionsByQuizId(result.getQuizId());
             if (questions == null || questions.isEmpty()) {
                 populateSampleQuestions(totalQuestions, correctCount);
@@ -137,15 +135,13 @@ public class HistoryDetailController {
         for (int i = 0; i < questions.size(); i++) {
             Question q = questions.get(i);
             final int qIndex = i;
-            boolean isQuestionCorrect = (i < correctCount); // Sample evaluation if question-level state isn't logged
+            boolean isQuestionCorrect = (i < correctCount);
 
-            // 1. Sidebar Nav Item
             HBox navItem = createSidebarNavItem(i + 1, isQuestionCorrect, i == 0);
             navItem.setOnMouseClicked(e -> selectQuestion(qIndex));
             navIndexNodes.add(navItem);
             view.getQuestionsIndexContainer().getChildren().add(navItem);
 
-            // 2. Question Review Card
             List<Answer> answers = null;
             try {
                 answers = answerService.getAnswersByQuestionId(q.getQuestionId());
@@ -221,15 +217,13 @@ public class HistoryDetailController {
 
         for (int i = 0; i < total; i++) {
             final int qIndex = i;
-            boolean isCorrect = (i != 1); // Question 2 is incorrect to match the screenshot example
+            boolean isCorrect = (i != 1);
 
-            // 1. Sidebar Nav
             HBox navItem = createSidebarNavItem(i + 1, isCorrect, i == 0);
             navItem.setOnMouseClicked(e -> selectQuestion(qIndex));
             navIndexNodes.add(navItem);
             view.getQuestionsIndexContainer().getChildren().add(navItem);
 
-            // 2. Question Card
             String qText = (i < sampleQuestions.length) ? sampleQuestions[i] : ("Sample Question #" + (i + 1));
             String[] answers = (i < sampleAnswers.length) ? sampleAnswers[i] : sampleAnswers[0];
             int correctIdx = (i < sampleCorrectIdx.length) ? sampleCorrectIdx[i] : 0;

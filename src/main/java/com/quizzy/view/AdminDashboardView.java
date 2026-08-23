@@ -60,9 +60,6 @@ public class AdminDashboardView {
         contentBox.setSpacing(16);
         contentBox.setAlignment(Pos.TOP_LEFT);
 
-        // ==========================================
-        // 1. GREETING HEADER
-        // ==========================================
         HBox header = new HBox(16);
         header.setAlignment(Pos.CENTER_LEFT);
 
@@ -80,15 +77,11 @@ public class AdminDashboardView {
         HBox headerSpacer = new HBox();
         HBox.setHgrow(headerSpacer, Priority.ALWAYS);
 
-        // Calendar Date Badge
         String currentDateStr = "📅  " + LocalDate.now().format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
         dateBadgeLabel.setText(currentDateStr);
         dateBadgeLabel.setStyle("-fx-background-color: #ffffff; -fx-border-color: #c7c4d7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 7 16; -fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #464554;");
         header.getChildren().addAll(greetingText, headerSpacer, dateBadgeLabel);
 
-        // ==========================================
-        // 2. HERO BANNER
-        // ==========================================
         StackPane heroFrame = new StackPane();
         heroFrame.setMinHeight(155);
         heroFrame.setPrefHeight(155);
@@ -121,9 +114,6 @@ public class AdminDashboardView {
         heroContent.getChildren().addAll(heroText, createHeroGraphic());
         heroFrame.getChildren().add(heroContent);
 
-        // ==========================================
-        // 3. STATS ROW (4 Stat Cards)
-        // ==========================================
         HBox statsRow = new HBox(14);
         statsRow.getChildren().addAll(
                 totalTopicsCard.getRoot(),
@@ -135,9 +125,6 @@ public class AdminDashboardView {
             HBox.setHgrow(card.getRoot(), Priority.ALWAYS);
         }
 
-        // ==========================================
-        // 4. BOTTOM SPLIT GRID (Recent Activities & Top Topics)
-        // ==========================================
         HBox bottomGrid = new HBox(16);
         bottomGrid.setAlignment(Pos.TOP_LEFT);
 

@@ -1,11 +1,14 @@
 package com.quizzy.util;
 
+import com.quizzy.controller.AdminResultController;
 import com.quizzy.controller.AnswerController;
+import com.quizzy.controller.HistoryDetailController;
 import com.quizzy.controller.HomeController;
 import com.quizzy.controller.LoginController;
 import com.quizzy.controller.MainController;
 import com.quizzy.controller.QuestionController;
 import com.quizzy.controller.QuizController;
+import com.quizzy.controller.QuizHistoryController;
 import com.quizzy.controller.RegisterController;
 import com.quizzy.controller.ResultController;
 import com.quizzy.controller.SelectQuizController;
@@ -37,8 +40,7 @@ public class SceneManager {
                     Image icon = new Image(SceneManager.class.getResourceAsStream(ICON_PATH));
                     primaryStage.getIcons().setAll(icon);
                 }
-            } catch (Exception e) {
-                // Graceful fallback
+            } catch (Exception ignored) {
             }
         }
     }
@@ -89,8 +91,14 @@ public class SceneManager {
     }
 
     public static void showMain() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        if (!SessionManager.isAdmin()) { showSelectQuiz(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        if (!SessionManager.isAdmin()) {
+            showSelectQuiz();
+            return;
+        }
         MainController controller = new MainController();
         switchScene(controller.getView(), "Quizzy - Dashboard");
     }
@@ -100,74 +108,125 @@ public class SceneManager {
     }
 
     public static void showTopic() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        if (!SessionManager.isAdmin()) { showSelectQuiz(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        if (!SessionManager.isAdmin()) {
+            showSelectQuiz();
+            return;
+        }
         TopicController controller = new TopicController();
         switchScene(controller.getView(), "Quizzy - Topic Management");
     }
 
     public static void showQuiz() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        if (!SessionManager.isAdmin()) { showSelectQuiz(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        if (!SessionManager.isAdmin()) {
+            showSelectQuiz();
+            return;
+        }
         QuizController controller = new QuizController();
         switchScene(controller.getView(), "Quizzy - Quiz Management");
     }
 
     public static void showQuestion() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        if (!SessionManager.isAdmin()) { showSelectQuiz(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        if (!SessionManager.isAdmin()) {
+            showSelectQuiz();
+            return;
+        }
         QuestionController controller = new QuestionController();
         switchScene(controller.getView(), "Quizzy - Question Management");
     }
 
     public static void showAnswer() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        if (!SessionManager.isAdmin()) { showSelectQuiz(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        if (!SessionManager.isAdmin()) {
+            showSelectQuiz();
+            return;
+        }
         AnswerController controller = new AnswerController();
         switchScene(controller.getView(), "Quizzy - Answer Management");
     }
 
     public static void showUser() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        if (!SessionManager.isAdmin()) { showSelectQuiz(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        if (!SessionManager.isAdmin()) {
+            showSelectQuiz();
+            return;
+        }
         UserController controller = new UserController();
         switchScene(controller.getView(), "Quizzy - User Management");
     }
 
     public static void showSelectQuiz() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
         SelectQuizController controller = new SelectQuizController();
         switchScene(controller.getView(), "Quizzy - Select Quiz");
     }
 
     public static void showTakeQuiz() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
         TakeQuizController controller = new TakeQuizController();
         switchScene(controller.getView(), "Quizzy - Take Quiz");
     }
 
     public static void showResult() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
         ResultController controller = new ResultController();
         switchScene(controller.getView(), "Quizzy - Quiz Result");
     }
 
     public static void showAdminResult() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        if (!SessionManager.isAdmin()) { showResult(); return; }
-        com.quizzy.controller.AdminResultController controller = new com.quizzy.controller.AdminResultController();
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        if (!SessionManager.isAdmin()) {
+            showResult();
+            return;
+        }
+        AdminResultController controller = new AdminResultController();
         switchScene(controller.getView(), "Quizzy - Quiz History Management");
     }
 
     public static void showHistory() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        com.quizzy.controller.QuizHistoryController controller = new com.quizzy.controller.QuizHistoryController();
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        QuizHistoryController controller = new QuizHistoryController();
         switchScene(controller.getView(), "Quizzy - Quiz History");
     }
 
     public static void showHistoryDetail() {
-        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
-        com.quizzy.controller.HistoryDetailController controller = new com.quizzy.controller.HistoryDetailController();
+        if (!SessionManager.isLoggedIn()) {
+            showLogin();
+            return;
+        }
+        HistoryDetailController controller = new HistoryDetailController();
         switchScene(controller.getView(), "Quizzy - Quiz Attempt Review");
     }
 

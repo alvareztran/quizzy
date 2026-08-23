@@ -76,10 +76,9 @@ public class QuestionFormDialog {
         contentBox.setPadding(new Insets(20));
         contentBox.setPrefWidth(500);
 
-        Label headerTitle = new Label(isEdit ? "Edit Question Item" : "Create New Question");
+        Label headerTitle = new Label(isEdit ? "Edit Question" : "Add New Question");
         headerTitle.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0f172a;");
 
-        // 1. Select Topic ComboBox
         Label topicLabel = new Label("Target Topic *");
         topicLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #475569;");
         ComboBox<Topic> topicComboBox = new ComboBox<>();
@@ -92,7 +91,6 @@ public class QuestionFormDialog {
             topicComboBox.getItems().addAll(availableTopics);
         }
 
-        // 2. Select Quiz ComboBox (filtered by topic)
         Label quizLabel = new Label("Target Quiz *");
         quizLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #475569;");
         ComboBox<Quiz> quizComboBox = new ComboBox<>();
@@ -101,7 +99,6 @@ public class QuestionFormDialog {
         quizComboBox.setPrefHeight(38);
         setupQuizComboBox(quizComboBox);
 
-        // Cascading event: when topic changes, filter quizzes
         topicComboBox.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newTopic) -> {
             quizComboBox.getItems().clear();
             if (newTopic != null && availableQuizzes != null) {
@@ -119,7 +116,6 @@ public class QuestionFormDialog {
             }
         });
 
-        // 3. Question Content
         Label contentLabel = new Label("Question Content *");
         contentLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #475569;");
         TextArea contentArea = new TextArea();
@@ -127,7 +123,6 @@ public class QuestionFormDialog {
         contentArea.setPrefRowCount(3);
         contentArea.setWrapText(true);
 
-        // 4. Difficulty Level
         Label diffLabel = new Label("Difficulty Level *");
         diffLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #475569;");
         ComboBox<String> diffComboBox = new ComboBox<>();
@@ -136,7 +131,6 @@ public class QuestionFormDialog {
         diffComboBox.setValue("Easy");
         diffComboBox.setPrefHeight(38);
 
-        // 5. Answer Choices Section (Option A, B, C, D)
         Label answerHeaderLabel = new Label("Answer Choices (Select Correct Answer) *");
         answerHeaderLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #0f172a; -fx-padding: 10 0 0 0;");
 
@@ -187,7 +181,6 @@ public class QuestionFormDialog {
             if (availableQuizzes != null) {
                 for (Quiz q : availableQuizzes) {
                     if (q.getQuizId() == existingQuestion.getQuizId()) {
-                        // Find topic of this quiz
                         if (availableTopics != null) {
                             for (Topic t : availableTopics) {
                                 if (t.getTopicId() == q.getTopicId()) {

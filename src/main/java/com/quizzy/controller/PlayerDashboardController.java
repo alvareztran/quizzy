@@ -65,7 +65,6 @@ public class PlayerDashboardController {
             view.getWelcomeTitleLabel().setText("Welcome back, " + name + "!");
         }
 
-        // 1. Load Total Quizzes
         try {
             List<Quiz> quizzes = quizService.getAllQuizzes();
             int totalQ = quizzes != null ? quizzes.size() : 0;
@@ -74,7 +73,6 @@ public class PlayerDashboardController {
             view.getTotalQuizzesValLabel().setText("0");
         }
 
-        // 2. Load Completed & Avg Score
         if (currentUser != null) {
             try {
                 List<Result> results = resultService.getResultsByUserId(currentUser.getUserId());
@@ -100,7 +98,6 @@ public class PlayerDashboardController {
             }
         }
 
-        // 3. Load Topics List
         try {
             List<Topic> topics = topicService.getAllTopics();
             view.getTopicsListContainer().getChildren().clear();
@@ -115,7 +112,6 @@ public class PlayerDashboardController {
                     view.getTopicsListContainer().getChildren().add(topicCard);
                 }
 
-                // Update Continue Learning card with first topic
                 Topic firstTopic = topics.get(0);
                 view.getContinueQuizTitleLabel().setText(firstTopic.getTopicName() + " Practice");
                 view.getContinueQuizSubtitleLabel().setText("Interactive assessment & questions");
@@ -124,8 +120,7 @@ public class PlayerDashboardController {
                 noTopicLabel.setStyle("-fx-text-fill: #64748b; -fx-font-size: 13px;");
                 view.getTopicsListContainer().getChildren().add(noTopicLabel);
             }
-        } catch (Exception e) {
-            // Graceful fallback
+        } catch (Exception ignored) {
         }
     }
 

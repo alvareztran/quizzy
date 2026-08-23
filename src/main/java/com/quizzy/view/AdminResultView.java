@@ -1,10 +1,10 @@
 package com.quizzy.view;
 
 import com.quizzy.model.Result;
-import com.quizzy.model.Topic;
 import com.quizzy.util.NavIconHelper;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.component.UserProfileWidget;
+import java.time.LocalDateTime;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -25,7 +25,6 @@ public class AdminResultView {
     private final BorderPane root = new BorderPane();
     private final UserProfileWidget userProfileWidget = new UserProfileWidget(SessionManager.getCurrentUser());
 
-    // Sidebar Navigation Buttons
     private final Button dashBtn = new Button();
     private final Button topicBtn = new Button();
     private final Button quizBtn = new Button();
@@ -34,14 +33,12 @@ public class AdminResultView {
     private final Button userBtn = new Button();
     private final Button resultBtn = new Button();
 
-    // Toolbar Filter Controls
     private final TextField searchField = new TextField();
     private final ComboBox<String> topicFilterComboBox = new ComboBox<>();
     private final ComboBox<String> dateFilterComboBox = new ComboBox<>();
     private final ComboBox<String> scoreFilterComboBox = new ComboBox<>();
     private final Button resetFilterBtn = new Button("🔄  Reset");
 
-    // TableView and Columns
     private final TableView<ResultItemDTO> resultTable = new TableView<>();
     private final TableColumn<ResultItemDTO, ResultItemDTO> userColumn = new TableColumn<>("User");
     private final TableColumn<ResultItemDTO, ResultItemDTO> quizColumn = new TableColumn<>("Quiz Name");
@@ -50,7 +47,6 @@ public class AdminResultView {
     private final TableColumn<ResultItemDTO, ResultItemDTO> durationColumn = new TableColumn<>("Duration");
     private final TableColumn<ResultItemDTO, ResultItemDTO> actionColumn = new TableColumn<>("Action");
 
-    // Pagination Controls
     private final Label paginationInfoLabel = new Label("Showing 0 to 0 of 0 results");
     private final Button prevPageBtn = new Button("‹");
     private final Button page1Btn = new Button("1");
@@ -64,9 +60,6 @@ public class AdminResultView {
         root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");
 
-        // ==========================================
-        // 1. SIDEBAR (Full-height from top)
-        // ==========================================
         VBox sidebar = new VBox(6);
         sidebar.setPrefWidth(260);
         sidebar.setMinWidth(260);
@@ -95,7 +88,6 @@ public class AdminResultView {
         Label managementHeader = new Label("MANAGEMENT");
         managementHeader.setStyle("-fx-text-fill: #767586; -fx-font-size: 11px; -fx-font-weight: 700; -fx-padding: 4 0 4 12; -fx-letter-spacing: 0.8px;");
 
-        // Setup navigation buttons with PNG icons
         NavIconHelper.setupNavButton(dashBtn, "Dashboard", "dashboard.png", false);
         NavIconHelper.setupNavButton(topicBtn, "Topics", "topic_icon.png", false);
         NavIconHelper.setupNavButton(quizBtn, "Quizzes", "quiz_icon.png", false);
@@ -121,14 +113,10 @@ public class AdminResultView {
         );
         root.setLeft(sidebar);
 
-        // ==========================================
-        // 2. MAIN WORKSPACE CONTENT AREA
-        // ==========================================
         VBox mainContent = new VBox(14);
         mainContent.setPadding(new Insets(16, 28, 16, 28));
         mainContent.setStyle("-fx-background-color: #f8fafc;");
 
-        // Page Header
         VBox titleCol = new VBox(3);
         Label titleL = new Label("Quiz History Management");
         titleL.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #0f172a;");
@@ -137,7 +125,6 @@ public class AdminResultView {
         subtitleL.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b;");
         titleCol.getChildren().addAll(titleL, subtitleL);
 
-        // Search & Filter Toolbar
         HBox toolbar = new HBox(12);
         toolbar.setAlignment(Pos.CENTER_LEFT);
         toolbar.getStyleClass().add("card");
@@ -173,8 +160,7 @@ public class AdminResultView {
                 scoreFilterComboBox, resetFilterBtn, toolbarSpacer
         );
 
-        // Data TableView
-        resultTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        resultTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         userColumn.setPrefWidth(240);
         quizColumn.setPrefWidth(260);
@@ -192,7 +178,6 @@ public class AdminResultView {
         );
         VBox.setVgrow(resultTable, Priority.ALWAYS);
 
-        // Pagination Bar
         HBox paginationBar = new HBox(12);
         paginationBar.setAlignment(Pos.CENTER_LEFT);
         paginationBar.setPadding(new Insets(4, 2, 0, 2));
@@ -229,7 +214,7 @@ public class AdminResultView {
         public String dateDisplay;
         public String timeDisplay;
         public String durationDisplay;
-        public java.time.LocalDateTime attemptDateTime;
+        public LocalDateTime attemptDateTime;
     }
 
     public BorderPane getRoot() {

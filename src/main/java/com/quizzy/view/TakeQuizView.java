@@ -37,9 +37,6 @@ public class TakeQuizView {
     private void createUI() {
         root.setPrefSize(1140, 720);
 
-        // ==========================================
-        // 1. TOP HEADER BAR (Matching media_1787420874972.png)
-        // ==========================================
         HBox topBar = new HBox(16);
         topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.getStyleClass().add("top-bar");
@@ -51,8 +48,7 @@ public class TakeQuizView {
             logoImageView.setFitHeight(28);
             logoImageView.setPreserveRatio(true);
             logoImageView.setSmooth(true);
-        } catch (Exception e) {
-            // Fallback
+        } catch (Exception ignored) {
         }
 
         brandNameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #6366f1; -fx-letter-spacing: 1px;");
@@ -76,15 +72,11 @@ public class TakeQuizView {
         topBar.getChildren().addAll(brandHeader, spacerTop, questionNumberLabel, timerLabel, backBtn);
         root.setTop(topBar);
 
-        // ==========================================
-        // 2. CENTER EXAM CANVAS & QUESTION CARD
-        // ==========================================
         VBox centerBox = new VBox(22);
         centerBox.setAlignment(Pos.TOP_CENTER);
         centerBox.setPadding(new Insets(36, 40, 36, 40));
         centerBox.setStyle("-fx-background-color: #f8f9fb;");
 
-        // Question Statement Card Container (820px Width)
         VBox statementCard = new VBox(10);
         statementCard.setMaxWidth(820);
         statementCard.getStyleClass().add("card");
@@ -98,7 +90,6 @@ public class TakeQuizView {
 
         statementCard.getChildren().addAll(questionContentLabel, questionInstructionLabel);
 
-        // Options Vertical Box Container (820px Width)
         answerBox.setMaxWidth(820);
         answerBox.setAlignment(Pos.TOP_LEFT);
 
@@ -109,9 +100,6 @@ public class TakeQuizView {
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8f9fb;");
         root.setCenter(scrollPane);
 
-        // ==========================================
-        // 3. BOTTOM EXAM CONTROL & STEPPER BAR
-        // ==========================================
         HBox bottomBar = new HBox(20);
         bottomBar.setAlignment(Pos.CENTER_LEFT);
         bottomBar.setPadding(new Insets(18, 52, 18, 52));

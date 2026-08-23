@@ -14,9 +14,7 @@ public class MainController {
         this.view = new MainView();
         this.adminDashboardController = new AdminDashboardController();
 
-        // Place AdminDashboardController view in Center
         view.getRoot().setCenter(adminDashboardController.getView());
-
         initEventHandlers();
     }
 
@@ -37,7 +35,6 @@ public class MainController {
         view.getUserBtn().setOnAction(e -> SceneManager.showUser());
         view.getResultBtn().setOnAction(e -> SceneManager.showAdminResult());
 
-        // Logout via User Profile ContextMenu Item
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());
     }
 
