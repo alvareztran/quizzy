@@ -24,30 +24,30 @@ public class StatCard {
     private void createUI(String iconText, String title, String initialValue, String subtext, String iconBgHex, String iconTextHex) {
         root.setAlignment(Pos.CENTER_LEFT);
         root.getStyleClass().add("card");
-        root.setPadding(new Insets(12, 16, 12, 16));
-        root.setMinWidth(190);
-        root.setPrefWidth(220);
+        root.setPadding(new Insets(10, 16, 10, 16));
+        root.setMinWidth(140);
+        root.setPrefWidth(180);
 
         // Circle Icon Container
         StackPane iconPane = new StackPane();
-        Circle circle = new Circle(21);
+        Circle circle = new Circle(18);
         circle.setFill(Color.web(iconBgHex));
 
         Label iconLbl = new Label(iconText);
-        iconLbl.setStyle(String.format("-fx-font-size: 14px; -fx-text-fill: %s; -fx-font-weight: 800;", iconTextHex));
+        iconLbl.setStyle(String.format("-fx-font-size: 13px; -fx-text-fill: %s; -fx-font-weight: 800;", iconTextHex));
 
         iconPane.getChildren().addAll(circle, iconLbl);
 
         // Metric Text Column
-        VBox textCol = new VBox(1);
+        VBox textCol = new VBox(0);
         titleLabel.setText(title);
-        titleLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: 500; -fx-text-fill: #767586;");
+        titleLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: 500; -fx-text-fill: #767586;");
 
         valueLabel.setText(initialValue);
-        valueLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: 800; -fx-text-fill: #191c1e;");
+        valueLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #191c1e;");
 
         subtextLabel.setText(subtext);
-        subtextLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #464554;");
+        subtextLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #464554;");
 
         textCol.getChildren().addAll(titleLabel, valueLabel, subtextLabel);
 

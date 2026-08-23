@@ -128,32 +128,32 @@ public class TopicView {
         root.setLeft(sidebar);
 
         // Main Content Area (Full height from top)
-        VBox mainContent = new VBox(20);
-        mainContent.setPadding(new Insets(24, 32, 32, 32));
+        VBox mainContent = new VBox(12);
+        mainContent.setPadding(new Insets(14, 24, 14, 24));
         mainContent.setStyle("-fx-background-color: #f8fafc;");
 
         // Page Header
         HBox pageHeader = new HBox(16);
         pageHeader.setAlignment(Pos.CENTER_LEFT);
 
-        VBox titleCol = new VBox(4);
+        VBox titleCol = new VBox(2);
         Label titleL = new Label("Topic Management");
-        titleL.setStyle("-fx-font-size: 26px; -fx-font-weight: bold; -fx-text-fill: #0f172a;");
+        titleL.setStyle("-fx-font-size: 22px; -fx-font-weight: bold; -fx-text-fill: #0f172a;");
 
         Label subtitleL = new Label("Manage quiz topics and organize your question bank.");
-        subtitleL.setStyle("-fx-font-size: 13px; -fx-text-fill: #64748b;");
+        subtitleL.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b;");
         titleCol.getChildren().addAll(titleL, subtitleL);
 
         HBox headerSpacer = new HBox();
         HBox.setHgrow(headerSpacer, Priority.ALWAYS);
 
         createTopicBtn.getStyleClass().add("button-primary");
-        createTopicBtn.setStyle("-fx-font-size: 14px; -fx-padding: 10 22; -fx-font-weight: bold;");
+        createTopicBtn.setStyle("-fx-font-size: 13px; -fx-padding: 8 18; -fx-font-weight: bold;");
 
         pageHeader.getChildren().addAll(titleCol, headerSpacer, createTopicBtn);
 
         // 4 Stat Cards Row (Expanding 100% Width)
-        HBox statCardsRow = new HBox(16);
+        HBox statCardsRow = new HBox(12);
         HBox.setHgrow(totalTopicsCard.getRoot(), Priority.ALWAYS);
         HBox.setHgrow(totalQuizzesCard.getRoot(), Priority.ALWAYS);
         HBox.setHgrow(totalQuestionsCard.getRoot(), Priority.ALWAYS);
@@ -167,26 +167,26 @@ public class TopicView {
         );
 
         // Search & Filter Toolbar Card
-        HBox toolbar = new HBox(12);
+        HBox toolbar = new HBox(10);
         toolbar.setAlignment(Pos.CENTER_LEFT);
         toolbar.getStyleClass().add("card");
-        toolbar.setPadding(new Insets(12, 16, 12, 16));
+        toolbar.setPadding(new Insets(8, 14, 8, 14));
 
         searchTopicsField.setPromptText("Search topics...");
-        searchTopicsField.setPrefWidth(260);
-        searchTopicsField.setPrefHeight(36);
+        searchTopicsField.setPrefWidth(240);
+        searchTopicsField.setPrefHeight(32);
 
         statusFilterComboBox.setPromptText("All Status");
         statusFilterComboBox.getItems().setAll("All Status", "Active", "Inactive");
         statusFilterComboBox.setValue("All Status");
-        statusFilterComboBox.setPrefHeight(36);
+        statusFilterComboBox.setPrefHeight(32);
 
         sortComboBox.setPromptText("Sort by: Newest");
         sortComboBox.getItems().setAll("Sort by: Newest", "Sort by: Name A-Z", "Sort by: ID");
         sortComboBox.setValue("Sort by: Newest");
-        sortComboBox.setPrefHeight(36);
+        sortComboBox.setPrefHeight(32);
 
-        resetFilterBtn.setStyle("-fx-font-size: 12px; -fx-padding: 7 14;");
+        resetFilterBtn.setStyle("-fx-font-size: 12px; -fx-padding: 5 12;");
 
         HBox toolbarSpacer = new HBox();
         HBox.setHgrow(toolbarSpacer, Priority.ALWAYS);
@@ -229,7 +229,7 @@ public class TopicView {
         // Table Pagination Footer
         HBox paginationBar = new HBox(12);
         paginationBar.setAlignment(Pos.CENTER_LEFT);
-        paginationBar.setPadding(new Insets(10, 4, 4, 4));
+        paginationBar.setPadding(new Insets(4, 2, 0, 2));
 
         paginationInfoLabel.setStyle("-fx-font-size: 12px; -fx-text-fill: #64748b;");
 
@@ -238,12 +238,12 @@ public class TopicView {
 
         perPageComboBox.getItems().setAll("10 per page", "25 per page", "50 per page");
         perPageComboBox.setValue("10 per page");
-        perPageComboBox.setPrefHeight(32);
+        perPageComboBox.setPrefHeight(30);
 
-        prevPageBtn.setStyle("-fx-padding: 4 10;");
+        prevPageBtn.setStyle("-fx-padding: 3 9;");
         page1Btn.getStyleClass().add("button-primary");
-        page1Btn.setStyle("-fx-padding: 4 10; -fx-font-weight: bold;");
-        nextPageBtn.setStyle("-fx-padding: 4 10;");
+        page1Btn.setStyle("-fx-padding: 3 9; -fx-font-weight: bold;");
+        nextPageBtn.setStyle("-fx-padding: 3 9;");
 
         HBox pagBtns = new HBox(4, prevPageBtn, page1Btn, nextPageBtn);
         pagBtns.setAlignment(Pos.CENTER);
@@ -251,11 +251,7 @@ public class TopicView {
         paginationBar.getChildren().addAll(paginationInfoLabel, pagSpacer, perPageComboBox, pagBtns);
 
         mainContent.getChildren().addAll(pageHeader, statCardsRow, toolbar, topicTable, paginationBar);
-
-        ScrollPane scrollPane = new ScrollPane(mainContent);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8fafc;");
-        root.setCenter(scrollPane);
+        root.setCenter(mainContent);
     }
 
     public BorderPane getRoot() {

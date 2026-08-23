@@ -50,7 +50,7 @@ public class UserController {
         view.getQuestionBtn().setOnAction(e -> SceneManager.showQuestion());
         view.getAnswerBtn().setOnAction(e -> SceneManager.showAnswer());
         view.getUserBtn().setOnAction(e -> loadUsers());
-        view.getResultBtn().setOnAction(e -> SceneManager.showResult());
+        view.getResultBtn().setOnAction(e -> SceneManager.showAdminResult());
 
         // Logout via User Profile ContextMenu Item
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());

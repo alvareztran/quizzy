@@ -6,13 +6,13 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 
 public class ResultView {
@@ -54,11 +54,12 @@ public class ResultView {
 
     private void createUI() {
         root.setPrefSize(1240, 780);
+        root.setStyle("-fx-background-color: #f8fafc;");
 
         // ==========================================
-        // 1. TOP NAVBAR (Matching media_1787421007569.png)
+        // 1. TOP NAVBAR (Matching design screenshot)
         // ==========================================
-        HBox navbar = new HBox(24);
+        HBox navbar = new HBox(20);
         navbar.setAlignment(Pos.CENTER_LEFT);
         navbar.setPadding(new Insets(14, 52, 14, 52));
         navbar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 0 0 1px 0;");
@@ -66,96 +67,104 @@ public class ResultView {
         try {
             Image iconImg = new Image(getClass().getResourceAsStream("/com/quizzy/images/quizzy-icon.png"));
             logoImageView.setImage(iconImg);
-            logoImageView.setFitHeight(30);
+            logoImageView.setFitHeight(28);
             logoImageView.setPreserveRatio(true);
             logoImageView.setSmooth(true);
             logoImageView.setStyle("-fx-cursor: hand;");
-        } catch (Exception e) {
-            // Fallback
+        } catch (Exception ignored) {
         }
 
-        brandNameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #6366f1; -fx-letter-spacing: 1px; -fx-cursor: hand;");
-        HBox logoBrandBox = new HBox(10, logoImageView, brandNameLabel);
+        brandNameLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #4338ca; -fx-letter-spacing: 1px; -fx-cursor: hand;");
+        HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Nav Tabs (History active)
-        navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #464554; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 12; -fx-cursor: hand;");
-        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #464554; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 12; -fx-cursor: hand;");
-        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4338ca; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #4f46e5; -fx-border-width: 0 0 2px 0; -fx-padding: 8 12;");
+        // Center Nav Tabs (Dashboard, Topics, History centered)
+        navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
+        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
+        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
 
-        HBox navTabs = new HBox(16, navDashboardBtn, navTopicsBtn, navHistoryBtn);
-        navTabs.setAlignment(Pos.CENTER_LEFT);
+        HBox navTabs = new HBox(12, navDashboardBtn, navTopicsBtn, navHistoryBtn);
+        navTabs.setAlignment(Pos.CENTER);
 
-        HBox navSpacer = new HBox();
-        HBox.setHgrow(navSpacer, Priority.ALWAYS);
+        HBox leftSpacer = new HBox();
+        HBox.setHgrow(leftSpacer, Priority.ALWAYS);
+
+        HBox rightSpacer = new HBox();
+        HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
         Label bellIcon = new Label("🔔");
-        bellIcon.setStyle("-fx-font-size: 18px; -fx-text-fill: #64748b; -fx-cursor: hand;");
+        bellIcon.setStyle("-fx-font-size: 17px; -fx-text-fill: #64748b; -fx-cursor: hand;");
 
         HBox userBox = new HBox(16, bellIcon, userProfileWidget.getRoot());
         userBox.setAlignment(Pos.CENTER_RIGHT);
 
-        navbar.getChildren().addAll(logoBrandBox, navTabs, navSpacer, userBox);
+        navbar.getChildren().addAll(logoBrandBox, leftSpacer, navTabs, rightSpacer, userBox);
         root.setTop(navbar);
 
         // ==========================================
-        // 2. MAIN RESULT WORKSPACE CANVAS
+        // 2. MAIN RESULT CONTENT
         // ==========================================
-        VBox contentContainer = new VBox(28);
+        VBox contentContainer = new VBox(22);
         contentContainer.setAlignment(Pos.TOP_CENTER);
-        contentContainer.setPadding(new Insets(32, 52, 40, 52));
-        contentContainer.setStyle("-fx-background-color: #f8f9fb;");
+        contentContainer.setPadding(new Insets(24, 48, 28, 48));
+        contentContainer.setStyle("-fx-background-color: #f8fafc;");
 
-        VBox mainBox = new VBox(28);
+        VBox mainBox = new VBox(18);
         mainBox.setMaxWidth(780);
+        mainBox.setAlignment(Pos.TOP_CENTER);
 
-        // Header Hero Banner
-        VBox headerBox = new VBox(10);
+        // Header Hero Banner (Trophy + Title + Subtitle)
+        VBox headerBox = new VBox(6);
         headerBox.setAlignment(Pos.CENTER);
 
-        Label trophyBadge = new Label("🏆");
-        trophyBadge.setAlignment(Pos.CENTER);
-        trophyBadge.setPrefSize(48, 48);
-        trophyBadge.setStyle("-fx-background-color: #e0e7ff; -fx-text-fill: #4338ca; -fx-font-size: 22px; -fx-background-radius: 24px;");
+        StackPane trophyBadge = new StackPane();
+        trophyBadge.setPrefSize(50, 50);
+        trophyBadge.setMinSize(50, 50);
+        trophyBadge.setMaxSize(50, 50);
+        trophyBadge.setStyle("-fx-background-color: #e0e7ff; -fx-background-radius: 999px;");
+
+        Label trophyIcon = new Label("🏆");
+        trophyIcon.setStyle("-fx-font-size: 22px;");
+        trophyBadge.getChildren().add(trophyIcon);
 
         Label headlineLabel = new Label("Quiz Completed!");
-        headlineLabel.setStyle("-fx-font-size: 32px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
+        headlineLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
 
-        quizTitleLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #64748b;");
+        quizTitleLabel.setStyle("-fx-font-size: 15px; -fx-font-weight: 500; -fx-text-fill: #64748b;");
 
         headerBox.getChildren().addAll(trophyBadge, headlineLabel, quizTitleLabel);
 
         // Performance Metrics Cards Container (Score Card + 2x2 Grid)
-        HBox metricsRow = new HBox(20);
+        HBox metricsRow = new HBox(18);
         metricsRow.setAlignment(Pos.CENTER);
 
         // Left Large Score Card
-        VBox leftScoreCard = new VBox(12);
+        VBox leftScoreCard = new VBox(8);
         leftScoreCard.setPrefWidth(340);
         leftScoreCard.setAlignment(Pos.CENTER);
         leftScoreCard.getStyleClass().add("card");
-        leftScoreCard.setPadding(new Insets(28, 24, 28, 24));
-        leftScoreCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 10, 0, 0, 3);");
+        leftScoreCard.setPadding(new Insets(22, 22, 22, 22));
+        leftScoreCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2);");
 
         Label yourScoreLabel = new Label("YOUR SCORE");
-        yourScoreLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: bold; -fx-text-fill: #64748b; -fx-letter-spacing: 1px;");
+        yourScoreLabel.setStyle("-fx-font-size: 11px; -fx-font-weight: 800; -fx-text-fill: #64748b; -fx-letter-spacing: 0.8px;");
 
-        percentDisplayLabel.setStyle("-fx-font-size: 52px; -fx-font-weight: bold; -fx-text-fill: #6366f1;");
+        percentDisplayLabel.setStyle("-fx-font-size: 52px; -fx-font-weight: 800; -fx-text-fill: #4338ca;");
 
-        correctRatioBadgeLabel.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 14; -fx-background-radius: 12px;");
+        correctRatioBadgeLabel.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #334155; -fx-font-size: 12px; -fx-font-weight: 700; -fx-padding: 4 16; -fx-background-radius: 999px;");
 
         leftScoreCard.getChildren().addAll(yourScoreLabel, percentDisplayLabel, correctRatioBadgeLabel);
 
         // Right 2x2 Grid Stat Cards
         GridPane gridPane = new GridPane();
-        gridPane.setHgap(16);
-        gridPane.setVgap(16);
+        gridPane.setHgap(14);
+        gridPane.setVgap(14);
         HBox.setHgrow(gridPane, Priority.ALWAYS);
 
-        VBox c1 = createGridStatCard("✓  Correct", correctValLabel, "#10b981");
-        VBox c2 = createGridStatCard("✕  Incorrect", incorrectValLabel, "#ef4444");
-        VBox c3 = createGridStatCard("🎯  Accuracy", accuracyValLabel, "#6366f1");
-        VBox c4 = createGridStatCard("⏱  Time", durationValLabel, "#64748b");
+        VBox c1 = createGridStatCard("✓", "Correct", correctValLabel, "#4338ca");
+        VBox c2 = createGridStatCard("✕", "Incorrect", incorrectValLabel, "#ef4444");
+        VBox c3 = createGridStatCard("🎯", "Accuracy", accuracyValLabel, "#4338ca");
+        VBox c4 = createGridStatCard("⏱", "Time", durationValLabel, "#64748b");
 
         gridPane.add(c1, 0, 0);
         gridPane.add(c2, 1, 0);
@@ -167,82 +176,52 @@ public class ResultView {
         // Question Review Section Container
         VBox reviewSectionCard = new VBox(0);
         reviewSectionCard.getStyleClass().add("card");
-        reviewSectionCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 10, 0, 0, 3);");
+        reviewSectionCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2);");
 
         HBox reviewHeader = new HBox();
-        reviewHeader.setPadding(new Insets(16, 20, 16, 20));
-        reviewHeader.setStyle("-fx-border-color: #e5e7eb; -fx-border-width: 0 0 1px 0; -fx-background-color: #f8f9fb; -fx-background-radius: 16px 16px 0 0;");
+        reviewHeader.setPadding(new Insets(12, 18, 12, 18));
+        reviewHeader.setStyle("-fx-border-color: #e2e8f0; -fx-border-width: 0 0 1px 0; -fx-background-color: #f8fafc; -fx-background-radius: 12px 12px 0 0;");
         Label reviewHeaderTitle = new Label("Question Review");
-        reviewHeaderTitle.setStyle("-fx-font-size: 14px; -fx-font-weight: bold; -fx-text-fill: #334155;");
+        reviewHeaderTitle.setStyle("-fx-font-size: 13px; -fx-font-weight: 700; -fx-text-fill: #334155;");
         reviewHeader.getChildren().add(reviewHeaderTitle);
 
         reviewSectionCard.getChildren().addAll(reviewHeader, questionReviewBox);
 
         // Bottom Action Buttons Row (3 Buttons)
-        HBox actionBtnRow = new HBox(14);
+        HBox actionBtnRow = new HBox(16);
         actionBtnRow.setAlignment(Pos.CENTER);
 
-        reviewAnswersBtn.getStyleClass().add("button-primary");
-        reviewAnswersBtn.setStyle("-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 11 22; -fx-font-weight: bold; -fx-background-radius: 8px;");
-
-        tryAgainBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-text-fill: #191c1e; -fx-font-size: 14px; -fx-padding: 11 22; -fx-font-weight: bold; -fx-border-radius: 8px; -fx-background-radius: 8px;");
-
-        backDashboardBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-text-fill: #191c1e; -fx-font-size: 14px; -fx-padding: 11 22; -fx-font-weight: bold; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+        reviewAnswersBtn.setStyle("-fx-background-color: #4338ca; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 10 24; -fx-font-weight: 700; -fx-background-radius: 8px; -fx-cursor: hand;");
+        tryAgainBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-text-fill: #0f172a; -fx-font-size: 14px; -fx-padding: 10 24; -fx-font-weight: 700; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-cursor: hand;");
+        backDashboardBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-text-fill: #0f172a; -fx-font-size: 14px; -fx-padding: 10 24; -fx-font-weight: 700; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-cursor: hand;");
 
         actionBtnRow.getChildren().addAll(reviewAnswersBtn, tryAgainBtn, backDashboardBtn);
 
         mainBox.getChildren().addAll(headerBox, metricsRow, reviewSectionCard, actionBtnRow);
         contentContainer.getChildren().add(mainBox);
 
-        ScrollPane scrollPane = new ScrollPane(contentContainer);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8f9fb;");
-        root.setCenter(scrollPane);
-
-        // ==========================================
-        // 3. BOTTOM FOOTER BAR
-        // ==========================================
-        HBox footerBar = new HBox(20);
-        footerBar.setAlignment(Pos.CENTER_LEFT);
-        footerBar.setPadding(new Insets(18, 52, 18, 52));
-        footerBar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-width: 1px 0 0 0;");
-
-        Label copyrightLabel = new Label("© 2024 QUIZZY Learning Platform");
-        copyrightLabel.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: #64748b;");
-
-        HBox footerSpacer = new HBox();
-        HBox.setHgrow(footerSpacer, Priority.ALWAYS);
-
-        Label privacyLink = new Label("Privacy Policy");
-        Label termsLink = new Label("Terms of Service");
-        Label helpLink = new Label("Help Center");
-        Label contactLink = new Label("Contact Us");
-
-        String linkStyle = "-fx-font-size: 12px; -fx-text-fill: #64748b; -fx-cursor: hand;";
-        privacyLink.setStyle(linkStyle);
-        termsLink.setStyle(linkStyle);
-        helpLink.setStyle(linkStyle);
-        contactLink.setStyle(linkStyle);
-
-        HBox linksBox = new HBox(20, privacyLink, termsLink, helpLink, contactLink);
-        linksBox.setAlignment(Pos.CENTER_RIGHT);
-
-        footerBar.getChildren().addAll(copyrightLabel, footerSpacer, linksBox);
-        root.setBottom(footerBar);
+        root.setCenter(contentContainer);
     }
 
-    private VBox createGridStatCard(String headerStr, Label valLabel, String textHex) {
-        VBox card = new VBox(6);
+    private VBox createGridStatCard(String iconSymbol, String titleText, Label valLabel, String iconColorHex) {
+        VBox card = new VBox(4);
         card.setPrefWidth(190);
         card.setPadding(new Insets(14, 18, 14, 18));
-        card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 12px; -fx-background-radius: 12px;");
+        card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.03), 6, 0, 0, 2);");
 
-        Label headerL = new Label(headerStr);
-        headerL.setStyle("-fx-font-size: 12px; -fx-font-weight: bold; -fx-text-fill: " + textHex + ";");
+        HBox titleBox = new HBox(6);
+        titleBox.setAlignment(Pos.CENTER_LEFT);
 
-        valLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
+        Label iconLbl = new Label(iconSymbol);
+        iconLbl.setStyle("-fx-font-size: 13px; -fx-text-fill: " + iconColorHex + "; -fx-font-weight: bold;");
 
-        card.getChildren().addAll(headerL, valLabel);
+        Label titleLbl = new Label(titleText);
+        titleLbl.setStyle("-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #475569;");
+        titleBox.getChildren().addAll(iconLbl, titleLbl);
+
+        valLabel.setStyle("-fx-font-size: 26px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
+
+        card.getChildren().addAll(titleBox, valLabel);
         return card;
     }
 

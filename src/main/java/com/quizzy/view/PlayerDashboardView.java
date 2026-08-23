@@ -77,24 +77,27 @@ public class PlayerDashboardView {
         HBox logoBrandBox = new HBox(10, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        // Nav Tabs
-        navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4338ca; -fx-font-size: 14px; -fx-font-weight: bold; -fx-border-color: #4f46e5; -fx-border-width: 0 0 2px 0; -fx-padding: 8 12;");
-        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #464554; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 12; -fx-cursor: hand;");
-        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #464554; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 12; -fx-cursor: hand;");
+        // Nav Tabs (Centered)
+        navDashboardBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4338ca; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 6 16; -fx-cursor: hand;");
+        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
+        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 6 16; -fx-cursor: hand;");
 
-        HBox navTabs = new HBox(16, navDashboardBtn, navTopicsBtn, navHistoryBtn);
-        navTabs.setAlignment(Pos.CENTER_LEFT);
+        HBox navTabs = new HBox(12, navDashboardBtn, navTopicsBtn, navHistoryBtn);
+        navTabs.setAlignment(Pos.CENTER);
 
-        HBox navSpacer = new HBox();
-        HBox.setHgrow(navSpacer, Priority.ALWAYS);
+        HBox leftSpacer = new HBox();
+        HBox.setHgrow(leftSpacer, Priority.ALWAYS);
+
+        HBox rightSpacer = new HBox();
+        HBox.setHgrow(rightSpacer, Priority.ALWAYS);
 
         Label bellIcon = new Label("🔔");
-        bellIcon.setStyle("-fx-font-size: 18px; -fx-text-fill: #64748b; -fx-cursor: hand;");
+        bellIcon.setStyle("-fx-font-size: 17px; -fx-text-fill: #64748b; -fx-cursor: hand;");
 
         HBox userBox = new HBox(16, bellIcon, userProfileWidget.getRoot());
         userBox.setAlignment(Pos.CENTER_RIGHT);
 
-        navbar.getChildren().addAll(logoBrandBox, navTabs, navSpacer, userBox);
+        navbar.getChildren().addAll(logoBrandBox, leftSpacer, navTabs, rightSpacer, userBox);
         root.setTop(navbar);
 
         // ==========================================

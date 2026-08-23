@@ -56,7 +56,7 @@ public class AnswerController {
         view.getQuestionBtn().setOnAction(e -> SceneManager.showQuestion());
         view.getAnswerBtn().setOnAction(e -> loadData());
         view.getUserBtn().setOnAction(e -> SceneManager.showUser());
-        view.getResultBtn().setOnAction(e -> SceneManager.showResult());
+        view.getResultBtn().setOnAction(e -> SceneManager.showAdminResult());
 
         // Logout via User Profile ContextMenu Item
         view.getUserProfileWidget().getLogoutItem().setOnAction(e -> logout());

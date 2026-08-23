@@ -154,6 +154,13 @@ public class SceneManager {
         switchScene(controller.getView(), "Quizzy - Quiz Result");
     }
 
+    public static void showAdminResult() {
+        if (!SessionManager.isLoggedIn()) { showLogin(); return; }
+        if (!SessionManager.isAdmin()) { showResult(); return; }
+        com.quizzy.controller.AdminResultController controller = new com.quizzy.controller.AdminResultController();
+        switchScene(controller.getView(), "Quizzy - Quiz History Management");
+    }
+
     public static void showHistory() {
         if (!SessionManager.isLoggedIn()) { showLogin(); return; }
         com.quizzy.controller.QuizHistoryController controller = new com.quizzy.controller.QuizHistoryController();
