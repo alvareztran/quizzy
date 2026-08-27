@@ -3,6 +3,7 @@ package com.quizzy.service;
 import com.quizzy.dao.UserDAO;
 import com.quizzy.factory.DAOFactory;
 import com.quizzy.model.User;
+import com.quizzy.util.PasswordHasher;
 import java.util.Objects;
 
 public class AuthService {
@@ -28,11 +29,17 @@ public class AuthService {
 
         User user = userDAO.findByUsername(username.trim());
 
-        if (user == null) {
+        if (user == null || user.getPassword() == null) {
             return null;
         }
 
-        if (password.equals(user.getPassword())) {
+        if (PasswordHasher.checkPassword(password, user.getPassword())) {
+            // Lazy migration: Automatically upgrade legacy plaintext passwords to BCrypt hash upon successful login
+            if (!PasswordHasher.isHashed(user.getPassword())) {
+                String upgradedHash = PasswordHasher.hash(password);
+                user.setPassword(upgradedHash);
+                userDAO.update(user);
+            }
             return user;
         }
 
@@ -79,9 +86,10 @@ public class AuthService {
                 return "Username already exists.";
             }
 
+            String hashedPassword = PasswordHasher.hash(password);
             User user = new User(
                     trimmedUsername,
-                    password,
+                    hashedPassword,
                     fullName.trim(),
                     "Player"
             );

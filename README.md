@@ -126,6 +126,7 @@ Quizzy enforces **Role-Based Access Control (RBAC)** across application layers:
 - Minimum 8 characters.
 - Must contain at least one uppercase letter `[A-Z]`, one lowercase letter `[a-z]`, one numeric digit `[0-9]`, and one special symbol `[@$!%*?&]`.
 - Passwords are salted and hashed with **BCrypt ($2a$12$)** before persisting to database storage.
+- Includes transparent auto-migration on login for legacy plaintext accounts (see [MIGRATION.md](file:///d:/LearningProgramming/projects/Quizzy/MIGRATION.md)).
 
 ---
 
@@ -148,6 +149,7 @@ Quizzy enforces **Role-Based Access Control (RBAC)** across application layers:
 ```text
 Quizzy/
 ├── pom.xml                                      # Maven Dependencies & Build Configuration
+├── MIGRATION.md                                 # Password Hashing Migration Guide
 ├── README.md                                    # Project Documentation
 └── src/
     └── main/
@@ -176,6 +178,7 @@ Quizzy/
         │   │   ├── QuestionDAO.java / QuestionDAOImpl.java
         │   │   ├── QuizDAO.java / QuizDAOImpl.java
         │   │   ├── ResultDAO.java / ResultDAOImpl.java
+        │   │   ├── ResultDetailDAO.java / ResultDetailDAOImpl.java
         │   │   ├── TopicDAO.java / TopicDAOImpl.java
         │   │   └── UserDAO.java / UserDAOImpl.java
         │   ├── factory/                         # Factory Layer
@@ -186,6 +189,7 @@ Quizzy/
         │   │   ├── Question.java
         │   │   ├── Quiz.java
         │   │   ├── Result.java
+        │   │   ├── ResultDetail.java
         │   │   ├── Topic.java
         │   │   └── User.java
         │   ├── service/                         # Business Logic & RBAC Security Layer
@@ -193,6 +197,7 @@ Quizzy/
         │   │   ├── AuthService.java
         │   │   ├── QuestionService.java
         │   │   ├── QuizService.java
+        │   │   ├── ResultDetailService.java
         │   │   ├── ResultService.java
         │   │   ├── TopicService.java
         │   │   └── UserService.java
@@ -221,7 +226,9 @@ Quizzy/
         │       ├── TopicView.java
         │       ├── UserView.java
         │       └── component/                   # Reusable UI Dialogs & Widgets
+        │           ├── AdminSidebar.java
         │           ├── ConfirmDialog.java
+        │           ├── PasswordInputField.java
         │           ├── QuestionFormDialog.java
         │           ├── QuizFormDialog.java
         │           ├── StatCard.java
@@ -244,7 +251,7 @@ Quizzy/
 
 ## 🗄️ Database Schema Architecture
 
-The relational database model comprises 6 core business entities:
+The relational database model comprises core business entities:
 
 - **`Users`**: User identities, role privileges (`Admin` / `Player`), and salted BCrypt password hashes.
 - **`Topic`**: Knowledge domains and subject categories.
@@ -252,6 +259,7 @@ The relational database model comprises 6 core business entities:
 - **`Question`**: Assessment questions categorized by difficulty level (`Easy`, `Medium`, `Hard`).
 - **`Answer`**: Multiple-choice options linked to parent questions with correctness flags.
 - **`Result`**: Candidate assessment logs including total score, accuracy ratio, start timestamp, and finish timestamp.
+- **`ResultDetail`**: Granular question-by-question attempt records tracking user chosen answers and correctness.
 
 ---
 
