@@ -34,7 +34,6 @@ public class AuthService {
         }
 
         if (PasswordHasher.checkPassword(password, user.getPassword())) {
-            // Lazy migration: Automatically upgrade legacy plaintext passwords to BCrypt hash upon successful login
             if (!PasswordHasher.isHashed(user.getPassword())) {
                 String upgradedHash = PasswordHasher.hash(password);
                 user.setPassword(upgradedHash);

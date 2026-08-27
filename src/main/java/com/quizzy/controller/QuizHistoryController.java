@@ -9,6 +9,8 @@ import com.quizzy.service.QuizService;
 import com.quizzy.service.ResultService;
 import com.quizzy.service.TopicService;
 import com.quizzy.util.NavIconHelper;
+import com.quizzy.util.PaginationButtonRenderer;
+import com.quizzy.util.Paginator;
 import com.quizzy.util.SceneManager;
 import com.quizzy.util.SessionManager;
 import com.quizzy.view.QuizHistoryView;
@@ -47,12 +49,10 @@ public class QuizHistoryController {
     private final ObservableList<Topic> topicList = FXCollections.observableArrayList();
     private final List<Topic> allTopicsList = new ArrayList<>();
     private final List<HistoryItemDTO> allHistoryItems = new ArrayList<>();
-    private final List<HistoryItemDTO> filteredHistoryItems = new ArrayList<>();
     private final Map<Integer, Topic> topicMap = new HashMap<>();
     private final Map<Integer, Quiz> quizMap = new HashMap<>();
 
-    private int currentPage = 1;
-    private static final int PAGE_SIZE = 5;
+    private final Paginator<HistoryItemDTO> paginator = new Paginator<>(5);
 
     public QuizHistoryController() {
         this.view = new QuizHistoryView();
@@ -78,15 +78,8 @@ public class QuizHistoryController {
 
         view.getSearchTopicField().textProperty().addListener((obs, oldVal, query) -> filterSidebarTopics(query));
 
-        view.getTopicFilterComboBox().setOnAction(e -> {
-            currentPage = 1;
-            applyFilter();
-        });
-
-        view.getDateFilterComboBox().setOnAction(e -> {
-            currentPage = 1;
-            applyFilter();
-        });
+        view.getTopicFilterComboBox().setOnAction(e -> applyFilter());
+        view.getDateFilterComboBox().setOnAction(e -> applyFilter());
 
         view.getTopicListView().getSelectionModel().selectedItemProperty().addListener(
                 (obs, oldVal, selectedTopic) -> {
@@ -249,37 +242,29 @@ public class QuizHistoryController {
         String selectedTopicFilter = view.getTopicFilterComboBox().getValue();
         String selectedDateFilter = view.getDateFilterComboBox().getValue();
 
-        filteredHistoryItems.clear();
+        List<HistoryItemDTO> matched = new ArrayList<>();
         LocalDate now = LocalDate.now();
 
         for (HistoryItemDTO item : allHistoryItems) {
-
             boolean matchTopic = (selectedTopicFilter == null || selectedTopicFilter.equals("All Topics") || selectedTopicFilter.equalsIgnoreCase(item.topicName));
 
             boolean matchDate = true;
             if (item.result != null && item.result.getFinishedAt() != null && selectedDateFilter != null && !selectedDateFilter.equals("All Time")) {
                 LocalDate itemDate = item.result.getFinishedAt().toLocalDate();
                 switch (selectedDateFilter) {
-                    case "Today":
-                        matchDate = itemDate.isEqual(now);
-                        break;
-                    case "This Week":
-                        matchDate = !itemDate.isBefore(now.minusDays(7));
-                        break;
-                    case "This Month":
-                        matchDate = !itemDate.isBefore(now.minusMonths(1));
-                        break;
-                    case "This Year":
-                        matchDate = (itemDate.getYear() == now.getYear());
-                        break;
+                    case "Today" -> matchDate = itemDate.isEqual(now);
+                    case "This Week" -> matchDate = !itemDate.isBefore(now.minusDays(7));
+                    case "This Month" -> matchDate = !itemDate.isBefore(now.minusMonths(1));
+                    case "This Year" -> matchDate = (itemDate.getYear() == now.getYear());
                 }
             }
 
             if (matchTopic && matchDate) {
-                filteredHistoryItems.add(item);
+                matched.add(item);
             }
         }
 
+        paginator.setItems(matched);
         renderCurrentPage();
     }
 
@@ -314,7 +299,8 @@ public class QuizHistoryController {
         headerDivider.setStyle("-fx-background-color: #e2e8f0;");
         grid.add(headerDivider, 0, 1, 5, 1);
 
-        if (filteredHistoryItems.isEmpty()) {
+        List<HistoryItemDTO> currentPageItems = paginator.getCurrentPageItems();
+        if (currentPageItems.isEmpty()) {
             VBox emptyBox = new VBox(10);
             emptyBox.setAlignment(Pos.CENTER);
             emptyBox.setPadding(new Insets(36, 0, 36, 0));
@@ -324,36 +310,29 @@ public class QuizHistoryController {
             grid.add(emptyBox, 0, 2, 5, 1);
 
             view.getPaginationInfoLabel().setText("Showing 0 attempts");
-            renderPagination(1);
+            PaginationButtonRenderer.renderButtons(
+                    view.getPaginationButtonsBox(),
+                    paginator.getCurrentPage(),
+                    paginator.getTotalPages(),
+                    page -> {
+                        paginator.setPage(page);
+                        renderCurrentPage();
+                    }
+            );
             return;
         }
 
-        int totalItems = filteredHistoryItems.size();
-        int totalPages = Math.max(1, (int) Math.ceil((double) totalItems / PAGE_SIZE));
-
-        if (currentPage > totalPages) {
-            currentPage = totalPages;
-        }
-        if (currentPage < 1) {
-            currentPage = 1;
-        }
-
-        int startIdx = (currentPage - 1) * PAGE_SIZE;
-        int endIdx = Math.min(startIdx + PAGE_SIZE, totalItems);
-
-        view.getPaginationInfoLabel().setText(
-                String.format("Showing %d to %d of %d attempts", (startIdx + 1), endIdx, totalItems)
-        );
+        view.getPaginationInfoLabel().setText(paginator.getPaginationInfoText("attempts"));
 
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("MMM dd, yyyy  •  HH:mm");
 
         int gridRow = 2;
-        for (int i = startIdx; i < endIdx; i++) {
-            HistoryItemDTO item = filteredHistoryItems.get(i);
+        for (int i = 0; i < currentPageItems.size(); i++) {
+            HistoryItemDTO item = currentPageItems.get(i);
             addGridDataRow(grid, item, dtf, gridRow);
             gridRow++;
 
-            if (i < endIdx - 1) {
+            if (i < currentPageItems.size() - 1) {
                 Region rowDivider = new Region();
                 rowDivider.setPrefHeight(1);
                 rowDivider.setMaxHeight(1);
@@ -363,7 +342,15 @@ public class QuizHistoryController {
             }
         }
 
-        renderPagination(totalPages);
+        PaginationButtonRenderer.renderButtons(
+                view.getPaginationButtonsBox(),
+                paginator.getCurrentPage(),
+                paginator.getTotalPages(),
+                page -> {
+                    paginator.setPage(page);
+                    renderCurrentPage();
+                }
+        );
     }
 
     private void addGridDataRow(GridPane grid, HistoryItemDTO item, DateTimeFormatter dtf, int rowIdx) {
@@ -416,59 +403,6 @@ public class QuizHistoryController {
         scoreBox.setOnMouseClicked(e -> openResult(item.result));
         dateLbl.setOnMouseClicked(e -> openResult(item.result));
         actionBtn.setOnAction(e -> openResult(item.result));
-    }
-
-    private void renderPagination(int totalPages) {
-        view.getPaginationButtonsBox().getChildren().clear();
-
-        Button prevBtn = new Button("<");
-        stylePaginationBtn(prevBtn, false);
-        prevBtn.setDisable(currentPage <= 1);
-        prevBtn.setOnAction(e -> {
-            if (currentPage > 1) {
-                currentPage--;
-                renderCurrentPage();
-            }
-        });
-        view.getPaginationButtonsBox().getChildren().add(prevBtn);
-
-        for (int p = 1; p <= totalPages; p++) {
-            final int pageNum = p;
-            Button pageBtn = new Button(String.valueOf(pageNum));
-            boolean isActive = (pageNum == currentPage);
-            stylePaginationBtn(pageBtn, isActive);
-            pageBtn.setOnAction(e -> {
-                currentPage = pageNum;
-                renderCurrentPage();
-            });
-            view.getPaginationButtonsBox().getChildren().add(pageBtn);
-        }
-
-        Button nextBtn = new Button(">");
-        stylePaginationBtn(nextBtn, false);
-        nextBtn.setDisable(currentPage >= totalPages);
-        nextBtn.setOnAction(e -> {
-            if (currentPage < totalPages) {
-                currentPage++;
-                renderCurrentPage();
-            }
-        });
-        view.getPaginationButtonsBox().getChildren().add(nextBtn);
-    }
-
-    private void stylePaginationBtn(Button btn, boolean isActive) {
-        btn.setPrefSize(36, 36);
-        btn.setMinSize(36, 36);
-        btn.setAlignment(Pos.CENTER);
-        btn.setPadding(Insets.EMPTY);
-
-        if (isActive) {
-            btn.setTextFill(javafx.scene.paint.Color.WHITE);
-            btn.setStyle("-fx-background-color: #4f46e5; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-font-weight: 800; -fx-background-radius: 8px; -fx-padding: 0; -fx-alignment: center; -fx-cursor: hand;");
-        } else {
-            btn.setTextFill(javafx.scene.paint.Color.web("#334155"));
-            btn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-width: 1px; -fx-text-fill: #334155; -fx-font-size: 14px; -fx-font-weight: 700; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 0; -fx-alignment: center; -fx-cursor: hand;");
-        }
     }
 
     private void openResult(Result result) {

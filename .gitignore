@@ -3,6 +3,8 @@ target/
 
 # Environment & Local Secrets Configuration
 config.properties
+*.local.properties
+config.local.properties
 *.env
 db.properties
 .env

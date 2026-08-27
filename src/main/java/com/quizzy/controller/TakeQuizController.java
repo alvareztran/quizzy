@@ -252,7 +252,8 @@ public class TakeQuizController {
                         resultDetailService.saveResultDetails(details);
                     }
                 }
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                System.err.println("Error saving quiz result or details: " + e.getMessage());
             }
         }
 

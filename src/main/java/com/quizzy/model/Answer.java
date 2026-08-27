@@ -59,4 +59,8 @@ public class Answer {
         this.isCorrect = isCorrect;
     }
 
+    public void setCorrect(boolean isCorrect) {
+        this.isCorrect = isCorrect;
+    }
+
 }
