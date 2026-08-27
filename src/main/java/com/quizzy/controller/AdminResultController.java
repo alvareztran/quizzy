@@ -176,6 +176,7 @@ public class AdminResultController {
                         scoreBadge.setStyle("-fx-background-color: #f1f5f9; -fx-text-fill: #475569; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 3 10; -fx-background-radius: 999;");
                     }
                     setAlignment(Pos.CENTER);
+                    setStyle("-fx-alignment: CENTER;");
                     setGraphic(scoreBadge);
                 }
             }
@@ -238,6 +239,7 @@ public class AdminResultController {
                         SceneManager.showResult();
                     });
                     setAlignment(Pos.CENTER);
+                    setStyle("-fx-alignment: CENTER;");
                     setGraphic(detailsBtn);
                 }
             }
@@ -287,7 +289,6 @@ public class AdminResultController {
         } catch (Exception ignored) {
         }
 
-        // Populate Topic ComboBox
         List<String> topicNames = new ArrayList<>();
         topicNames.add("All Topics");
         for (Topic t : topicMap.values()) {
@@ -354,7 +355,6 @@ public class AdminResultController {
             }
         }
 
-        // Sort by attempt date descending (newest first)
         allItems.sort((a, b) -> {
             LocalDateTime tA = a.attemptDateTime != null ? a.attemptDateTime : LocalDateTime.MIN;
             LocalDateTime tB = b.attemptDateTime != null ? b.attemptDateTime : LocalDateTime.MIN;
@@ -362,28 +362,6 @@ public class AdminResultController {
         });
 
         applyFilters();
-    }
-
-    private ResultItemDTO createSampleItem(String userName, String userEmail, String quizName, String topicName, int correct, int total, String date, String time, String duration) {
-        ResultItemDTO dto = new ResultItemDTO();
-        dto.userName = userName;
-        dto.userEmail = userEmail;
-        dto.userInitials = getInitials(userName);
-        dto.userAvatarColor = getAvatarColor(dto.userInitials);
-        dto.quizName = quizName;
-        dto.topicName = topicName;
-        dto.scoreDisplay = correct + "/" + total;
-        dto.scorePercent = ((double) correct / total) * 100;
-        dto.dateDisplay = date;
-        dto.timeDisplay = time;
-        dto.durationDisplay = duration;
-        dto.attemptDateTime = LocalDateTime.now();
-
-        Result r = new Result();
-        r.setCorrectAnswer(correct);
-        r.setTotalQuestions(total);
-        dto.result = r;
-        return dto;
     }
 
     private String getInitials(String name) {

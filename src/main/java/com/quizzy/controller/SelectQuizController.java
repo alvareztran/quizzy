@@ -85,6 +85,11 @@ public class SelectQuizController {
                     box.setPadding(new Insets(10, 14, 10, 14));
 
                     Label nameL = new Label(topic.getTopicName());
+                    nameL.setWrapText(true);
+                    nameL.prefWidthProperty().bind(listView.widthProperty().subtract(36));
+                    HBox.setHgrow(nameL, Priority.ALWAYS);
+                    box.setMaxWidth(Double.MAX_VALUE);
+
                     if (isSel) {
                         box.setStyle("-fx-background-color: #eef2ff; -fx-border-color: #4f46e5; -fx-border-width: 0 0 0 3.5px; -fx-border-radius: 0 8 8 0; -fx-background-radius: 0 8 8 0;");
                         nameL.setStyle("-fx-font-weight: 700; -fx-font-size: 14px; -fx-text-fill: #4f46e5;");
@@ -224,6 +229,8 @@ public class SelectQuizController {
         card.getStyleClass().add("card");
 
         Label titleL = new Label(quiz.getQuizName());
+        titleL.setWrapText(true);
+        titleL.setMaxWidth(Double.MAX_VALUE);
         titleL.setStyle("-fx-font-size: 20px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
 
         Label descL = new Label("Comprehensive practice assessment covering " + topicName + " fundamentals.");

@@ -4,7 +4,7 @@ import com.quizzy.model.Result;
 import java.util.List;
 
 public interface ResultDAO {
-    
+
     Result findById(int resultId);
     List<Result> findByUserId(int userId);
     List<Result> findByQuizId(int quizId);
@@ -12,5 +12,5 @@ public interface ResultDAO {
     List<Result> findTopResults(int limit);
     boolean insert(Result result);
     boolean delete(int resultID);
-     
+
 }

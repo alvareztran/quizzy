@@ -55,7 +55,6 @@ public class QuizView {
     private final TableColumn<Quiz, Integer> timeLimitColumn = new TableColumn<>("TIME LIMIT (MINS)");
     private final TableColumn<Quiz, Quiz> actionsColumn = new TableColumn<>("ACTIONS");
 
-    // Pagination Controls
     private final Label paginationInfoLabel = new Label("Showing 1 to 0 of 0 quizzes");
     private final ComboBox<String> perPageComboBox = new ComboBox<>();
     private final Button prevPageBtn = new Button("<");
@@ -70,7 +69,6 @@ public class QuizView {
     private void createUI() {
         root.setPrefSize(1280, 800);
 
-        // Sidebar Navigation (Full Height)
         VBox sidebar = new VBox(6);
         sidebar.setPrefWidth(260);
         sidebar.setMinWidth(260);
@@ -87,7 +85,7 @@ public class QuizView {
             iconView.setPreserveRatio(true);
             iconView.setSmooth(true);
         } catch (Exception e) {
-            // Fallback
+
         }
 
         Label brandTitle = new Label("QUIZZY");
@@ -111,7 +109,6 @@ public class QuizView {
         VBox sidebarSpacer = new VBox();
         VBox.setVgrow(sidebarSpacer, Priority.ALWAYS);
 
-        // Bottom User Profile Widget Frame
         VBox profileBox = new VBox(10);
         profileBox.setPadding(new Insets(14, 0, 0, 0));
         profileBox.setStyle("-fx-border-color: #c7c4d7; -fx-border-width: 1 0 0 0;");
@@ -175,9 +172,9 @@ public class QuizView {
         topicFilterComboBox.setPromptText("All Topics");
         topicFilterComboBox.setPrefHeight(32);
 
-        sortComboBox.setPromptText("Sort by: Newest");
-        sortComboBox.getItems().setAll("Sort by: Newest", "Sort by: Name A-Z", "Sort by: Questions Count");
-        sortComboBox.setValue("Sort by: Newest");
+        sortComboBox.setPromptText("Sort by: ID");
+        sortComboBox.getItems().setAll("Sort by: ID", "Sort by: Name A-Z", "Sort by: Questions Count", "Sort by: Newest");
+        sortComboBox.setValue("Sort by: ID");
         sortComboBox.setPrefHeight(32);
 
         resetFilterBtn.setStyle("-fx-font-size: 12px; -fx-padding: 5 12;");
@@ -189,9 +186,11 @@ public class QuizView {
 
         quizTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
+        idColumn.setId("id-col");
         idColumn.setMaxWidth(60);
         idColumn.setMinWidth(45);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("quizId"));
+        idColumn.getStyleClass().add("column-center");
 
         nameColumn.setPrefWidth(320);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("quizName"));
@@ -204,6 +203,7 @@ public class QuizView {
         timeLimitColumn.setPrefWidth(160);
         timeLimitColumn.setCellValueFactory(new PropertyValueFactory<>("timeLimit"));
 
+        actionsColumn.setId("actions-col");
         actionsColumn.setPrefWidth(120);
         actionsColumn.setMaxWidth(130);
         actionsColumn.setStyle("-fx-alignment: CENTER;");

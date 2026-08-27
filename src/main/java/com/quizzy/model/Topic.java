@@ -1,7 +1,7 @@
 package com.quizzy.model;
 
 public class Topic {
-    
+
     private int topicId;
     private String topicName;
     private String description;
@@ -19,7 +19,7 @@ public class Topic {
         this.topicName = topicName;
         this.description = description;
     }
-    
+
     public int getTopicId() {
         return topicId;
     }

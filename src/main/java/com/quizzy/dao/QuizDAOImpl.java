@@ -29,8 +29,8 @@ public class QuizDAOImpl implements QuizDAO {
     @Override
     public Quiz findById(int quizId) {
         String sql = """
-                     SELECT QuizID, TopicID, QuizName, NumberOfQuestions, TimeLimit, CreatedAt 
-                     FROM Quiz 
+                     SELECT QuizID, TopicID, QuizName, NumberOfQuestions, TimeLimit, CreatedAt
+                     FROM Quiz
                      WHERE QuizID=?
                      """;
 
@@ -54,7 +54,7 @@ public class QuizDAOImpl implements QuizDAO {
     public List<Quiz> findByTopicId(int topicId) {
         List<Quiz> quizzes = new ArrayList<>();
         String sql = """
-                     SELECT QuizID, TopicID, QuizName, NumberOfQuestions, TimeLimit, CreatedAt 
+                     SELECT QuizID, TopicID, QuizName, NumberOfQuestions, TimeLimit, CreatedAt
                      FROM Quiz
                      WHERE TopicID=?
                      ORDER BY QuizID
@@ -149,10 +149,10 @@ public class QuizDAOImpl implements QuizDAO {
     @Override
     public boolean update(Quiz quiz) {
         String sql = """
-                     UPDATE Quiz 
+                     UPDATE Quiz
                      SET TopicID=?,
-                         QuizName=?, 
-                         NumberOfQuestions=?, 
+                         QuizName=?,
+                         NumberOfQuestions=?,
                          TimeLimit=?
                      WHERE QuizID=?
                      """;

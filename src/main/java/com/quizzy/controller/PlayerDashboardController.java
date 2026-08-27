@@ -145,7 +145,6 @@ public class PlayerDashboardController {
         titleBox.getChildren().addAll(titleL, countL);
         topRow.getChildren().addAll(iconL, titleBox);
 
-        // Active indicator line
         HBox bar = new HBox();
         bar.setPrefHeight(3);
         bar.setStyle(isActive ? "-fx-background-color: #6366f1; -fx-background-radius: 2px;" : "-fx-background-color: #e5e7eb; -fx-background-radius: 2px;");

@@ -30,7 +30,7 @@ public class UserDAOImpl implements UserDAO {
     public User findById(int userId) {
         String sql = """
                      SELECT UserID, Username, Password, FullName, Role, CreatedAt
-                     FROM Users 
+                     FROM Users
                      WHERE UserID=?
                      """;
 
@@ -123,10 +123,10 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public boolean update(User user) {
         String sql = """
-                     UPDATE Users 
-                     SET Username=?, 
-                         Password=?, 
-                         FullName=?, 
+                     UPDATE Users
+                     SET Username=?,
+                         Password=?,
+                         FullName=?,
                          Role=?
                      WHERE UserID=?
                      """;

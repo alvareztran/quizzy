@@ -54,7 +54,6 @@ public class AnswerView {
     private final TableColumn<Answer, Boolean> statusColumn = new TableColumn<>("IS CORRECT?");
     private final TableColumn<Answer, Answer> actionsColumn = new TableColumn<>("ACTIONS");
 
-    // Pagination Controls
     private final Label paginationInfoLabel = new Label("Showing 1 to 0 of 0 answers");
     private final ComboBox<String> perPageComboBox = new ComboBox<>();
     private final Button prevPageBtn = new Button("<");
@@ -69,7 +68,6 @@ public class AnswerView {
     private void createUI() {
         root.setPrefSize(1280, 800);
 
-        // Sidebar Navigation (Full Height)
         VBox sidebar = new VBox(6);
         sidebar.setPrefWidth(260);
         sidebar.setMinWidth(260);
@@ -86,7 +84,7 @@ public class AnswerView {
             iconView.setPreserveRatio(true);
             iconView.setSmooth(true);
         } catch (Exception e) {
-            // Fallback
+
         }
 
         Label brandTitle = new Label("QUIZZY");
@@ -110,7 +108,6 @@ public class AnswerView {
         VBox sidebarSpacer = new VBox();
         VBox.setVgrow(sidebarSpacer, Priority.ALWAYS);
 
-        // Bottom User Profile Widget Frame
         VBox profileBox = new VBox(10);
         profileBox.setPadding(new Insets(14, 0, 0, 0));
         profileBox.setStyle("-fx-border-color: #c7c4d7; -fx-border-width: 1 0 0 0;");
@@ -184,9 +181,11 @@ public class AnswerView {
 
         answerTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
+        idColumn.setId("id-col");
         idColumn.setMaxWidth(60);
         idColumn.setMinWidth(45);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("answerId"));
+        idColumn.getStyleClass().add("column-center");
 
         questionContentColumn.setPrefWidth(480);
 
@@ -224,6 +223,7 @@ public class AnswerView {
             }
         });
 
+        actionsColumn.setId("actions-col");
         actionsColumn.setPrefWidth(120);
         actionsColumn.setMaxWidth(130);
         actionsColumn.setStyle("-fx-alignment: CENTER;");

@@ -166,13 +166,20 @@ public class AdminResultView {
 
         userColumn.setPrefWidth(240);
         quizColumn.setPrefWidth(260);
+
+        scoreColumn.setId("score-col");
         scoreColumn.setPrefWidth(100);
         scoreColumn.setStyle("-fx-alignment: CENTER;");
+        scoreColumn.getStyleClass().add("column-center");
+
         dateTimeColumn.setPrefWidth(160);
         durationColumn.setPrefWidth(120);
+
+        actionColumn.setId("action-col");
         actionColumn.setPrefWidth(130);
         actionColumn.setMaxWidth(140);
         actionColumn.setStyle("-fx-alignment: CENTER;");
+        actionColumn.getStyleClass().add("column-center");
 
         resultTable.getColumns().addAll(
                 userColumn, quizColumn, scoreColumn,

@@ -25,15 +25,15 @@ public class ResultView {
     private final Button navTopicsBtn = new Button("Topics");
     private final Button navHistoryBtn = new Button("History");
 
-    private final Label quizTitleLabel = new Label("Computer Science Basic");
+    private final Label quizTitleLabel = new Label("-");
 
-    private final Label percentDisplayLabel = new Label("82%");
-    private final Label correctRatioBadgeLabel = new Label("8 / 10 Correct");
+    private final Label percentDisplayLabel = new Label("0%");
+    private final Label correctRatioBadgeLabel = new Label("0 / 0 Correct");
 
-    private final Label correctValLabel = new Label("8");
-    private final Label incorrectValLabel = new Label("2");
-    private final Label accuracyValLabel = new Label("80%");
-    private final Label durationValLabel = new Label("12:34");
+    private final Label correctValLabel = new Label("0");
+    private final Label incorrectValLabel = new Label("0");
+    private final Label accuracyValLabel = new Label("0%");
+    private final Label durationValLabel = new Label("00:00");
 
     private final VBox questionReviewBox = new VBox(0);
 

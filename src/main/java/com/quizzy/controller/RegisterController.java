@@ -68,7 +68,7 @@ public class RegisterController {
             showError("Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&).");
             return;
         }
-        
+
         if (confirmPassword == null || confirmPassword.isBlank()) {
             showError("Confirm Password is required.");
             return;
@@ -84,8 +84,7 @@ public class RegisterController {
 
             if ("SUCCESS".equals(result)) {
                 showSuccess("Account created successfully.");
-                
-                // Show Login screen with prefilled username
+
                 LoginController loginController = new LoginController();
                 loginController.getLoginView().getUsernameField().setText(username.trim());
                 SceneManager.switchScene(loginController.getView(), "Quizzy - Login");

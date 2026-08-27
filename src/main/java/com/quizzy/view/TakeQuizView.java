@@ -17,8 +17,8 @@ public class TakeQuizView {
     private final BorderPane root = new BorderPane();
     private final ImageView logoImageView = new ImageView();
     private final Label brandNameLabel = new Label("QUIZZY");
-    private final Label quizNameLabel = new Label("Computer Science Basic");
-    private final Label questionNumberLabel = new Label("Question 1 / 10");
+    private final Label quizNameLabel = new Label("");
+    private final Label questionNumberLabel = new Label("Question 0 / 0");
     private final Label timerLabel = new Label("⏱ 00:00");
     private final Button backBtn = new Button("Exit Quiz");
 

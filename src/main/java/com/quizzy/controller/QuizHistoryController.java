@@ -98,7 +98,7 @@ public class QuizHistoryController {
     }
 
     private void initializeData() {
-        // Setup Left Sidebar Topic ListView
+
         view.getTopicListView().setItems(topicList);
         view.getTopicListView().setCellFactory(listView -> new ListCell<>() {
             @Override
@@ -115,6 +115,11 @@ public class QuizHistoryController {
                     box.setPadding(new Insets(10, 14, 10, 14));
 
                     Label nameL = new Label(topic.getTopicName());
+                    nameL.setWrapText(true);
+                    nameL.prefWidthProperty().bind(listView.widthProperty().subtract(36));
+                    HBox.setHgrow(nameL, Priority.ALWAYS);
+                    box.setMaxWidth(Double.MAX_VALUE);
+
                     if (isSel) {
                         box.setStyle("-fx-background-color: #eef2ff; -fx-border-color: #4f46e5; -fx-border-width: 0 0 0 3.5px; -fx-border-radius: 0 8 8 0; -fx-background-radius: 0 8 8 0;");
                         nameL.setStyle("-fx-font-weight: 700; -fx-font-size: 14px; -fx-text-fill: #4f46e5;");
@@ -141,7 +146,6 @@ public class QuizHistoryController {
             allHistoryItems.clear();
             allTopicsList.clear();
 
-            // Load Topics
             List<Topic> topics = topicService.getAllTopics();
             if (topics != null) {
                 allTopicsList.addAll(topics);
@@ -154,7 +158,6 @@ public class QuizHistoryController {
             }
             filterSidebarTopics(view.getSearchTopicField().getText());
 
-            // Load Quizzes
             List<Quiz> quizzes = quizService.getAllQuizzes();
             if (quizzes != null) {
                 for (Quiz q : quizzes) {
@@ -162,7 +165,6 @@ public class QuizHistoryController {
                 }
             }
 
-            // Load Results for Current User
             User currentUser = SessionManager.getCurrentUser();
             if (currentUser != null) {
                 List<Result> results = resultService.getResultsByUserId(currentUser.getUserId());
@@ -179,12 +181,6 @@ public class QuizHistoryController {
                 }
             }
 
-            // If empty, generate realistic sample history
-            if (allHistoryItems.isEmpty()) {
-                populateSampleData();
-            }
-
-            // Explicitly sort by attempt date descending (newest first)
             allHistoryItems.sort((a, b) -> {
                 LocalDateTime dtA = (a.result != null && a.result.getFinishedAt() != null) ? a.result.getFinishedAt() : LocalDateTime.MIN;
                 LocalDateTime dtB = (b.result != null && b.result.getFinishedAt() != null) ? b.result.getFinishedAt() : LocalDateTime.MIN;
@@ -195,23 +191,9 @@ public class QuizHistoryController {
             applyFilter();
 
         } catch (Exception e) {
-            populateSampleData();
             calculateAndDisplayStats();
             applyFilter();
         }
-    }
-
-    private void populateSampleData() {
-        allHistoryItems.clear();
-        LocalDateTime now = LocalDateTime.now();
-
-        allHistoryItems.add(new HistoryItemDTO(new Result(1, 1, 1, new BigDecimal("9.0"), 10, 9, now.minusDays(9).withHour(14).withMinute(10), now.minusDays(9).withHour(14).withMinute(10)), "Java Basic", "Java Programming"));
-        allHistoryItems.add(new HistoryItemDTO(new Result(2, 1, 1, new BigDecimal("8.7"), 10, 8, now.minusDays(8).withHour(14).withMinute(51), now.minusDays(8).withHour(14).withMinute(51)), "Java Advanced", "Java Programming"));
-        allHistoryItems.add(new HistoryItemDTO(new Result(3, 1, 2, new BigDecimal("10.0"), 10, 10, now.minusDays(6).withHour(8).withMinute(38), now.minusDays(6).withHour(8).withMinute(38)), "JavaFX Basic", "JavaFX"));
-        allHistoryItems.add(new HistoryItemDTO(new Result(4, 1, 3, new BigDecimal("10.0"), 10, 10, now.minusDays(3).withHour(22).withMinute(5), now.minusDays(3).withHour(22).withMinute(5)), "Computer Science Basic", "Computer Science"));
-        allHistoryItems.add(new HistoryItemDTO(new Result(5, 1, 3, new BigDecimal("10.0"), 10, 10, now.minusDays(2).withHour(20).withMinute(18), now.minusDays(2).withHour(20).withMinute(18)), "Computer Science Basic", "Computer Science"));
-        allHistoryItems.add(new HistoryItemDTO(new Result(6, 1, 1, new BigDecimal("2.0"), 10, 2, now.minusHours(5), now.minusHours(5)), "OOP Fundamentals", "OOP"));
-        allHistoryItems.add(new HistoryItemDTO(new Result(7, 1, 1, new BigDecimal("0.0"), 10, 0, now.minusMinutes(40), now.minusMinutes(40)), "OOP Fundamentals", "OOP"));
     }
 
     private void calculateAndDisplayStats() {
@@ -271,10 +253,9 @@ public class QuizHistoryController {
         LocalDate now = LocalDate.now();
 
         for (HistoryItemDTO item : allHistoryItems) {
-            // 1. Topic filter
+
             boolean matchTopic = (selectedTopicFilter == null || selectedTopicFilter.equals("All Topics") || selectedTopicFilter.equalsIgnoreCase(item.topicName));
 
-            // 2. Date filter
             boolean matchDate = true;
             if (item.result != null && item.result.getFinishedAt() != null && selectedDateFilter != null && !selectedDateFilter.equals("All Time")) {
                 LocalDate itemDate = item.result.getFinishedAt().toLocalDate();
@@ -387,9 +368,11 @@ public class QuizHistoryController {
 
     private void addGridDataRow(GridPane grid, HistoryItemDTO item, DateTimeFormatter dtf, int rowIdx) {
         Label quizLbl = new Label(item.quizName);
+        quizLbl.setWrapText(true);
         quizLbl.setStyle("-fx-font-size: 14px; -fx-font-weight: 700; -fx-text-fill: #0f172a; -fx-padding: 10 14; -fx-cursor: hand;");
 
         Label topicLbl = new Label(item.topicName);
+        topicLbl.setWrapText(true);
         topicLbl.setStyle("-fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #64748b; -fx-padding: 10 14; -fx-cursor: hand;");
 
         double scoreVal = item.result != null && item.result.getScore() != null ? (item.result.getScore().doubleValue() / 10.0) * 100 : 0;

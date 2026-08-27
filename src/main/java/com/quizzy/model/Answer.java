@@ -1,7 +1,7 @@
 package com.quizzy.model;
 
 public class Answer {
-    
+
     private int answerId;
     private int questionId;
     private String answerContent;
@@ -9,7 +9,7 @@ public class Answer {
 
     public Answer() {
     }
-    
+
     public Answer(int answerId, int questionId, String answerContent, boolean isCorrect) {
         this.answerId = answerId;
         this.questionId = questionId;
@@ -22,7 +22,7 @@ public class Answer {
         this.answerContent = answerContent;
         this.isCorrect = isCorrect;
     }
-    
+
     public int getAnswerId() {
         return answerId;
     }
@@ -58,5 +58,5 @@ public class Answer {
     public void setIsCorrect(boolean isCorrect) {
         this.isCorrect = isCorrect;
     }
-    
+
 }

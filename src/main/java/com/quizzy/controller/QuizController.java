@@ -201,14 +201,17 @@ public class QuizController {
 
         if (sortOption != null) {
             switch (sortOption) {
-                case "Sort by: Oldest" -> filtered.sort(java.util.Comparator.comparingInt(Quiz::getQuizId));
+                case "Sort by: ID", "Sort by: Oldest" -> filtered.sort(java.util.Comparator.comparingInt(Quiz::getQuizId));
+                case "Sort by: Newest" -> filtered.sort((a, b) -> Integer.compare(b.getQuizId(), a.getQuizId()));
                 case "Sort by: Name A-Z" -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
                         a.getQuizName() != null ? a.getQuizName() : "",
                         b.getQuizName() != null ? b.getQuizName() : ""
                 ));
                 case "Sort by: Questions Count" -> filtered.sort((a, b) -> Integer.compare(b.getNumberOfQuestions(), a.getNumberOfQuestions()));
-                default -> filtered.sort((a, b) -> Integer.compare(b.getQuizId(), a.getQuizId()));
+                default -> filtered.sort(java.util.Comparator.comparingInt(Quiz::getQuizId));
             }
+        } else {
+            filtered.sort(java.util.Comparator.comparingInt(Quiz::getQuizId));
         }
 
         currentFilteredList.clear();

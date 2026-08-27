@@ -56,7 +56,6 @@ public class UserView {
     private final TableColumn<User, String> roleColumn = new TableColumn<>("ROLE");
     private final TableColumn<User, User> actionsColumn = new TableColumn<>("ACTIONS");
 
-    // Pagination Controls
     private final Label paginationInfoLabel = new Label("Showing 1 to 0 of 0 users");
     private final ComboBox<String> perPageComboBox = new ComboBox<>();
     private final Button prevPageBtn = new Button("<");
@@ -71,7 +70,6 @@ public class UserView {
     private void createUI() {
         root.setPrefSize(1280, 800);
 
-        // Sidebar Navigation (Full Height)
         VBox sidebar = new VBox(6);
         sidebar.setPrefWidth(260);
         sidebar.setMinWidth(260);
@@ -88,7 +86,7 @@ public class UserView {
             iconView.setPreserveRatio(true);
             iconView.setSmooth(true);
         } catch (Exception e) {
-            // Fallback
+
         }
 
         Label brandTitle = new Label("QUIZZY");
@@ -112,7 +110,6 @@ public class UserView {
         VBox sidebarSpacer = new VBox();
         VBox.setVgrow(sidebarSpacer, Priority.ALWAYS);
 
-        // Bottom User Profile Widget Frame
         VBox profileBox = new VBox(10);
         profileBox.setPadding(new Insets(14, 0, 0, 0));
         profileBox.setStyle("-fx-border-color: #c7c4d7; -fx-border-width: 1 0 0 0;");
@@ -178,9 +175,9 @@ public class UserView {
         roleFilterComboBox.setValue("All Roles");
         roleFilterComboBox.setPrefHeight(32);
 
-        sortComboBox.setPromptText("Sort by: Username");
-        sortComboBox.getItems().setAll("Sort by: Username", "Sort by: Full Name", "Sort by: Role");
-        sortComboBox.setValue("Sort by: Username");
+        sortComboBox.setPromptText("Sort by: ID");
+        sortComboBox.getItems().setAll("Sort by: ID", "Sort by: Username", "Sort by: Full Name", "Sort by: Role");
+        sortComboBox.setValue("Sort by: ID");
         sortComboBox.setPrefHeight(32);
 
         resetFilterBtn.setStyle("-fx-font-size: 12px; -fx-padding: 5 12;");
@@ -192,9 +189,11 @@ public class UserView {
 
         userTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
+        idColumn.setId("id-col");
         idColumn.setMaxWidth(60);
         idColumn.setMinWidth(45);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("userId"));
+        idColumn.getStyleClass().add("column-center");
 
         fullNameColumn.setPrefWidth(340);
         fullNameColumn.setCellValueFactory(new PropertyValueFactory<>("fullName"));
@@ -229,6 +228,7 @@ public class UserView {
             }
         });
 
+        actionsColumn.setId("actions-col");
         actionsColumn.setPrefWidth(120);
         actionsColumn.setMaxWidth(130);
         actionsColumn.setStyle("-fx-alignment: CENTER;");

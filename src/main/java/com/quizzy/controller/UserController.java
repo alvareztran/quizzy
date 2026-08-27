@@ -171,6 +171,11 @@ public class UserController {
 
         if (sortOption != null) {
             switch (sortOption) {
+                case "Sort by: ID", "Sort by: Oldest" -> filtered.sort(java.util.Comparator.comparingInt(User::getUserId));
+                case "Sort by: Username" -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
+                        a.getUserName() != null ? a.getUserName() : "",
+                        b.getUserName() != null ? b.getUserName() : ""
+                ));
                 case "Sort by: Full Name" -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
                         a.getFullName() != null ? a.getFullName() : "",
                         b.getFullName() != null ? b.getFullName() : ""
@@ -179,11 +184,10 @@ public class UserController {
                         a.getRole() != null ? a.getRole() : "",
                         b.getRole() != null ? b.getRole() : ""
                 ));
-                default -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
-                        a.getUserName() != null ? a.getUserName() : "",
-                        b.getUserName() != null ? b.getUserName() : ""
-                )); // Sort by: Username
+                default -> filtered.sort(java.util.Comparator.comparingInt(User::getUserId));
             }
+        } else {
+            filtered.sort(java.util.Comparator.comparingInt(User::getUserId));
         }
 
         currentFilteredList.clear();

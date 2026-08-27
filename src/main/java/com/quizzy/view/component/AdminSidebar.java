@@ -49,7 +49,7 @@ public class AdminSidebar {
             iconView.setPreserveRatio(true);
             iconView.setSmooth(true);
         } catch (Exception e) {
-            // Brand text remains visible without the icon.
+
         }
 
         Label brandTitle = new Label("QUIZZY");

@@ -72,7 +72,6 @@ public class TopicController {
 
         view.getResetFilterBtn().setOnAction(e -> {
             view.getSearchTopicsField().clear();
-            view.getStatusFilterComboBox().setValue("All Status");
             view.getSortComboBox().setValue("Sort by: Newest");
             filterTopics(null);
         });
@@ -178,7 +177,8 @@ public class TopicController {
 
         if (sortOption != null) {
             switch (sortOption) {
-                case "Sort by: Oldest" -> filtered.sort(java.util.Comparator.comparingInt(Topic::getTopicId));
+                case "Sort by: ID", "Sort by: Oldest" -> filtered.sort(java.util.Comparator.comparingInt(Topic::getTopicId));
+                case "Sort by: Newest" -> filtered.sort((a, b) -> Integer.compare(b.getTopicId(), a.getTopicId()));
                 case "Sort by: Name A-Z", "Name: A - Z" -> filtered.sort((a, b) -> String.CASE_INSENSITIVE_ORDER.compare(
                         a.getTopicName() != null ? a.getTopicName() : "",
                         b.getTopicName() != null ? b.getTopicName() : ""
@@ -187,8 +187,10 @@ public class TopicController {
                         b.getTopicName() != null ? b.getTopicName() : "",
                         a.getTopicName() != null ? a.getTopicName() : ""
                 ));
-                default -> filtered.sort((a, b) -> Integer.compare(b.getTopicId(), a.getTopicId())); // Newest by default
+                default -> filtered.sort(java.util.Comparator.comparingInt(Topic::getTopicId));
             }
+        } else {
+            filtered.sort(java.util.Comparator.comparingInt(Topic::getTopicId));
         }
 
         currentFilteredList.clear();

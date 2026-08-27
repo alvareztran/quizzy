@@ -48,7 +48,7 @@ public class AnswerDAOImpl implements AnswerDAO {
     public List<Answer> findByQuestionId(int questionId) {
         List<Answer> answers = new ArrayList<>();
         String sql = """
-                     SELECT AnswerID, QuestionID, AnswerContent, IsCorrect 
+                     SELECT AnswerID, QuestionID, AnswerContent, IsCorrect
                      FROM Answer
                      WHERE QuestionID=?
                      ORDER BY AnswerID

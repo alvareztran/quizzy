@@ -3,7 +3,7 @@ package com.quizzy.model;
 import java.time.LocalDateTime;
 
 public class User {
-    
+
     private int userId;
     private String userName;
     private String password;
@@ -77,7 +77,5 @@ public class User {
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
     }
-    
-    
-    
+
 }

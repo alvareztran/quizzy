@@ -60,8 +60,7 @@ public class UserFormDialog {
 
         Label passLabel = new Label(isEdit ? "Password (leave blank to keep current)" : "Password *");
         passLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #475569;");
-        PasswordField passField = new PasswordField();
-        passField.setPromptText("Account password");
+        PasswordInputField passField = new PasswordInputField("Account password");
         passField.setPrefHeight(38);
 
         Label roleLabel = new Label("Role *");
@@ -79,7 +78,7 @@ public class UserFormDialog {
 
         if (isEdit) {
             usernameField.setText(existingUser.getUserName());
-            usernameField.setDisable(true); // Username immutable
+            usernameField.setDisable(true);
             fullnameField.setText(existingUser.getFullName());
             roleComboBox.setValue(existingUser.getRole());
         }

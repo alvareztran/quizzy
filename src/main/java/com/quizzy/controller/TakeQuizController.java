@@ -5,9 +5,11 @@ import com.quizzy.model.Answer;
 import com.quizzy.model.Question;
 import com.quizzy.model.Quiz;
 import com.quizzy.model.Result;
+import com.quizzy.model.ResultDetail;
 import com.quizzy.model.User;
 import com.quizzy.service.AnswerService;
 import com.quizzy.service.QuestionService;
+import com.quizzy.service.ResultDetailService;
 import com.quizzy.service.ResultService;
 import com.quizzy.util.SceneManager;
 import com.quizzy.util.SessionManager;
@@ -15,9 +17,11 @@ import com.quizzy.view.TakeQuizView;
 import com.quizzy.view.component.SubmitQuizModal;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -32,7 +36,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.Toggle;
 import javafx.scene.control.ToggleGroup;
-import java.util.Optional;
 
 public class TakeQuizController {
 
@@ -40,6 +43,7 @@ public class TakeQuizController {
     private final QuestionService questionService = ServiceFactory.getQuestionService();
     private final AnswerService answerService = ServiceFactory.getAnswerService();
     private final ResultService resultService = ServiceFactory.getResultService();
+    private final ResultDetailService resultDetailService = ServiceFactory.getResultDetailService();
     private final Map<Integer, Answer> selectedAnswerMap = new HashMap<>();
 
     private Quiz selectedQuiz;
@@ -234,7 +238,20 @@ public class TakeQuizController {
 
         if (currentUser != null) {
             try {
-                resultService.createResult(result);
+                boolean created = resultService.createResult(result);
+                if (created && result.getResultId() > 0) {
+                    List<ResultDetail> details = new ArrayList<>();
+                    for (int i = 0; i < questionList.size(); i++) {
+                        Question q = questionList.get(i);
+                        Answer chosenAnswer = selectedAnswerMap.get(q.getQuestionId());
+                        if (chosenAnswer != null) {
+                            details.add(new ResultDetail(i + 1, q.getQuestionId(), chosenAnswer.getAnswerId(), result.getResultId()));
+                        }
+                    }
+                    if (!details.isEmpty()) {
+                        resultDetailService.saveResultDetails(details);
+                    }
+                }
             } catch (Exception ignored) {
             }
         }

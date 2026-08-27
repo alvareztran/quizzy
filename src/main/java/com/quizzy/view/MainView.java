@@ -51,7 +51,7 @@ public class MainView {
             iconView.setPreserveRatio(true);
             iconView.setSmooth(true);
         } catch (Exception e) {
-            // App still renders the wordmark if the icon resource is missing.
+
         }
 
         Label brandTitle = new Label("QUIZZY");
@@ -64,7 +64,6 @@ public class MainView {
         Label managementHeader = new Label("MANAGEMENT");
         managementHeader.setStyle("-fx-text-fill: #767586; -fx-font-size: 11px; -fx-font-weight: 700; -fx-padding: 4 0 4 12; -fx-letter-spacing: 0.8px;");
 
-        // Setup navigation buttons with icons from resources/com/quizzy/icons
         NavIconHelper.setupNavButton(dashBtn, "Dashboard", "dashboard.png", true);
         NavIconHelper.setupNavButton(topicBtn, "Topics", "topic_icon.png", false);
         NavIconHelper.setupNavButton(quizBtn, "Quizzes", "quiz_icon.png", false);

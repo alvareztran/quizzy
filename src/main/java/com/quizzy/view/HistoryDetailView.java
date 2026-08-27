@@ -28,18 +28,18 @@ public class HistoryDetailView {
     private final Button navHistoryBtn = new Button("History");
 
     private final Button backToHistoryBtn = new Button("←  Back to History");
-    private final Label quizTitleInfoLabel = new Label("Java Basic");
-    private final Label quizDateInfoLabel = new Label("Aug 23, 2026 • 10:21");
-    private final Label quizQuestionsInfoLabel = new Label("10 Questions");
+    private final Label quizTitleInfoLabel = new Label("-");
+    private final Label quizDateInfoLabel = new Label("-");
+    private final Label quizQuestionsInfoLabel = new Label("0 Questions");
     private final VBox questionsIndexContainer = new VBox(6);
 
-    private final Label percentDisplayLabel = new Label("90%");
-    private final Label praiseTitleLabel = new Label("Great Job! 🎉");
-    private final Label praiseSubtitleLabel = new Label("You scored 9 out of 10");
-    private final Label correctCountLabel = new Label("9");
-    private final Label incorrectCountLabel = new Label("1");
-    private final Label accuracyPercentLabel = new Label("90%");
-    private final Label timeTakenLabel = new Label("10:21");
+    private final Label percentDisplayLabel = new Label("0%");
+    private final Label praiseTitleLabel = new Label("");
+    private final Label praiseSubtitleLabel = new Label("");
+    private final Label correctCountLabel = new Label("0");
+    private final Label incorrectCountLabel = new Label("0");
+    private final Label accuracyPercentLabel = new Label("0%");
+    private final Label timeTakenLabel = new Label("00:00");
 
     private final VBox questionCardsContainer = new VBox(16);
     private final ScrollPane scrollPane = new ScrollPane();
@@ -68,12 +68,15 @@ public class HistoryDetailView {
         } catch (Exception ignored) {
         }
 
-        brandNameLabel.setStyle("-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #4f46e5; -fx-letter-spacing: 0.5px; -fx-cursor: hand;");
+        brandNameLabel.setStyle(
+                "-fx-font-size: 22px; -fx-font-weight: 900; -fx-text-fill: #4f46e5; -fx-letter-spacing: 0.5px; -fx-cursor: hand;");
         HBox logoBrandBox = new HBox(8, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
-        navTopicsBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
-        navHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 8 16 4 16; -fx-cursor: hand;");
+        navTopicsBtn.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #475569; -fx-font-size: 14px; -fx-font-weight: 600; -fx-padding: 8 16; -fx-cursor: hand;");
+        navHistoryBtn.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 14px; -fx-font-weight: 700; -fx-padding: 8 16 4 16; -fx-cursor: hand;");
 
         Region activeUnderline = new Region();
         activeUnderline.setPrefHeight(3);
@@ -105,22 +108,26 @@ public class HistoryDetailView {
         root.setTop(navbar);
 
         VBox leftSidebar = new VBox(18);
-        leftSidebar.setPrefWidth(260);
-        leftSidebar.setMinWidth(240);
-        leftSidebar.setMaxWidth(280);
+        leftSidebar.setPrefWidth(280);
+        leftSidebar.setMinWidth(260);
+        leftSidebar.setMaxWidth(300);
         leftSidebar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 1px 0 0;");
         leftSidebar.setPadding(new Insets(20, 16, 20, 20));
 
         backToHistoryBtn.setFocusTraversable(false);
-        backToHistoryBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 13px; -fx-font-weight: 700; -fx-padding: 0; -fx-cursor: hand;");
+        backToHistoryBtn.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #4f46e5; -fx-font-size: 13px; -fx-font-weight: 700; -fx-padding: 4px 6px; -fx-cursor: hand;");
 
         VBox quizInfoCard = new VBox(8);
         quizInfoCard.setPadding(new Insets(14, 14, 14, 14));
-        quizInfoCard.setStyle("-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px;");
+        quizInfoCard.setStyle(
+                "-fx-background-color: #f8fafc; -fx-border-color: #e2e8f0; -fx-border-radius: 10px; -fx-background-radius: 10px;");
 
         Label quizInfoTag = new Label("QUIZ INFO");
-        quizInfoTag.setStyle("-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: #94a3b8; -fx-letter-spacing: 0.5px;");
+        quizInfoTag.setStyle(
+                "-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: #94a3b8; -fx-letter-spacing: 0.5px;");
 
+        quizTitleInfoLabel.setWrapText(true);
         quizTitleInfoLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
 
         HBox dateRow = new HBox(6);
@@ -138,7 +145,8 @@ public class HistoryDetailView {
         quizInfoCard.getChildren().addAll(quizInfoTag, quizTitleInfoLabel, dateRow, countRow);
 
         Label questionsTag = new Label("QUESTIONS");
-        questionsTag.setStyle("-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: #94a3b8; -fx-letter-spacing: 0.5px; -fx-padding: 4 0 0 0;");
+        questionsTag.setStyle(
+                "-fx-font-size: 10px; -fx-font-weight: 800; -fx-text-fill: #94a3b8; -fx-letter-spacing: 0.5px; -fx-padding: 4 0 0 0;");
 
         ScrollPane questionsNavScroll = new ScrollPane(questionsIndexContainer);
         questionsNavScroll.setFitToWidth(true);
@@ -158,7 +166,8 @@ public class HistoryDetailView {
 
         VBox summaryCard = new VBox(14);
         summaryCard.setPadding(new Insets(20, 24, 20, 24));
-        summaryCard.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2);");
+        summaryCard.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 14px; -fx-background-radius: 14px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.04), 8, 0, 0, 2);");
 
         Label summaryHeader = new Label("Your Result");
         summaryHeader.setStyle("-fx-font-size: 18px; -fx-font-weight: 800; -fx-text-fill: #0f172a;");
@@ -198,8 +207,7 @@ public class HistoryDetailView {
                 correctCol, createVertDivider(),
                 incorrectCol, createVertDivider(),
                 accuracyCol, createVertDivider(),
-                timeCol
-        );
+                timeCol);
 
         summaryCard.getChildren().addAll(summaryHeader, metricsRow);
 
@@ -211,9 +219,6 @@ public class HistoryDetailView {
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8fafc;");
         root.setCenter(scrollPane);
 
-        // ==========================================
-        // 4. BOTTOM FOOTER BAR
-        // ==========================================
         HBox footerBar = new HBox(20);
         footerBar.setAlignment(Pos.CENTER_LEFT);
         footerBar.setPadding(new Insets(16, 48, 16, 48));
@@ -243,14 +248,16 @@ public class HistoryDetailView {
         root.setBottom(footerBar);
     }
 
-    private VBox createSummaryStatItem(String iconStr, String iconColor, String iconBg, Label valLabel, String subText) {
+    private VBox createSummaryStatItem(String iconStr, String iconColor, String iconBg, Label valLabel,
+            String subText) {
         VBox box = new VBox(4);
         box.setAlignment(Pos.CENTER);
 
         Label iconL = new Label(iconStr);
         iconL.setAlignment(Pos.CENTER);
         iconL.setPrefSize(26, 26);
-        iconL.setStyle("-fx-font-size: 13px; -fx-font-weight: 900; -fx-text-fill: " + iconColor + "; -fx-background-color: " + iconBg + "; -fx-background-radius: 13px;");
+        iconL.setStyle("-fx-font-size: 13px; -fx-font-weight: 900; -fx-text-fill: " + iconColor
+                + "; -fx-background-color: " + iconBg + "; -fx-background-radius: 13px;");
 
         valLabel.setStyle("-fx-font-size: 18px; -fx-font-weight: 900; -fx-text-fill: #0f172a;");
 

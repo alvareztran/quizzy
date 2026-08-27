@@ -1,10 +1,10 @@
 package com.quizzy.view;
 
+import com.quizzy.view.component.PasswordInputField;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -21,7 +21,7 @@ public class LoginView {
     private final Label titleLabel = new Label("Welcome back !");
     private final Label subtitleLabel = new Label("Sign in to continue learning");
     private final TextField usernameField = new TextField();
-    private final PasswordField passwordField = new PasswordField();
+    private final PasswordInputField passwordField = new PasswordInputField("Enter your password");
     private final Button forgotPasswordBtn = new Button("Forgot password?");
     private final Button loginButton = new Button("Login →");
     private final Button registerLinkButton = new Button("Register");
@@ -34,18 +34,18 @@ public class LoginView {
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(36, 44, 40, 44));
         root.getStyleClass().add("login-box");
-        root.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.06), 20, 0, 0, 6);");
+        root.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.06), 20, 0, 0, 6);");
         root.setMaxWidth(440);
         root.setPrefWidth(440);
         root.setMaxHeight(Region.USE_PREF_SIZE);
 
-        // Top Back to Home Button Row
-        backHomeBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 4px 6px;");
+        backHomeBtn.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #64748b; -fx-font-weight: bold; -fx-font-size: 12px; -fx-cursor: hand; -fx-padding: 4px 6px;");
         HBox backHomeBox = new HBox(backHomeBtn);
         backHomeBox.setAlignment(Pos.CENTER_LEFT);
         backHomeBox.setMaxWidth(350);
 
-        // Brand Logo Container
         try {
             Image logoImg = new Image(getClass().getResourceAsStream("/com/quizzy/images/quizzy-logo.png"));
             logoImageView.setImage(logoImg);
@@ -54,7 +54,7 @@ public class LoginView {
             logoImageView.setSmooth(true);
             logoImageView.setStyle("-fx-cursor: hand;");
         } catch (Exception e) {
-            // Fallback
+
         }
 
         titleLabel.setStyle("-fx-font-size: 28px; -fx-font-weight: bold; -fx-text-fill: #191c1e;");
@@ -63,17 +63,16 @@ public class LoginView {
         VBox headerBox = new VBox(8, logoImageView, titleLabel, subtitleLabel);
         headerBox.setAlignment(Pos.CENTER);
 
-        // Username / Email Field
         VBox usernameBox = new VBox(6);
         usernameBox.setMaxWidth(350);
         Label userLabel = new Label("Username");
         userLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #334155;");
-        usernameField.setPromptText("you@example.com");
+        usernameField.setPromptText("Enter your username");
         usernameField.setPrefHeight(42);
-        usernameField.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 10 14; -fx-font-size: 14px;");
+        usernameField.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 10 14; -fx-font-size: 14px;");
         usernameBox.getChildren().addAll(userLabel, usernameField);
 
-        // Password Field with Forgot Password Link
         VBox passwordBox = new VBox(6);
         passwordBox.setMaxWidth(350);
 
@@ -86,28 +85,26 @@ public class LoginView {
         HBox passSpacer = new HBox();
         HBox.setHgrow(passSpacer, Priority.ALWAYS);
 
-        forgotPasswordBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #6366f1; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 4px 6px; -fx-cursor: hand;");
+        forgotPasswordBtn.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #6366f1; -fx-font-weight: bold; -fx-font-size: 12px; -fx-padding: 4px 6px; -fx-cursor: hand;");
 
         passHeader.getChildren().addAll(passLabel, passSpacer, forgotPasswordBtn);
 
-        passwordField.setPromptText("••••••••");
-        passwordField.setPrefHeight(42);
-        passwordField.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 10 14; -fx-font-size: 14px;");
         passwordBox.getChildren().addAll(passHeader, passwordField);
 
-        // Primary Login Button
         loginButton.setMaxWidth(350);
         loginButton.setPrefHeight(44);
         loginButton.getStyleClass().add("button-primary");
-        loginButton.setStyle("-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 15px; -fx-padding: 12 16; -fx-font-weight: bold; -fx-background-radius: 8px;");
+        loginButton.setStyle(
+                "-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 15px; -fx-padding: 12 16; -fx-font-weight: bold; -fx-background-radius: 8px;");
 
-        // Footer Register Link
         HBox footerBox = new HBox(5);
         footerBox.setAlignment(Pos.CENTER);
         Label accountPromptL = new Label("Don't have an account?");
         accountPromptL.setStyle("-fx-text-fill: #64748b; -fx-font-size: 14px;");
 
-        registerLinkButton.setStyle("-fx-background-color: transparent; -fx-text-fill: #6366f1; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 4px 6px; -fx-cursor: hand;");
+        registerLinkButton.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #6366f1; -fx-font-weight: bold; -fx-font-size: 14px; -fx-padding: 4px 6px; -fx-cursor: hand;");
         footerBox.getChildren().addAll(accountPromptL, registerLinkButton);
 
         root.getChildren().addAll(backHomeBox, headerBox, usernameBox, passwordBox, loginButton, footerBox);
@@ -137,7 +134,7 @@ public class LoginView {
         return usernameField;
     }
 
-    public PasswordField getPasswordField() {
+    public PasswordInputField getPasswordField() {
         return passwordField;
     }
 

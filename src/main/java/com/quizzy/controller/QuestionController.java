@@ -189,7 +189,7 @@ public class QuestionController {
 
         final String search = (keyword != null && !keyword.isBlank()) ? keyword.trim().toLowerCase() : null;
 
-        List<Question> filtered = allQuestions.stream().filter(q -> {
+        List<Question> filtered = new ArrayList<>(allQuestions.stream().filter(q -> {
             boolean matchSearch = (search == null)
                     || (q.getContent() != null && q.getContent().toLowerCase().contains(search));
 
@@ -205,7 +205,9 @@ public class QuestionController {
             }
 
             return matchSearch && matchQuiz && matchDiff;
-        }).toList();
+        }).toList());
+
+        filtered.sort(java.util.Comparator.comparingInt(Question::getQuestionId));
 
         currentFilteredList.clear();
         currentFilteredList.addAll(filtered);
@@ -332,7 +334,6 @@ public class QuestionController {
                     return;
                 }
 
-                // Retrieve created question ID to bind answers
                 List<Question> quizQuestions = questionService.getQuestionsByQuizId(formResult.question.getQuizId());
                 Question createdQuestion = null;
                 if (quizQuestions != null && !quizQuestions.isEmpty()) {
@@ -397,7 +398,7 @@ public class QuestionController {
         if (!confirm) return;
 
         try {
-            // Delete associated answers first
+
             List<Answer> answers = answerService.getAnswersByQuestionId(question.getQuestionId());
             if (answers != null) {
                 for (Answer ans : answers) {

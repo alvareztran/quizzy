@@ -30,16 +30,19 @@ public class AdminDashboardView {
 
     private final Label greetingPrefixLabel = new Label("Welcome back, ");
     private final Label greetingUserLabel = new Label("Administrator!");
-    private final Label greetingEmojiLabel = new Label(" 👋");
     private final Label greetingSubLabel = new Label("Here's what's happening with your quizzes today.");
     private final Label dateBadgeLabel = new Label();
 
     private final Button createNewQuizBtn = new Button("+  Create New Quiz");
 
-    private final StatCard totalTopicsCard = new StatCard("📁", "Total Topics", "0", "All topics in system", "#e1e0ff", "#4648d4");
-    private final StatCard totalQuizzesCard = new StatCard("📝", "Total Quizzes", "0", "All quiz assessments", "#dcfce7", "#166534");
-    private final StatCard totalQuestionsCard = new StatCard("❓", "Total Questions", "0", "Across all quizzes", "#fef08a", "#854d0e");
-    private final StatCard totalUsersCard = new StatCard("👥", "Total Users", "0", "Registered accounts", "#e0f2fe", "#075985");
+    private final StatCard totalTopicsCard = new StatCard("📁", "Total Topics", "0", "All topics in system", "#e1e0ff",
+            "#4648d4");
+    private final StatCard totalQuizzesCard = new StatCard("📝", "Total Quizzes", "0", "All quiz assessments",
+            "#dcfce7", "#166534");
+    private final StatCard totalQuestionsCard = new StatCard("❓", "Total Questions", "0", "Across all quizzes",
+            "#fef08a", "#854d0e");
+    private final StatCard totalUsersCard = new StatCard("👥", "Total Users", "0", "Registered accounts", "#e0f2fe",
+            "#075985");
 
     private final Button viewAllActivitiesBtn = new Button("View all");
     private final VBox activitiesContainer = new VBox(12);
@@ -68,8 +71,7 @@ public class AdminDashboardView {
         greetingLine.setAlignment(Pos.CENTER_LEFT);
         greetingPrefixLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: 800; -fx-text-fill: #191c1e;");
         greetingUserLabel.setStyle("-fx-font-size: 24px; -fx-font-weight: 800; -fx-text-fill: #4648d4;");
-        greetingEmojiLabel.setStyle("-fx-font-size: 22px;");
-        greetingLine.getChildren().addAll(greetingPrefixLabel, greetingUserLabel, greetingEmojiLabel);
+        greetingLine.getChildren().addAll(greetingPrefixLabel, greetingUserLabel);
 
         greetingSubLabel.setStyle("-fx-font-size: 13px; -fx-text-fill: #464554;");
         greetingText.getChildren().addAll(greetingLine, greetingSubLabel);
@@ -79,14 +81,16 @@ public class AdminDashboardView {
 
         String currentDateStr = "📅  " + LocalDate.now().format(DateTimeFormatter.ofPattern("MMM dd, yyyy"));
         dateBadgeLabel.setText(currentDateStr);
-        dateBadgeLabel.setStyle("-fx-background-color: #ffffff; -fx-border-color: #c7c4d7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 7 16; -fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #464554;");
+        dateBadgeLabel.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #c7c4d7; -fx-border-radius: 8; -fx-background-radius: 8; -fx-padding: 7 16; -fx-font-size: 12px; -fx-font-weight: 600; -fx-text-fill: #464554;");
         header.getChildren().addAll(greetingText, headerSpacer, dateBadgeLabel);
 
         StackPane heroFrame = new StackPane();
         heroFrame.setMinHeight(155);
         heroFrame.setPrefHeight(155);
         heroFrame.setMaxWidth(Double.MAX_VALUE);
-        heroFrame.setStyle("-fx-background-color: #ffffff; -fx-border-color: #4648d4 #c7c4d7 #c7c4d7 #4648d4; -fx-border-width: 0 1 1 5px; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.05), 8, 0, 0, 2);");
+        heroFrame.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #4648d4 #c7c4d7 #c7c4d7 #4648d4; -fx-border-width: 0 1 1 5px; -fx-border-radius: 12; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.05), 8, 0, 0, 2);");
 
         HBox heroContent = new HBox(20);
         heroContent.setAlignment(Pos.CENTER_LEFT);
@@ -97,17 +101,19 @@ public class AdminDashboardView {
         HBox.setHgrow(heroText, Priority.ALWAYS);
 
         HBox heroTitle = new HBox(6);
+
         heroTitle.setAlignment(Pos.CENTER_LEFT);
-        Label welcomePrefix = new Label("Welcome to ");
+        Label welcomePrefix = new Label("Master Your Quizzes with");
         welcomePrefix.setStyle("-fx-font-size: 24px; -fx-font-weight: 800; -fx-text-fill: #191c1e;");
-        Label welcomeBrand = new Label("Quizzy");
+        Label welcomeBrand = new Label("Quizzy!");
         welcomeBrand.setStyle("-fx-font-size: 24px; -fx-font-weight: 800; -fx-text-fill: #4648d4;");
         heroTitle.getChildren().addAll(welcomePrefix, welcomeBrand);
 
         Label heroSub = new Label("Create, manage and take quizzes in a smarter way.");
         heroSub.setStyle("-fx-font-size: 13px; -fx-text-fill: #464554;");
 
-        createNewQuizBtn.setStyle("-fx-font-size: 13px; -fx-padding: 9 22; -fx-font-weight: 700; -fx-background-color: #4648d4; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;");
+        createNewQuizBtn.setStyle(
+                "-fx-font-size: 13px; -fx-padding: 9 22; -fx-font-weight: 700; -fx-background-color: #4648d4; -fx-text-fill: #ffffff; -fx-background-radius: 8; -fx-cursor: hand;");
         VBox.setMargin(createNewQuizBtn, new Insets(8, 0, 0, 0));
         heroText.getChildren().addAll(heroTitle, heroSub, createNewQuizBtn);
 
@@ -119,8 +125,7 @@ public class AdminDashboardView {
                 totalTopicsCard.getRoot(),
                 totalQuizzesCard.getRoot(),
                 totalQuestionsCard.getRoot(),
-                totalUsersCard.getRoot()
-        );
+                totalUsersCard.getRoot());
         for (StatCard card : List.of(totalTopicsCard, totalQuizzesCard, totalQuestionsCard, totalUsersCard)) {
             HBox.setHgrow(card.getRoot(), Priority.ALWAYS);
         }
@@ -194,7 +199,8 @@ public class AdminDashboardView {
         panel.setPadding(new Insets(16, 20, 16, 20));
         panel.setMinHeight(220);
         panel.setMaxHeight(Double.MAX_VALUE);
-        panel.setStyle("-fx-background-color: #ffffff; -fx-border-color: #c7c4d7; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.03), 6, 0, 0, 2);");
+        panel.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #c7c4d7; -fx-border-radius: 12px; -fx-background-radius: 12px; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.03), 6, 0, 0, 2);");
 
         HBox header = new HBox(12);
         header.setAlignment(Pos.CENTER_LEFT);
@@ -205,7 +211,8 @@ public class AdminDashboardView {
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        actionButton.setStyle("-fx-background-color: #ffffff; -fx-text-fill: #4648d4; -fx-font-weight: 700; -fx-font-size: 11px; -fx-padding: 4 14; -fx-border-color: #c7c4d7; -fx-border-radius: 999; -fx-background-radius: 999; -fx-cursor: hand;");
+        actionButton.setStyle(
+                "-fx-background-color: #ffffff; -fx-text-fill: #4648d4; -fx-font-weight: 700; -fx-font-size: 11px; -fx-padding: 4 14; -fx-border-color: #c7c4d7; -fx-border-radius: 999; -fx-background-radius: 999; -fx-cursor: hand;");
         header.getChildren().addAll(titleLabel, spacer, actionButton);
         panel.getChildren().add(header);
         return panel;
@@ -288,18 +295,20 @@ public class AdminDashboardView {
         activitiesContainer.getChildren().clear();
 
         if (activities == null || activities.isEmpty()) {
-            activitiesContainer.getChildren().add(createActivityItem("+", "New quiz \"Computer Science Basic\" created", "Assessment Ready", "Today", "#e1e0ff", "#4648d4"));
-            activitiesContainer.getChildren().add(createActivityItem("📁", "Topic \"Computer Science\" updated", "Question bank updated", "Today", "#fef08a", "#854d0e"));
-            activitiesContainer.getChildren().add(createActivityItem("👤", "User \"admin\" active session verified", "Role: Admin", "Active now", "#dcfce7", "#166534"));
+            Label emptyLbl = new Label("No recent activities.");
+            emptyLbl.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 13px; -fx-padding: 10 0;");
+            activitiesContainer.getChildren().add(emptyLbl);
             return;
         }
 
         for (ActivityItemData activity : activities) {
-            activitiesContainer.getChildren().add(createActivityItem(activity.icon, activity.title, activity.sub, activity.time, activity.bgHex, activity.iconHex));
+            activitiesContainer.getChildren().add(createActivityItem(activity.icon, activity.title, activity.sub,
+                    activity.time, activity.bgHex, activity.iconHex));
         }
     }
 
-    public HBox createActivityItem(String iconText, String titleText, String subText, String timeText, String bgHex, String iconHex) {
+    public HBox createActivityItem(String iconText, String titleText, String subText, String timeText, String bgHex,
+            String iconHex) {
         HBox item = new HBox(14);
         item.setAlignment(Pos.CENTER_LEFT);
         item.setPadding(new Insets(5, 0, 5, 0));

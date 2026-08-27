@@ -99,9 +99,9 @@ public class SelectQuizView {
         root.setTop(navbar);
 
         VBox leftSidebar = new VBox(14);
-        leftSidebar.setPrefWidth(260);
-        leftSidebar.setMinWidth(240);
-        leftSidebar.setMaxWidth(280);
+        leftSidebar.setPrefWidth(280);
+        leftSidebar.setMinWidth(260);
+        leftSidebar.setMaxWidth(300);
         leftSidebar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 1px 0 0;");
         leftSidebar.setPadding(new Insets(20, 16, 20, 20));
 
@@ -183,9 +183,6 @@ public class SelectQuizView {
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8fafc;");
         root.setCenter(scrollPane);
 
-        // ==========================================
-        // 4. BOTTOM FOOTER BAR
-        // ==========================================
         HBox footerBar = new HBox(20);
         footerBar.setAlignment(Pos.CENTER_LEFT);
         footerBar.setPadding(new Insets(16, 48, 16, 48));

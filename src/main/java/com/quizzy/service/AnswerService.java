@@ -26,6 +26,10 @@ public class AnswerService {
         return answerDAO.findById(answerId);
     }
 
+    public Answer getAnswerById(int answerId) {
+        return getAnswerId(answerId);
+    }
+
     public List<Answer> getAnswersByQuestionId(int questionId) {
         if (questionId <= 0) {
             return null;

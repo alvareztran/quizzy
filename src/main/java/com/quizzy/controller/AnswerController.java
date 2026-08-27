@@ -176,7 +176,7 @@ public class AnswerController {
 
         final String search = (keyword != null && !keyword.isBlank()) ? keyword.trim().toLowerCase() : null;
 
-        List<Answer> filtered = allAnswers.stream().filter(ans -> {
+        List<Answer> filtered = new ArrayList<>(allAnswers.stream().filter(ans -> {
             boolean matchSearch = (search == null)
                     || (ans.getAnswerContent() != null && ans.getAnswerContent().toLowerCase().contains(search));
 
@@ -194,7 +194,9 @@ public class AnswerController {
             }
 
             return matchSearch && matchQuestion && matchStatus;
-        }).toList();
+        }).toList());
+
+        filtered.sort(java.util.Comparator.comparingInt(Answer::getAnswerId));
 
         currentFilteredList.clear();
         currentFilteredList.addAll(filtered);

@@ -23,7 +23,7 @@ public class TopicDAOImpl implements TopicDAO {
     public Topic findById(int topicId) {
         String sql = """
                      SELECT TopicID, TopicName, Description
-                     FROM Topic 
+                     FROM Topic
                      WHERE TopicID=?
                      """;
 
@@ -114,8 +114,8 @@ public class TopicDAOImpl implements TopicDAO {
     @Override
     public boolean update(Topic topic) {
         String sql = """
-                     UPDATE Topic 
-                     SET TopicName=?, 
+                     UPDATE Topic
+                     SET TopicName=?,
                          Description=?
                      WHERE TopicID=?
                      """;

@@ -28,7 +28,7 @@ public class QuestionDAOImpl implements QuestionDAO {
     @Override
     public Question findById(int questionId) {
         String sql = """
-                     SELECT QuestionID, QuizID, Content, Difficulty, CreatedAt 
+                     SELECT QuestionID, QuizID, Content, Difficulty, CreatedAt
                      FROM Question
                      WHERE QuestionID=?
                      """;
@@ -53,7 +53,7 @@ public class QuestionDAOImpl implements QuestionDAO {
     public List<Question> findAll() {
         List<Question> questions = new ArrayList<>();
         String sql = """
-                     SELECT QuestionID, QuizID, Content, Difficulty, CreatedAt 
+                     SELECT QuestionID, QuizID, Content, Difficulty, CreatedAt
                      FROM Question
                      ORDER BY QuestionID
                      """;
@@ -73,7 +73,7 @@ public class QuestionDAOImpl implements QuestionDAO {
     public List<Question> findByQuizId(int quizId) {
         List<Question> questions = new ArrayList<>();
         String sql = """
-                     SELECT QuestionID, QuizID, Content, Difficulty, CreatedAt 
+                     SELECT QuestionID, QuizID, Content, Difficulty, CreatedAt
                      FROM Question
                      WHERE QuizID=?
                      ORDER BY QuestionID
@@ -148,8 +148,8 @@ public class QuestionDAOImpl implements QuestionDAO {
     @Override
     public boolean update(Question question) {
         String sql = """
-                     UPDATE Question 
-                     SET QuizID=?, 
+                     UPDATE Question
+                     SET QuizID=?,
                          Content=?,
                          Difficulty=?
                      WHERE QuestionID=?

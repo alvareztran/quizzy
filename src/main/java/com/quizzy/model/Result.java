@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class Result {
-    
+
     private int resultId;
     private int userId;
     private int quizId;
@@ -16,8 +16,8 @@ public class Result {
 
     public Result() {
     }
-    
-    public Result(int resultId, int userId, int quizId, BigDecimal score, int totalQuestions, 
+
+    public Result(int resultId, int userId, int quizId, BigDecimal score, int totalQuestions,
             int correctAnswer, LocalDateTime startedAt, LocalDateTime finishedAt) {
         this.resultId = resultId;
         this.userId = userId;
@@ -29,7 +29,7 @@ public class Result {
         this.finishedAt = finishedAt;
     }
 
-    public Result(int userId, int quizId, BigDecimal score, int totalQuestions, int correctAnswers, 
+    public Result(int userId, int quizId, BigDecimal score, int totalQuestions, int correctAnswers,
             LocalDateTime startedAt, LocalDateTime finishedAt) {
         this.userId = userId;
         this.quizId = quizId;
@@ -39,8 +39,7 @@ public class Result {
         this.startedAt = startedAt;
         this.finishedAt = finishedAt;
     }
-    
-    
+
     public int getResultId() {
         return resultId;
     }
@@ -104,7 +103,5 @@ public class Result {
     public void setFinishedAt(LocalDateTime finishedAt) {
         this.finishedAt = finishedAt;
     }
-    
-    
-    
+
 }

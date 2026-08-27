@@ -46,17 +46,20 @@ public class HomeView {
         } catch (Exception ignored) {
         }
 
-        brandNameLabel.setStyle("-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #191c1e; -fx-letter-spacing: 1px;");
+        brandNameLabel.setStyle(
+                "-fx-font-size: 20px; -fx-font-weight: 900; -fx-text-fill: #191c1e; -fx-letter-spacing: 1px;");
         HBox logoBrandBox = new HBox(10, logoImageView, brandNameLabel);
         logoBrandBox.setAlignment(Pos.CENTER_LEFT);
 
         HBox navSpacer = new HBox();
         HBox.setHgrow(navSpacer, Priority.ALWAYS);
 
-        headerLoginBtn.setStyle("-fx-background-color: transparent; -fx-text-fill: #334155; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 18; -fx-cursor: hand;");
+        headerLoginBtn.setStyle(
+                "-fx-background-color: transparent; -fx-text-fill: #334155; -fx-font-size: 14px; -fx-font-weight: bold; -fx-padding: 8 18; -fx-cursor: hand;");
 
         headerRegisterBtn.getStyleClass().add("button-primary");
-        headerRegisterBtn.setStyle("-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 7 17; -fx-font-weight: bold; -fx-background-radius: 8px;");
+        headerRegisterBtn.setStyle(
+                "-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 14px; -fx-padding: 7 17; -fx-font-weight: bold; -fx-background-radius: 8px;");
 
         navbar.getChildren().addAll(logoBrandBox, navSpacer, headerLoginBtn, headerRegisterBtn);
         root.setTop(navbar);
@@ -76,14 +79,17 @@ public class HomeView {
 
         VBox titleBox = new VBox(4);
         Label headingLine1 = new Label("Test your knowledge");
-        headingLine1.setStyle("-fx-font-size: 44px; -fx-font-weight: 800; -fx-text-fill: #191c1e; -fx-letter-spacing: -0.5px;");
+        headingLine1.setStyle(
+                "-fx-font-size: 44px; -fx-font-weight: 800; -fx-text-fill: #191c1e; -fx-letter-spacing: -0.5px;");
 
         Label headingLine2 = new Label("Learn - Practice - Improve");
-        headingLine2.setStyle("-fx-font-size: 44px; -fx-font-weight: 800; -fx-text-fill: #6366f1; -fx-letter-spacing: -0.5px;");
+        headingLine2.setStyle(
+                "-fx-font-size: 44px; -fx-font-weight: 800; -fx-text-fill: #6366f1; -fx-letter-spacing: -0.5px;");
 
         titleBox.getChildren().addAll(headingLine1, headingLine2);
 
-        Label subtitleLabel = new Label("Accelerate your learning journey with interactive quizzes, instant analytics, and structured topic mastery.");
+        Label subtitleLabel = new Label(
+                "Accelerate your learning journey with interactive quizzes, instant analytics, and structured topic mastery.");
         subtitleLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #464554; -fx-line-spacing: 4px;");
         subtitleLabel.setWrapText(true);
         subtitleLabel.setMaxWidth(520);
@@ -93,9 +99,11 @@ public class HomeView {
         ctaRow.setPadding(new Insets(8, 0, 0, 0));
 
         heroGetStartedBtn.getStyleClass().add("button-primary");
-        heroGetStartedBtn.setStyle("-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 15px; -fx-padding: 12 26; -fx-font-weight: bold; -fx-background-radius: 8px;");
+        heroGetStartedBtn.setStyle(
+                "-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 15px; -fx-padding: 12 26; -fx-font-weight: bold; -fx-background-radius: 8px;");
 
-        heroLoginBtn.setStyle("-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-text-fill: #191c1e; -fx-font-size: 15px; -fx-padding: 12 26; -fx-font-weight: bold;");
+        heroLoginBtn.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #cbd5e1; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-text-fill: #191c1e; -fx-font-size: 15px; -fx-padding: 12 26; -fx-font-weight: bold;");
 
         ctaRow.getChildren().addAll(heroGetStartedBtn, heroLoginBtn);
 
@@ -149,13 +157,15 @@ public class HomeView {
         VBox card = new VBox(18);
         card.setPrefWidth(440);
         card.setMaxWidth(440);
-        card.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-padding: 28; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.06), 20, 0, 0, 6);");
+        card.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 16px; -fx-background-radius: 16px; -fx-padding: 28; -fx-effect: dropshadow(three-pass-box, rgba(15, 23, 42, 0.06), 20, 0, 0, 6);");
 
         HBox topRow = new HBox(12);
         topRow.setAlignment(Pos.CENTER_LEFT);
 
         Label catPill = new Label("Computer Science");
-        catPill.setStyle("-fx-background-color: #e0e7ff; -fx-text-fill: #4338ca; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 12; -fx-background-radius: 12px;");
+        catPill.setStyle(
+                "-fx-background-color: #e0e7ff; -fx-text-fill: #4338ca; -fx-font-size: 12px; -fx-font-weight: bold; -fx-padding: 4 12; -fx-background-radius: 12px;");
 
         HBox spacer = new HBox();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -172,9 +182,12 @@ public class HomeView {
         HBox opt1 = new HBox(12);
         opt1.setAlignment(Pos.CENTER_LEFT);
         opt1.setPadding(new Insets(12, 16, 12, 16));
-        opt1.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+        opt1.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+
         Label circle1 = new Label("◯");
         circle1.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 14px;");
+
         Label opt1Text = new Label("Procedural Execution Flow");
         opt1Text.setStyle("-fx-text-fill: #334155; -fx-font-size: 14px;");
         opt1.getChildren().addAll(circle1, opt1Text);
@@ -182,9 +195,13 @@ public class HomeView {
         HBox opt2 = new HBox(12);
         opt2.setAlignment(Pos.CENTER_LEFT);
         opt2.setPadding(new Insets(12, 16, 12, 16));
-        opt2.setStyle("-fx-background-color: #f5f3ff; -fx-border-color: #6366f1; -fx-border-width: 1.5px; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+        opt2.setStyle(
+                "-fx-background-color: #f5f3ff; -fx-border-color: #6366f1; -fx-border-width: 1.5px; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+
         Label check2 = new Label("✓");
-        check2.setStyle("-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 2 5; -fx-background-radius: 9999px;");
+        check2.setStyle(
+                "-fx-background-color: #6366f1; -fx-text-fill: #ffffff; -fx-font-size: 11px; -fx-font-weight: bold; -fx-padding: 2 5; -fx-background-radius: 9999px;");
+
         Label opt2Text = new Label("Encapsulation & Inheritance");
         opt2Text.setStyle("-fx-font-weight: bold; -fx-text-fill: #4338ca; -fx-font-size: 14px;");
         opt2.getChildren().addAll(check2, opt2Text);
@@ -192,7 +209,8 @@ public class HomeView {
         HBox opt3 = new HBox(12);
         opt3.setAlignment(Pos.CENTER_LEFT);
         opt3.setPadding(new Insets(12, 16, 12, 16));
-        opt3.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 8px; -fx-background-radius: 8px;");
+        opt3.setStyle(
+                "-fx-background-color: #ffffff; -fx-border-color: #e5e7eb; -fx-border-radius: 8px; -fx-background-radius: 8px;");
         Label circle3 = new Label("◯");
         circle3.setStyle("-fx-text-fill: #94a3b8; -fx-font-size: 14px;");
         Label opt3Text = new Label("Global Memory Allocation");
@@ -202,7 +220,7 @@ public class HomeView {
         HBox bottomRow = new HBox();
         bottomRow.setAlignment(Pos.CENTER_RIGHT);
 
-        Label nextLink = new Label("Next Question >");
+        Label nextLink = new Label("Next Question ->");
         nextLink.setStyle("-fx-font-size: 13px; -fx-font-weight: bold; -fx-text-fill: #6366f1; -fx-cursor: hand;");
         bottomRow.getChildren().add(nextLink);
 

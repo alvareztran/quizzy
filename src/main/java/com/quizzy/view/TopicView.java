@@ -44,7 +44,6 @@ public class TopicView {
     private final StatCard activeTopicsCard = new StatCard("👥", "Active Topics", "0", "Active topics", "#E0F2FE", "#0284C7");
 
     private final TextField searchTopicsField = new TextField();
-    private final ComboBox<String> statusFilterComboBox = new ComboBox<>();
     private final ComboBox<String> sortComboBox = new ComboBox<>();
     private final Button resetFilterBtn = new Button("🔄  Reset");
 
@@ -54,7 +53,6 @@ public class TopicView {
     private final TableColumn<Topic, String> descriptionColumn = new TableColumn<>("DESCRIPTION");
     private final TableColumn<Topic, Topic> actionsColumn = new TableColumn<>("ACTIONS");
 
-    // Pagination Controls
     private final Label paginationInfoLabel = new Label("Showing 1 to 0 of 0 topics");
     private final ComboBox<String> perPageComboBox = new ComboBox<>();
     private final Button prevPageBtn = new Button("<");
@@ -69,7 +67,6 @@ public class TopicView {
     private void createUI() {
         root.setPrefSize(1280, 800);
 
-        // Sidebar Navigation (Full Height)
         VBox sidebar = new VBox(6);
         sidebar.setPrefWidth(260);
         sidebar.setMinWidth(260);
@@ -86,7 +83,7 @@ public class TopicView {
             iconView.setPreserveRatio(true);
             iconView.setSmooth(true);
         } catch (Exception e) {
-            // Fallback
+
         }
 
         Label brandTitle = new Label("QUIZZY");
@@ -110,7 +107,6 @@ public class TopicView {
         VBox sidebarSpacer = new VBox();
         VBox.setVgrow(sidebarSpacer, Priority.ALWAYS);
 
-        // Bottom User Profile Widget Frame
         VBox profileBox = new VBox(10);
         profileBox.setPadding(new Insets(14, 0, 0, 0));
         profileBox.setStyle("-fx-border-color: #c7c4d7; -fx-border-width: 1 0 0 0;");
@@ -171,14 +167,9 @@ public class TopicView {
         searchTopicsField.setPrefWidth(240);
         searchTopicsField.setPrefHeight(32);
 
-        statusFilterComboBox.setPromptText("All Status");
-        statusFilterComboBox.getItems().setAll("All Status", "Active", "Inactive");
-        statusFilterComboBox.setValue("All Status");
-        statusFilterComboBox.setPrefHeight(32);
-
-        sortComboBox.setPromptText("Sort by: Newest");
-        sortComboBox.getItems().setAll("Sort by: Newest", "Sort by: Name A-Z", "Sort by: ID");
-        sortComboBox.setValue("Sort by: Newest");
+        sortComboBox.setPromptText("Sort by: ID");
+        sortComboBox.getItems().setAll("Sort by: ID", "Sort by: Name A-Z", "Sort by: Name Z-A", "Sort by: Newest");
+        sortComboBox.setValue("Sort by: ID");
         sortComboBox.setPrefHeight(32);
 
         resetFilterBtn.setStyle("-fx-font-size: 12px; -fx-padding: 5 12;");
@@ -186,13 +177,15 @@ public class TopicView {
         HBox toolbarSpacer = new HBox();
         HBox.setHgrow(toolbarSpacer, Priority.ALWAYS);
 
-        toolbar.getChildren().addAll(searchTopicsField, statusFilterComboBox, sortComboBox, resetFilterBtn, toolbarSpacer);
+        toolbar.getChildren().addAll(searchTopicsField, sortComboBox, resetFilterBtn, toolbarSpacer);
 
         topicTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
+        idColumn.setId("id-col");
         idColumn.setMaxWidth(60);
         idColumn.setMinWidth(45);
         idColumn.setCellValueFactory(new PropertyValueFactory<>("topicId"));
+        idColumn.getStyleClass().add("column-center");
 
         nameColumn.setPrefWidth(280);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("topicName"));
@@ -212,6 +205,7 @@ public class TopicView {
         descriptionColumn.setPrefWidth(540);
         descriptionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
 
+        actionsColumn.setId("actions-col");
         actionsColumn.setPrefWidth(120);
         actionsColumn.setMaxWidth(130);
         actionsColumn.setStyle("-fx-alignment: CENTER;");
@@ -300,10 +294,6 @@ public class TopicView {
 
     public TextField getSearchTopicsField() {
         return searchTopicsField;
-    }
-
-    public ComboBox<String> getStatusFilterComboBox() {
-        return statusFilterComboBox;
     }
 
     public ComboBox<String> getSortComboBox() {

@@ -108,9 +108,9 @@ public class QuizHistoryView {
         root.setTop(navbar);
 
         VBox leftSidebar = new VBox(14);
-        leftSidebar.setPrefWidth(260);
-        leftSidebar.setMinWidth(240);
-        leftSidebar.setMaxWidth(280);
+        leftSidebar.setPrefWidth(280);
+        leftSidebar.setMinWidth(260);
+        leftSidebar.setMaxWidth(300);
         leftSidebar.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-width: 0 1px 0 0;");
         leftSidebar.setPadding(new Insets(20, 16, 20, 20));
 
@@ -144,7 +144,7 @@ public class QuizHistoryView {
         Label motivSub = new Label("Consistent practice leads to great results.");
         motivSub.setStyle("-fx-font-size: 11px; -fx-text-fill: #64748b; -fx-line-spacing: 1px;");
         motivSub.setWrapText(true);
-        motivSub.setMaxWidth(130);
+        motivSub.setMaxWidth(150);
         motivTextBox.getChildren().addAll(motivTitle, motivSub);
 
         motivCard.getChildren().addAll(bulbIcon, motivTextBox);
@@ -198,7 +198,7 @@ public class QuizHistoryView {
         dateFilterComboBox.setPrefHeight(34);
         dateFilterComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #334155;");
 
-        topicFilterComboBox.setPrefWidth(160);
+        topicFilterComboBox.setPrefWidth(220);
         topicFilterComboBox.setPrefHeight(34);
         topicFilterComboBox.setStyle("-fx-background-color: #ffffff; -fx-border-color: #e2e8f0; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-font-size: 13px; -fx-font-weight: 600; -fx-text-fill: #334155;");
 
@@ -207,15 +207,15 @@ public class QuizHistoryView {
         attemptsGrid.getColumnConstraints().clear();
 
         ColumnConstraints col0 = new ColumnConstraints();
-        col0.setPercentWidth(30);
+        col0.setPercentWidth(32);
         col0.setHalignment(HPos.LEFT);
 
         ColumnConstraints col1 = new ColumnConstraints();
-        col1.setPercentWidth(22);
+        col1.setPercentWidth(24);
         col1.setHalignment(HPos.LEFT);
 
         ColumnConstraints col2 = new ColumnConstraints();
-        col2.setPercentWidth(16);
+        col2.setPercentWidth(12);
         col2.setHalignment(HPos.CENTER);
 
         ColumnConstraints col3 = new ColumnConstraints();
@@ -253,9 +253,6 @@ public class QuizHistoryView {
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background: #f8fafc;");
         root.setCenter(scrollPane);
 
-        // ==========================================
-        // 4. BOTTOM FOOTER BAR
-        // ==========================================
         HBox footerBar = new HBox(20);
         footerBar.setAlignment(Pos.CENTER_LEFT);
         footerBar.setPadding(new Insets(16, 48, 16, 48));

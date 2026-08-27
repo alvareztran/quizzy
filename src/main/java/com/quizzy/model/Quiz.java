@@ -3,7 +3,7 @@ package com.quizzy.model;
 import java.time.LocalDateTime;
 
 public class Quiz {
-    
+
     private int quizId;
     private int topicId;
     private String quizName;
