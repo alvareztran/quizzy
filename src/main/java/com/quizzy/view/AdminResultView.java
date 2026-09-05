@@ -58,6 +58,7 @@ public class AdminResultView {
         createUI();
     }
 
+    @SuppressWarnings("unchecked")
     private void createUI() {
         root.setPrefSize(1280, 800);
         root.setStyle("-fx-background-color: #f8fafc;");

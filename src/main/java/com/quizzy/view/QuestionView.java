@@ -67,6 +67,7 @@ public class QuestionView {
         createUI();
     }
 
+    @SuppressWarnings("unchecked")
     private void createUI() {
         root.setPrefSize(1280, 800);
 

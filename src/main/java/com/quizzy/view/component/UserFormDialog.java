@@ -1,6 +1,7 @@
 package com.quizzy.view.component;
 
 import com.quizzy.model.User;
+import com.quizzy.util.ValidationUtil;
 import java.util.Optional;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
@@ -41,7 +42,7 @@ public class UserFormDialog {
 
         VBox contentBox = new VBox(12);
         contentBox.setPadding(new Insets(20));
-        contentBox.setPrefWidth(400);
+        contentBox.setPrefWidth(420);
 
         Label headerTitle = new Label(isEdit ? "Edit User Account" : "Create New User");
         headerTitle.setStyle("-fx-font-size: 20px; -fx-font-weight: bold; -fx-text-fill: #0f172a;");
@@ -63,6 +64,10 @@ public class UserFormDialog {
         PasswordInputField passField = new PasswordInputField("Account password");
         passField.setPrefHeight(38);
 
+        Label passHintLabel = new Label("Min 8 chars, 1 uppercase, 1 lowercase, 1 digit, 1 special char (@$!%*?&)");
+        passHintLabel.setStyle("-fx-font-size: 11px; -fx-text-fill: #64748b;");
+        passHintLabel.setWrapText(true);
+
         Label roleLabel = new Label("Role *");
         roleLabel.setStyle("-fx-font-weight: bold; -fx-font-size: 12px; -fx-text-fill: #475569;");
         ComboBox<String> roleComboBox = new ComboBox<>();
@@ -73,6 +78,8 @@ public class UserFormDialog {
 
         Label errorLabel = new Label();
         errorLabel.setStyle("-fx-text-fill: #dc2626; -fx-font-size: 12px; -fx-font-weight: bold;");
+        errorLabel.setWrapText(true);
+        errorLabel.setMaxWidth(400);
         errorLabel.setVisible(false);
         errorLabel.setManaged(false);
 
@@ -87,7 +94,7 @@ public class UserFormDialog {
                 headerTitle,
                 usernameLabel, usernameField,
                 fullnameLabel, fullnameField,
-                passLabel, passField,
+                passLabel, passField, passHintLabel,
                 roleLabel, roleComboBox,
                 errorLabel
         );
@@ -110,10 +117,23 @@ public class UserFormDialog {
                 return;
             }
 
-            if (!isEdit && (pass == null || pass.isBlank())) {
-                showErr(errorLabel, "Password is required.");
-                event.consume();
-                return;
+            if (!isEdit) {
+                if (pass == null || pass.isBlank()) {
+                    showErr(errorLabel, "Password is required.");
+                    event.consume();
+                    return;
+                }
+                if (!ValidationUtil.isValidPassword(pass)) {
+                    showErr(errorLabel, ValidationUtil.PASSWORD_REQUIREMENT_MESSAGE);
+                    event.consume();
+                    return;
+                }
+            } else {
+                if (pass != null && !pass.isBlank() && !ValidationUtil.isValidPassword(pass)) {
+                    showErr(errorLabel, ValidationUtil.PASSWORD_REQUIREMENT_MESSAGE);
+                    event.consume();
+                    return;
+                }
             }
         });
 

@@ -248,22 +248,33 @@ public class TopicController {
     private void deleteTopic(Topic topic) {
         if (topic == null) return;
 
+        List<Quiz> relatedQuizzes = quizService.getQuizzesByTopicId(topic.getTopicId());
+        if (relatedQuizzes != null && !relatedQuizzes.isEmpty()) {
+            ConfirmDialog.showCannotDeleteAlert(
+                    "Cannot Delete Topic",
+                    "Topic '" + topic.getTopicName() + "' cannot be deleted because it currently contains " + relatedQuizzes.size() + " quiz(zes).",
+                    "To protect data integrity, you must delete or reassign all quizzes belonging to this topic before deleting the topic itself."
+            );
+            return;
+        }
+
         boolean confirm = ConfirmDialog.showDeleteConfirmation(
                 "Delete Topic?",
-                "Are you sure you want to delete topic '" + topic.getTopicName() + "'? This action cannot be undone."
+                "Are you sure you want to delete topic '" + topic.getTopicName() + "'?",
+                "This topic has no dependent quizzes. Deleting it will permanently remove this topic category."
         );
 
         if (!confirm) return;
 
         try {
             if (!topicService.deleteTopic(topic.getTopicId())) {
-                showError("Unable to delete topic. Please make sure no quizzes are assigned to this topic.");
+                showError("Unable to delete topic. Please make sure no dependent records are assigned to this topic.");
                 return;
             }
             showInfo("Topic deleted successfully.");
             loadTopics();
         } catch (Exception e) {
-            showError("Unable to delete topic. Database connection error.");
+            showError("Unable to delete topic. Please check database relationships.");
         }
     }
 

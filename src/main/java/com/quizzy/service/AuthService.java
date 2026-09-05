@@ -4,6 +4,7 @@ import com.quizzy.dao.UserDAO;
 import com.quizzy.factory.DAOFactory;
 import com.quizzy.model.User;
 import com.quizzy.util.PasswordHasher;
+import com.quizzy.util.ValidationUtil;
 import java.util.Objects;
 
 public class AuthService {
@@ -50,8 +51,6 @@ public class AuthService {
         return "SUCCESS".equals(result);
     }
 
-    private static final String PASSWORD_REGEX = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$";
-
     public String registerUser(String fullName, String username, String password, String confirmPassword) {
         if (fullName == null || fullName.isBlank()) {
             return "Full Name is required.";
@@ -65,8 +64,8 @@ public class AuthService {
             return "Password is required.";
         }
 
-        if (!password.matches(PASSWORD_REGEX)) {
-            return "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&).";
+        if (!ValidationUtil.isValidPassword(password)) {
+            return ValidationUtil.PASSWORD_REQUIREMENT_MESSAGE;
         }
 
         if (confirmPassword == null || confirmPassword.isBlank()) {

@@ -216,16 +216,31 @@ public class AnswerController {
     private void deleteAnswer(Answer answer) {
         if (answer == null) return;
 
+        String preview = answer.getAnswerContent();
+        if (preview != null && preview.length() > 60) {
+            preview = preview.substring(0, 57) + "...";
+        }
+
+        if (answer.isIsCorrect()) {
+            ConfirmDialog.showCannotDeleteAlert(
+                    "Cannot Delete Answer Key",
+                    "Answer choice #" + answer.getAnswerId() + " cannot be deleted because it is currently the designated CORRECT ANSWER KEY for question #" + answer.getQuestionId() + ".",
+                    "To prevent question corruption and scoring errors, please designate another answer choice as the correct key before removing this option."
+            );
+            return;
+        }
+
         boolean confirm = ConfirmDialog.showDeleteConfirmation(
                 "Delete Answer Choice?",
-                "Are you sure you want to delete this answer choice?"
+                "Are you sure you want to delete answer choice #" + answer.getAnswerId() + " (" + (preview != null ? preview : "") + ")?",
+                "This answer option will be permanently removed from question #" + answer.getQuestionId() + ". This action cannot be undone."
         );
 
         if (!confirm) return;
 
         try {
             if (!answerService.deleteAnswer(answer.getAnswerId())) {
-                showError("Unable to delete answer choice.");
+                showError("Unable to delete answer choice. Please check question dependencies.");
                 return;
             }
             showInfo("Answer choice deleted successfully.");

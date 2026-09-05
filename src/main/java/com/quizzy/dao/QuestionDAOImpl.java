@@ -96,6 +96,30 @@ public class QuestionDAOImpl implements QuestionDAO {
     }
 
     @Override
+    public int countByQuizId(int quizId) {
+        String sql = """
+                     SELECT COUNT(*)
+                     FROM Question
+                     WHERE QuizID=?
+                     """;
+
+        try (Connection cn = DatabaseConnection.getConnection();
+             PreparedStatement ps = cn.prepareStatement(sql)) {
+
+            ps.setInt(1, quizId);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+
+        } catch (SQLException e) {
+            System.err.println("QuestionDAO.countByQuizId error: " + e.getMessage());
+        }
+        return 0;
+    }
+
+    @Override
     public List<Question> findRandomByQuizId(int quizId, int numberOfQuestions) {
         List<Question> questions = new ArrayList<>();
         String sql = """

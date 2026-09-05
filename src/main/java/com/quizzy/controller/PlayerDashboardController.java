@@ -66,7 +66,7 @@ public class PlayerDashboardController {
         }
 
         try {
-            List<Quiz> quizzes = quizService.getAllQuizzes();
+            List<Quiz> quizzes = quizService.getAllPlayableQuizzes();
             int totalQ = quizzes != null ? quizzes.size() : 0;
             view.getTotalQuizzesValLabel().setText(String.valueOf(totalQ));
         } catch (Exception e) {
@@ -105,7 +105,7 @@ public class PlayerDashboardController {
             if (topics != null && !topics.isEmpty()) {
                 for (int i = 0; i < Math.min(3, topics.size()); i++) {
                     Topic topic = topics.get(i);
-                    List<Quiz> topicQuizzes = quizService.getQuizzesByTopicId(topic.getTopicId());
+                    List<Quiz> topicQuizzes = quizService.getPlayableQuizzesByTopicId(topic.getTopicId());
                     int quizCount = topicQuizzes != null ? topicQuizzes.size() : 0;
 
                     VBox topicCard = createTopicCard(topic.getTopicName(), quizCount, i == 0);

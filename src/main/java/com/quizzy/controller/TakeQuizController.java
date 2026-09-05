@@ -90,8 +90,8 @@ public class TakeQuizController {
                 selectedQuiz.getNumberOfQuestions()
         );
 
-        if (questionList == null || questionList.isEmpty()) {
-            showError("No questions found for this quiz.");
+        if (questionList == null || questionList.size() < selectedQuiz.getNumberOfQuestions() || selectedQuiz.getNumberOfQuestions() <= 0) {
+            showError("This quiz does not have enough questions to start.");
             Platform.runLater(() -> SceneManager.showSelectQuiz());
             return;
         }

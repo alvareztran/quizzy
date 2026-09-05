@@ -66,6 +66,7 @@ public class QuizView {
         createUI();
     }
 
+    @SuppressWarnings("unchecked")
     private void createUI() {
         root.setPrefSize(1280, 800);
 

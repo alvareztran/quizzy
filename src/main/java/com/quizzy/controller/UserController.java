@@ -1,7 +1,9 @@
 package com.quizzy.controller;
 
 import com.quizzy.factory.ServiceFactory;
+import com.quizzy.model.Result;
 import com.quizzy.model.User;
+import com.quizzy.service.ResultService;
 import com.quizzy.service.UserService;
 import com.quizzy.util.NavIconHelper;
 import com.quizzy.util.PaginationButtonRenderer;
@@ -29,6 +31,7 @@ public class UserController {
 
     private final UserView view;
     private final UserService userService = ServiceFactory.getUserService();
+    private final ResultService resultService = ServiceFactory.getResultService();
 
     private final ObservableList<User> displayedUserList = FXCollections.observableArrayList();
     private final List<User> allUsers = new ArrayList<>();
@@ -251,16 +254,32 @@ public class UserController {
             return;
         }
 
+        String displayName = user.getUserName() + (user.getFullName() != null && !user.getFullName().isBlank() ? " (" + user.getFullName() + ")" : "");
+
+        try {
+            List<Result> results = resultService.getResultsByUserId(user.getUserId());
+            if (results != null && !results.isEmpty()) {
+                ConfirmDialog.showCannotDeleteAlert(
+                        "Cannot Delete User Account",
+                        "User account '" + displayName + "' cannot be deleted because it currently has " + results.size() + " exam attempt record(s) in the system.",
+                        "To protect audit integrity and prevent orphaned test history, you must delete or clear this user's exam records before deleting the user account."
+                );
+                return;
+            }
+        } catch (Exception ignored) {
+        }
+
         boolean confirm = ConfirmDialog.showDeleteConfirmation(
                 "Delete User Account?",
-                "Are you sure you want to delete user '" + user.getUserName() + "'? This action cannot be undone."
+                "Are you sure you want to delete user account '" + displayName + "'?",
+                "This account has no dependent exam results. Deleting it will permanently remove this user account."
         );
 
         if (!confirm) return;
 
         try {
             if (!userService.deleteUser(user.getUserId())) {
-                showError("Unable to delete user.");
+                showError("Unable to delete user. Please check database relationships.");
                 return;
             }
             showInfo("User account deleted successfully.");

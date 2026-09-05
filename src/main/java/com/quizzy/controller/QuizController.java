@@ -1,9 +1,13 @@
 package com.quizzy.controller;
 
 import com.quizzy.factory.ServiceFactory;
+import com.quizzy.model.Question;
 import com.quizzy.model.Quiz;
+import com.quizzy.model.Result;
 import com.quizzy.model.Topic;
+import com.quizzy.service.QuestionService;
 import com.quizzy.service.QuizService;
+import com.quizzy.service.ResultService;
 import com.quizzy.service.TopicService;
 import com.quizzy.util.NavIconHelper;
 import com.quizzy.util.PaginationButtonRenderer;
@@ -34,6 +38,8 @@ public class QuizController {
     private final QuizView view;
     private final QuizService quizService = ServiceFactory.getQuizService();
     private final TopicService topicService = ServiceFactory.getTopicService();
+    private final QuestionService questionService = ServiceFactory.getQuestionService();
+    private final ResultService resultService = ServiceFactory.getResultService();
 
     private final ObservableList<Quiz> displayedQuizList = FXCollections.observableArrayList();
     private final List<Quiz> allQuizzes = new ArrayList<>();
@@ -268,16 +274,37 @@ public class QuizController {
     private void deleteQuiz(Quiz quiz) {
         if (quiz == null) return;
 
+        List<Question> questions = questionService.getQuestionsByQuizId(quiz.getQuizId());
+        if (questions != null && !questions.isEmpty()) {
+            ConfirmDialog.showCannotDeleteAlert(
+                    "Cannot Delete Quiz",
+                    "Quiz '" + quiz.getQuizName() + "' cannot be deleted because it currently contains " + questions.size() + " question(s).",
+                    "To protect question bank integrity, please delete all questions belonging to this quiz before deleting the quiz itself."
+            );
+            return;
+        }
+
+        List<Result> results = resultService.getResultsByQuizId(quiz.getQuizId());
+        if (results != null && !results.isEmpty()) {
+            ConfirmDialog.showCannotDeleteAlert(
+                    "Cannot Delete Quiz",
+                    "Quiz '" + quiz.getQuizName() + "' cannot be deleted because there are " + results.size() + " student exam record(s) associated with it.",
+                    "To maintain test history integrity, you must delete or clear related test attempts before deleting this quiz."
+            );
+            return;
+        }
+
         boolean confirm = ConfirmDialog.showDeleteConfirmation(
-                "Delete Quiz?",
-                "Are you sure you want to delete quiz '" + quiz.getQuizName() + "'? This action cannot be undone."
+                "Delete Quiz Assessment?",
+                "Are you sure you want to delete quiz '" + quiz.getQuizName() + "'?",
+                "This quiz has no dependent questions or student results. Deleting it will permanently remove this quiz assessment."
         );
 
         if (!confirm) return;
 
         try {
             if (!quizService.deleteQuiz(quiz.getQuizId())) {
-                showError("Unable to delete quiz. Please check associated questions.");
+                showError("Unable to delete quiz. Please ensure any related dependencies are cleared first.");
                 return;
             }
             showInfo("Quiz deleted successfully.");

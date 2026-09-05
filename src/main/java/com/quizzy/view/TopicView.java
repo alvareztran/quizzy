@@ -64,6 +64,7 @@ public class TopicView {
         createUI();
     }
 
+    @SuppressWarnings("unchecked")
     private void createUI() {
         root.setPrefSize(1280, 800);
 

@@ -3,6 +3,7 @@ package com.quizzy.controller;
 import com.quizzy.factory.ServiceFactory;
 import com.quizzy.service.AuthService;
 import com.quizzy.util.SceneManager;
+import com.quizzy.util.ValidationUtil;
 import com.quizzy.view.RegisterView;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -64,8 +65,8 @@ public class RegisterController {
             return;
         }
 
-        if (!password.matches("^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@$!%*?&]).{8,}$")) {
-            showError("Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character (@$!%*?&).");
+        if (!ValidationUtil.isValidPassword(password)) {
+            showError(ValidationUtil.PASSWORD_REQUIREMENT_MESSAGE);
             return;
         }
 

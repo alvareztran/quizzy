@@ -34,7 +34,7 @@ public class SelectQuizController {
 
     private Quiz selectedQuiz = null;
     private final List<QuizCardHolder> quizCardHolders = new ArrayList<>();
-    private List<Quiz> currentTopicQuizzes = new ArrayList<>();
+    private final List<Quiz> currentTopicQuizzes = new ArrayList<>();
 
     public SelectQuizController() {
         this.view = new SelectQuizView();
@@ -147,9 +147,9 @@ public class SelectQuizController {
         }
 
         try {
-            List<Quiz> quizzes = quizService.getQuizzesByTopicId(topic.getTopicId());
+            List<Quiz> quizzes = quizService.getPlayableQuizzesByTopicId(topic.getTopicId());
             if (quizzes != null) {
-                currentTopicQuizzes = quizzes;
+                currentTopicQuizzes.addAll(quizzes);
             }
             filterQuizzes(view.getSearchQuizField().getText());
         } catch (Exception e) {

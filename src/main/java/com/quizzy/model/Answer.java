@@ -35,6 +35,10 @@ public class Answer {
         return answerContent;
     }
 
+    public String getContent() {
+        return answerContent;
+    }
+
     public boolean isIsCorrect() {
         return isCorrect;
     }

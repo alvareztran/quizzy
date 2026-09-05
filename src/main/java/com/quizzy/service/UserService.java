@@ -5,6 +5,7 @@ import com.quizzy.factory.DAOFactory;
 import com.quizzy.model.User;
 import com.quizzy.util.PasswordHasher;
 import com.quizzy.util.SessionManager;
+import com.quizzy.util.ValidationUtil;
 import java.util.List;
 
 public class UserService {
@@ -44,7 +45,13 @@ public class UserService {
         if (existing != null) {
             return false;
         }
-        if (user.getPassword() != null && !user.getPassword().isBlank() && !PasswordHasher.isHashed(user.getPassword())) {
+        if (user.getPassword() == null || user.getPassword().isBlank()) {
+            return false;
+        }
+        if (!PasswordHasher.isHashed(user.getPassword())) {
+            if (!ValidationUtil.isValidPassword(user.getPassword())) {
+                return false;
+            }
             user.setPassword(PasswordHasher.hash(user.getPassword()));
         }
         return userDAO.insert(user);
@@ -62,6 +69,9 @@ public class UserService {
                 user.setPassword(existing.getPassword());
             }
         } else if (!PasswordHasher.isHashed(user.getPassword())) {
+            if (!ValidationUtil.isValidPassword(user.getPassword())) {
+                return false;
+            }
             user.setPassword(PasswordHasher.hash(user.getPassword()));
         }
         return userDAO.update(user);

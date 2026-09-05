@@ -291,15 +291,20 @@ public class QuestionController {
     private void deleteQuestion(Question question) {
         if (question == null) return;
 
+        String preview = question.getContent();
+        if (preview != null && preview.length() > 60) {
+            preview = preview.substring(0, 57) + "...";
+        }
+
         boolean confirm = ConfirmDialog.showDeleteConfirmation(
                 "Delete Question?",
-                "Are you sure you want to delete this question? Associated answer choices will also be removed."
+                "Are you sure you want to delete question #" + question.getQuestionId() + " (" + (preview != null ? preview : "") + ")?",
+                "All 4 answer options (A, B, C, D) and any student exam submission records linked to this question will be permanently deleted. This action cannot be undone."
         );
 
         if (!confirm) return;
 
         try {
-
             List<Answer> answers = answerService.getAnswersByQuestionId(question.getQuestionId());
             if (answers != null) {
                 for (Answer ans : answers) {
@@ -307,11 +312,22 @@ public class QuestionController {
                 }
             }
 
-            questionService.deleteQuestion(question.getQuestionId());
-            showInfo("Question and answers deleted successfully.");
+            if (!questionService.deleteQuestion(question.getQuestionId())) {
+                ConfirmDialog.showCannotDeleteAlert(
+                        "Cannot Delete Question",
+                        "Question #" + question.getQuestionId() + " cannot be deleted because it is recorded in completed student exam submissions.",
+                        "To protect test history and scoring audit records, questions referenced in exam submissions cannot be removed."
+                );
+                return;
+            }
+            showInfo("Question and associated answers deleted successfully.");
             loadData();
         } catch (Exception e) {
-            showError("Unable to delete question. Database error.");
+            ConfirmDialog.showCannotDeleteAlert(
+                    "Cannot Delete Question",
+                    "Question #" + question.getQuestionId() + " cannot be deleted due to existing database dependencies.",
+                    "Please check if this question is referenced in student exam attempts or active test records."
+            );
         }
     }
 

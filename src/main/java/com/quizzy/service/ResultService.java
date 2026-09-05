@@ -87,7 +87,7 @@ public class ResultService {
             return false;
         }
 
-        if (!result.getFinishedAt().isAfter(result.getStartedAt())) {
+        if (result.getFinishedAt().isBefore(result.getStartedAt())) {
             return false;
         }
 
